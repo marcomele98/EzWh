@@ -100,9 +100,40 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | ID        | Description  |
 | ------------- |:-------------:| 
-|  FR1     |  |
-|  FR2     |   |
-| FRx..  | | 
+|  FR1     	| Manage invetory  |
+|  FR1.1    | Show available items and their quantities |
+|  FR1.2    | Update  quantity of items available in the warehouse |
+|  FR1.3 	| Show item description |
+|  FR1.4 	| Search for specific item in the warehouse  |
+|||  
+|  FR2   	| Manage orders |
+|  FR2.1 	| Make internal orders    |
+|  FR2.2	| Make orders to the suppliers |
+|  FR2.2.1	| Display different suppliers and their items |
+|  FR2.2.2	| Search items from suppliers |	
+|  FR2.3 	| Send back faulty items	|
+|  FR2.4 	| Display active orders  |
+|  FR2.5	| Show order history 	|
+|||
+|  FR3   	| Manage physical space in the warehouse |
+|  FR3.1 	| Update location of a certain item |
+|  FR3.2	| Search for location of a certain item |
+|  FR3.3 	| Compute available space |
+|||
+|  FR4 		| Send alert for a specific case | 
+|  FR4.1 	| Send alert message when the quantity of a certain item is under a certain threshold |
+|  FR4.2	| Send alert message when the available physical space is under a certain threshold |
+|  FR4.3 	| Send alert message when some items do not pass the quality check |
+|  FR4.4	| Send alert message when an order is received |
+|  FR4.5 	| Send alert message when item is in the pick up area |
+|||
+|  FR5 		| Manage users and user privileges |
+|  FR5.1	| Create user |
+|  FR5.2	| Manage user privileges |
+
+
+
+
 
 ## Non Functional Requirements
 
