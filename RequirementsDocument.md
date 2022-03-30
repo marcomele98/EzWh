@@ -3,12 +3,13 @@
 
 Date: 22 march 2022
 
-Version: 0.0
+Version: 1.1
 
  
 | Version number | Change |
 | ----------------- |:-----------|
-| | | 
+| 0   | Added Stakeholders, context diagram, FR|
+| 1.1 | Fixed Stakeholders, Context Diagram, FR. Added NFR and Deployment Diagram | 
 
 
 # Contents
@@ -19,17 +20,27 @@ Version: 0.0
 	+ [Context Diagram](#context-diagram)
 	+ [Interfaces](#interfaces) 
 	
+- [Contents](#contents)
+- [Informal description](#informal-description)
+- [Stakeholders](#stakeholders)
+- [Context Diagram and interfaces](#context-diagram-and-interfaces)
+	- [Context Diagram](#context-diagram)
+	- [Interfaces](#interfaces)
 - [Stories and personas](#stories-and-personas)
 - [Functional and non functional requirements](#functional-and-non-functional-requirements)
-	+ [Functional Requirements](#functional-requirements)
-	+ [Non functional requirements](#non-functional-requirements)
+	- [Functional Requirements](#functional-requirements)
+	- [Non Functional Requirements](#non-functional-requirements)
 - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
-	+ [Use case diagram](#use-case-diagram)
-	+ [Use cases](#use-cases)
-    	+ [Relevant scenarios](#relevant-scenarios)
+	- [Use case diagram](#use-case-diagram)
+		- [Use case 1, UC1](#use-case-1-uc1)
+				- [Scenario 1.1](#scenario-11)
+				- [Scenario 1.2](#scenario-12)
+				- [Scenario 1.x](#scenario-1x)
+		- [Use case 2, UC2](#use-case-2-uc2)
+		- [Use case x, UCx](#use-case-x-ucx)
 - [Glossary](#glossary)
-- [System design](#system-design)
-- [Deployment diagram](#deployment-diagram)
+- [System Design](#system-design)
+- [Deployment Diagram](#deployment-diagram)
 
 # Informal description
 Medium companies and retailers need a simple application to manage the relationship with suppliers and the inventory of physical items stocked in a physical warehouse. 
@@ -50,19 +61,18 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
-|   Administrator   | Handles application maintenance (bugs), handles user privileges | 
-|   Manager  		| Has information about the inventory and manages stock of products | 
-|   Supplier  		| Receive orders and provides items | 
-|  Warehouse employee | Collects items and store them into the warehouse, handles the inventory, provides the request items to the pick up area |  
-|   OU employee     | Issue internal orders, pick them from pick up area | 
-| Quality check office | Test quality of supplies | 
-|  Payment system   | Handles transaction between users | 
-| Database and DBMS system | Stores inventory data | 
+|  Administrator  		| Handles application maintenance (bugs), handles user privileges | 
+|  Manager  			| Has information about the inventory and manages stock of products | 
+|  Supplier  			| Receive orders and provides items | 
+|  Warehouse employee 	| Collects items and store them into the warehouse, handles the inventory, provides the request items to the pick up area |  
+| OU employee     		| Issue internal orders, pick them from pick up area | 
+| Quality check office 	| Test quality of supplies | 
+
 
 # Context Diagram and interfaces
 
 ## Context Diagram
-![contextDiagram](./EzWh-context-diagram.png)
+![contextDiagram](./EzWhContextDiagram.png)
 
 \<actors are a subset of stakeholders>
 
@@ -73,14 +83,13 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| -----:|
-| Administrator | GUI, CLI  | screen, keyboard  |
-| Manager | GUI   | screen, keyboard |
-| Supplier | GUI | screen, keyboard |
-| Warehouse employee | GUI | screen, keyboard |
-| OU employee | GUI | screen, keyboard |
-| Quality check office | GUI | screen, keyboard |
-| Payment system | API | internet connection |
-| Database and DBMS system | API | internet connection |
+| Administrator 		| GUI, CLI 	| screen, keyboard |
+| Manager 				| GUI   	| screen, keyboard |
+| Supplier 				| GUI 		| screen, keyboard |
+| Warehouse employee 	| GUI 		| screen, keyboard |
+| OU employee 			| GUI 		| screen, keyboard |
+| Quality check office 	| GUI 		| screen, keyboard |
+
 
 # Stories and personas
 \<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
@@ -100,37 +109,58 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | ID        | Description  |
 | ------------- |:-------------:| 
-|  FR1     	| Manage invetory  |
-|  FR1.1    | Show available items and their quantities |
-|  FR1.2    | Update  quantity of items available in the warehouse |
-|  FR1.3 	| Show item description |
-|  FR1.4 	| Search for specific item in the warehouse  |
-|||  
-|  FR2   	| Manage orders |
-|  FR2.1 	| Make internal orders    |
-|  FR2.2	| Make orders to the suppliers |
-|  FR2.2.1	| Display different suppliers and their items |
-|  FR2.2.2	| Search items from suppliers |	
-|  FR2.3 	| Send back faulty items	|
-|  FR2.4 	| Display active orders  |
-|  FR2.5	| Show order history 	|
-|||
-|  FR3   	| Manage physical space in the warehouse |
-|  FR3.1 	| Update location of a certain item |
-|  FR3.2	| Search for location of a certain item |
-|  FR3.3 	| Compute available space |
-|||
-|  FR4 		| Send alert for a specific case | 
-|  FR4.1 	| Send alert message when the quantity of a certain item is under a certain threshold |
-|  FR4.2	| Send alert message when the available physical space is under a certain threshold |
-|  FR4.3 	| Send alert message when some items do not pass the quality check |
-|  FR4.4	| Send alert message when an order is received |
-|  FR4.5 	| Send alert message when item is in the pick up area |
-|||
-|  FR5 		| Manage users and user privileges |
-|  FR5.1	| Create user |
-|  FR5.2	| Manage user privileges |
-
+| FR1    	| Manage user and rights (user Administaror, Manager, Employee and supplier) |
+| FR1.1		| Create a new user or modify an existing user |
+| FR1.2    	| Delete a user |
+| FR1.3  	| List all users | 
+| FR1.4		| Search a user |
+| FR1.5		| Manage rights. Authorize access to functions to specific actors according to access right |
+| | |
+| FR2		| Manage Inventory |
+| FR2.1		| Modify quantity available for a product in the warehouse |
+| FR2.2		| Modify position for a product type |
+| FR2.3		| Show available items and their quantities |
+| FR2.4		| Search for location of a certain item |
+| FR2.5		| Compute available space |
+| FR2.6		| Add new item |
+| FR2.7		| Delete item |
+| FR2.8		| Search item |
+| | |
+| FR3		| Manage supplier’s catalog |
+| FR3.1		| Define a new product type or modify an existing product type |
+| FR3.2		| Delete a product type |
+| FR3.3		| List all product types |
+| FR3.4		| Search for a product type |
+| | |
+| FR4		| Manage order to supplier |
+| FR4.1		| Create order to supplier |
+| FR4.2		| Add items to order |
+| FR4.3		| Select quantity of a certain item |
+| FR4.4		| Delete product from order |
+| FR4.5		| Delete order |
+| FR4.6		| Confirm order |
+| FR4.7		| Start a return transaction of faulty items |
+| FR4.8		| Send back faulty items of a previous order |
+| FR4.9		| Close a return transaction of faulty items |
+| FR4.10	| List all orders (active, closed) |
+| FR4.11	| Display different supplier and their items |
+| FR4.12	| Search item from supplier |
+| | |
+| FR5		| Manage internal order |
+| FR5.1		| Create internal order |
+| FR5.2		| Select available item from warehouse inventory |
+| FR5.3		| Add product to internal order |
+| FR5.4		| Delete product from internal order |
+| FR5.5		| Confirm internal order |
+| FR5.6		| Delete internal order |
+| FR5.7		| Show internal order history |
+| | |
+|  FR6 		| Send alert for a specific case | 
+|  FR6.1 	| Send alert message when the quantity of a certain item is under a certain threshold |
+|  FR6.2	| Send alert message when the available physical space is under a certain threshold |
+|  FR6.3 	| Send alert message when some items do not pass the quality check |
+|  FR6.4	| Send alert message when an order is received |
+|  FR6.5 	| Send alert message when item is in the pick up area |
 
 
 
@@ -141,10 +171,10 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
-|  NFR1     |   |  | |
-|  NFR2     | |  | |
-|  NFR3     | | | |
-| NFRx .. | | | | 
+|  NFR1     | Usability 	| Application should be used with no specific training for the users | All FR |
+|  NFR2     | Performance 	| All functions should complete in < 0.5 sec  | All FR |
+|  NFR3     | Privacy		| The data should not be disclosed outside the application | All FR |
+|  NFR4 	| Reliability 	| Mean time to failure... | All FR | 
 
 
 # Use case diagram and use cases
@@ -209,6 +239,8 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 # Deployment Diagram 
 
 \<describe here deployment diagram >
+
+![DeploymentDiagram](./EzWhDeploymentDiagram.png)
 
 
 
