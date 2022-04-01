@@ -3,13 +3,14 @@
 
 Date: 22 march 2022
 
-Version: 1.1
+Version: 1.2
 
  
 | Version number | Change |
 | ----------------- |:-----------|
 | 0   | Added Stakeholders, context diagram, FR|
 | 1.1 | Fixed Stakeholders, Context Diagram, FR. Added NFR and Deployment Diagram | 
+| 1.2 | Add functional requirements, modify context diagram |
 
 
 # Contents
@@ -88,7 +89,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | Supplier 				| GUI 		| screen, keyboard |
 | Warehouse employee 	| GUI 		| screen, keyboard |
 | OU employee 			| GUI 		| screen, keyboard |
-| Quality check office 	| GUI 		| screen, keyboard |
+| Quality check employee| GUI 		| screen, keyboard |
 
 
 # Stories and personas
@@ -161,6 +162,12 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  FR6.3 	| Send alert message when some items do not pass the quality check |
 |  FR6.4	| Send alert message when an order is received |
 |  FR6.5 	| Send alert message when item is in the pick up area |
+| | |
+|  FR7		| Manage quality check |
+|  FR7.1	| Select item to check from an order |
+|  FR7.2	| Show test to be done for a certain item |
+|  FR7.3	| Report test result |
+|  FR7.4	| Add test to a product |
 
 
 
