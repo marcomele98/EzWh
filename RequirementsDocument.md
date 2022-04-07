@@ -85,7 +85,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| -----:|
-| Administrator 		| GUI, CLI 	| screen, keyboard |
+| Administrator 		| GUI 	    | screen, keyboard |
 | Manager 				| GUI   	| screen, keyboard |
 | Supplier 				| GUI 		| screen, keyboard |
 | Warehouse employee 	| GUI 		| screen, keyboard |
@@ -120,7 +120,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | | |
 | FR2		| Manage Inventory |
 | FR2.1		| Modify quantity available for a product in the warehouse |
-| FR2.2		| Modify position for a product type |
+| FR2.2		| Modify position for a item |
 | FR2.3		| Show available items and their quantities |
 | FR2.4		| Search for location of a certain item |
 | FR2.5		| Compute available space |
@@ -128,11 +128,12 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | FR2.7		| Delete item |
 | FR2.8		| Search item |
 | | |
-| FR3		| Manage supplier’s catalog |
-| FR3.1		| Define a new product type or modify an existing product type |
-| FR3.2		| Delete a product type |
-| FR3.3		| List all product types |
-| FR3.4		| Search for a product type |
+| FR3		| Manage suppliers catalog |
+| FR3.1		| Add new item |
+| FR3.2		| Modify item |
+| FR3.3		| Delete item |
+| FR3.4		| List all items |
+| FR3.5		| Search for an item |
 | | |
 | FR4		| Manage order to supplier |
 | FR4.1		| Create order to supplier |
@@ -169,8 +170,10 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  FR7.2	| Show test to be done for a certain item |
 |  FR7.3	| Report test result |
 |  FR7.4	| Add test to a product |
-
-
+| | |
+| FR8 		| Authenticate and Authorize |
+| FR8.1		| Login |
+| FR8.2		| Logout |
 
 
 ## Non Functional Requirements
@@ -189,49 +192,221 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 
 ## Use case diagram
-![usecaseDiagram](./EzWhUseCaseDiagram.png)
+![usecaseDiagram](./EzWhUseCaseDiagram.PNG)
 
 
 \<next describe here each use case in the UCD>
-### Use case 1, UC1
-| Actors Involved        |  |
+### Use case 3, UC3 Manage supplier's catalog
+
+| Actors Involved        |  Supplier |
 | ------------- |:-------------:| 
-|  Precondition     | \<Boolean expression, must evaluate to true before the UC can start> |
-|  Post condition     | \<Boolean expression, must evaluate to true after UC is finished> |
-|  Nominal Scenario     | \<Textual description of actions executed by the UC> |
-|  Variants     | \<other normal executions> |
-|  Exceptions     | \<exceptions, errors > |
+|  Precondition     | Supplier exists and is logged in |
+|  Post condition     | Changes to Database are made and are coherent |
+|  Nominal Scenario     | The supplier, via the app, is supposed to be able to manage the list of items they are able to supply to the warehouse  |
+|  Variants     | Add item, Modify item, Delete item |
+|  Exceptions     | Input Error, Item not found, Item match |
 
-##### Scenario 1.1 
+##### Scenario 3-1
 
-\<describe here scenarios instances of UC1>
-
-\<a scenario is a sequence of steps that corresponds to a particular execution of one use case>
-
-\<a scenario is a more formal description of a story>
-
-\<only relevant scenarios should be described>
-
-| Scenario 1.1 | |
+| Scenario | Add Item |
 | ------------- |:-------------:| 
-|  Precondition     | \<Boolean expression, must evaluate to true before the scenario can start> |
-|  Post condition     | \<Boolean expression, must evaluate to true after scenario is finished> |
+|  Precondition     | Supplier must be able to provide item |
+|  Post condition     | Item correctly stored into the catalog |
 | Step#        | Description  |
-|  1     |  |  
-|  2     |  |
-|  ...     |  |
+|  1     | Open Add Item page |  
+|  2     | Fill information about Item |
+|  3     | Input Item Quantity |
+|  4     | Confirm Item Storage |
+|  5     | Item is stored into catalog |
 
-##### Scenario 1.2
+##### Scenario 3-2
 
-##### Scenario 1.x
+| Scenario | Item Match |
+| ------------- |:-------------:| 
+|  Precondition     | At least one Item in catalog |
+|  Post condition     | Item not stored into Catalog Database |
+| Step#        |   |
+|  1     | Open Add Item page |  
+|  2     | Fill information about Item |
+|  3     | Input Item Quantity |
+|  4     | Item Name is match inside system |
+|  5     | Error Message displayed about Item match |
+|  6     | Item not stored into catalog |
 
-### Use case 2, UC2
-..
+##### Scenario 3-3
 
-### Use case x, UCx
-..
+| Scenario | Input Error |
+| ------------- |:-------------:| 
+|  Precondition     | Supplier must be able to provide item |
+|  Post condition     | Item not stored into Catalog and user able to re-enter data |
+| Step#        | Description  |
+|  1     | Open Add Item page |  
+|  2     | Fill information about Item |
+|  3     | Input Item Quantity |
+|  4     | Something wrong with the format of input |
+|  5     | Error Message displayed about Input Error |
+|  6     | Item not stored into catalog |
+|  7     | Input cleared |
 
 
+##### Scenario 3-4
+
+| Scenario | Modify Item |
+| ------------- |:-------------:| 
+|  Precondition     | At least one Item in Catalog |
+|  Post condition     | Item data modified in Catalog Database |
+| Step#        | Description  |
+|  1     | Open Catalog View |  
+|  2     | User inputs search bar |
+|  3     | Query is made to Database |
+|  4     | Items respecting requirements shown |
+|  5     | Select Item to change |
+|  6     | Change Item information and/or quantity |
+|  7     | Confirm Changes |
+|  8     | Item data is modified in Catalog Database |
+
+##### Scenario 3-5
+
+| Scenario | Delete Item |
+| ------------- |:-------------:| 
+|  Precondition     | At least one Item in Catalog |
+|  Post condition     | Item data deleted from Catalog Database |
+| Step#        | Description |
+|  1     | Open Catalog View |  
+|  2     | User inputs search bar |
+|  3     | Query is made to Database |
+|  4     | Items respecting requirements shown |
+|  5     | Select Item to delete |
+|  7     | Confirm Changes |
+|  8     | Item data is deleted from Catalog Database |
+
+##### Scenario 3-6
+
+| Scenario | Item not found |
+| ------------- |:-------------:| 
+|  Precondition     | At least one Item in Catalog |
+|  Post condition     | Item not found |
+| Step#        | Description |
+|  1     | Open Catalog View |  
+|  2     | User inputs search bar |
+|  3     | Query is made to Database |
+|  7     | No item found respecting query |
+|  7     | No item shown |
+|  7     | Error Message displayed about Search not conclusive |
+
+
+### Use case 5, UC5 Manage internal order
+
+| Actors Involved        | OU Employee, Warehouse Employee |
+| ------------- |:-------------:| 
+|  Precondition     | Connection to Database |
+|  Post condition     | Order correctly sent to warehouse |
+|  Nominal Scenario     | The OU Employee is supposed to be able to see the items available to order and correctly appoint an order  |
+|  Variants     | |
+| | Make order |
+| | Delete order|
+| | Show order history |
+| | Order confirmed by Warehouse Employee |
+|  Exceptions     | Input Error, Current Order not found, Order not found |
+ 
+##### Scenario 5-1
+
+| Scenario | Make order |
+| ------------- |:-------------:| 
+|  Precondition     | Items are in the warehouse |
+|  Post condition     | Alert is sent to warehouse employees notifing about order made |
+| Step#        | Description  |
+|  1     | Open List of Items|  
+|  2     | Select Available Items from Warehouse Inventory |
+|  3     | Select the quantities |
+|  4     | Confirm Order |
+|  5     | Display Recap of Order |
+|  6     | Order put into Database |
+|  7     | Send Alert to Warehouse notifying about order |
+
+##### Scenario 5-2
+
+| Scenario | Input Error |
+| ------------- |:-------------:| 
+|  Precondition     | Items are in the warehouse |
+|  Post condition     | Order not confirmed and user able to re-enter data |
+| Step#        | Description |
+|  1     | Open List of Items |  
+|  2     | Select Items to Order |
+|  3     | Select the quantities |
+|  4     | User makes mistake in input format |
+|  5     | Alert shown notifying about Input Error |
+|  6     | Input cleared |
+
+##### Scenario 5-3
+
+| Scenario | Delete Order |
+| ------------- |:-------------:| 
+|  Precondition     | There is at least one not confirmed order ongoing |
+|  Post condition     | Order is deleted from history |
+|      |  Warehouse notified |
+| Step#        | Description  |
+|  1     | Open List of Orders currently ongoing|  
+|  2     | User inputs search bar |
+|  3     | Select Orders to Delete |
+|  4     | Ask for confirm |
+|  5     | Delete Orders from Database |
+|  6     | Send Alert to Warehouse about order cancelling |
+|  7     | OU Order Alert of Warehouse Employee disappears |
+
+##### Scenario 5-4
+
+| Scenario | Current Order not found |
+| ------------- |:-------------:| 
+|  Precondition     | There is at least one order ongoing |
+|  Post condition     | No order displayed and user able to re-enter data |
+| Step#        | Description |
+|  1     | Open List of Orders currently ongoing |  
+|  2     | User inputs search bar |
+|  3     | Query is made to Database |
+|  4     | User does not input a Number |
+|  5     | Error Message shown notifying about Search not Conclusive |
+|  6     | Input cleared |
+
+##### Scenario 5-5
+
+| Scenario | Show Order History |
+| ------------- |:-------------:| 
+|  Precondition     | There is at least one order made  |
+|  Post condition     | No order displayed and user able to re-enter data |
+| Step#        | Description  |
+|  1     | Open History of Orders |  
+|  2     | User inputs search bar |
+|  3     | Query is made from Database |
+|  4     | List of Orders shown |
+
+##### Scenario 5-6
+
+| Scenario | Order not found |
+| ------------- |:-------------:| 
+|  Precondition     | Items are in the warehouse |
+|  Post condition     | Order not confirmed and user able to re-input data |
+| Step#        | Description |
+|  1     | Open History of Orders  |  
+|  2     | User inputs search bar |
+|  3     | Query is made to Database |
+|  4     | Order not found given search info |
+|  5     | Error Message shown notifying about Search not Conclusive |
+|  6     | Input cleared |
+
+##### Scenario 5-7
+
+| Scenario | Order confirmed by Warehouse Employee |
+| ------------- |:-------------:| 
+|  Precondition     | At least one order is currently ongoing |
+|  Post condition     | Order counted as confirmed |
+|      | Product.units -= Order.units |
+| Step#        | Description  |
+|  1     | Warehouse employee opens OU Order Alert |  
+|  2     | Warehouse employee confirms order |
+|  3     | Database is updated |
+|  4     | Order now counts as confirmed |
+|  5     | OU Order Alert disappears |
 
 # Glossary
 
