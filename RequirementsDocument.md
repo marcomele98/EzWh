@@ -100,6 +100,19 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 \<stories will be formalized later as scenarios in use cases>
 
+###Persona
+Persona:Jhon White, 46 years old, Manager, future father, married,charismatic.
+
+Work day: Wakes up early, checks the emails, goes to the office, organizes meetings, reads the report of quality check office, handles the different issues related to the warehouse company, goes to the gym, watch a film with his wife, checks the email, goes to sleep.
+
+Weekend day: wake up early, goes to visit his parents, makes jogging, helps his wife to clean the house, goes to a pub.
+
+Goal: Jhon wants to make the orders and handles them in the easiest possible way.
+
+Story:
+As every morning, Jhon check his emails, in order to start thinking to the possible solutions for the new issues. He has a lots of responsability: indeed he has to monitor the status of the orders and the items, with their quantities.
+Sometimes he has difficulties due to the internal orders, coming from the OU employees, because some transaction are not registered: in this way the information about the quantities of the items are no longer consistent.
+However he has to work hard because he must keep trace about the items that are nearly out of orders. By doing so he can create a new orders, selecting a specific suppliers, and require the needed quantity of items for the company. 
 
 # Functional and non functional requirements
 
@@ -294,8 +307,91 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  7     | No item shown |
 |  7     | Error Message displayed about Search not conclusive |
 
+### Use case 4, UC4 Manage orders to supplier
+| Actors Involved        | Manager M, Warehouse Employee WE, Supplier S |
+| ------------- |:-------------:| 
+|  Precondition     | the user has to be logged as manager M; |
+|					|	the suppliers S have to upload their list of items |
+|  Post condition     | The order is confirmed |
+|  Nominal Scenario  | M makes an order of the nearly out of order items |
+|  Variants |  The order is deleted;|
+|			 | M checks the list of the orders;|
+|			 | M receives the order and update the system|
+| Exceptions | The order fails |
 
-### Use case 5, UC5 Manage internal order
+##### Scenario 4-1
+| Scenario | M creates an order |
+| ------------- |:-------------:| 
+| Precondition | the user has to be logged as manager M;|
+|			 |the suppliers S have to upload their list of items|
+|Postcondition | The order is created |	 
+| Step # | Description |
+| 1 | M checks the quantity of the nearly out of order items |
+| 2 | M checks the list of suppliers |
+| 3 | M selects the specific supplier |
+| 4 | M selects the needed quantity of an item |
+| 5 | S receivs the order |
+| 7 | M receivs a confirmation notification |
+| 8 | The order is created | 
+
+##### Scenario 4-2
+| Scenario | M deletes an order |
+| ------------- |:-------------:| 
+| Precondition | the user has to be logged as manager M;|
+| 	|  M has to had made an order but is not already arrived |
+|			 |the suppliers S have to upload their list of items|
+|Postcondition | The order is deleted |	 
+| Step # | Description |
+| 1 | M checks the list of active orders |
+| 2 | M decides to delete one order | 
+| 3 | The order selected is correctly deleted |
+
+##### Scenario 4-3
+| Scenario | M checks the status of active orders |
+| ------------- |:-------------:| 
+| Precondition | the user has to be logged as manager M;|
+| 	|  M has to had made at least one order that is not alreay arrived.  |
+|Postcondition |  |	 
+| Step # | Description |
+| 1 	| M checks the list of active orders |
+| 2 | M checks the status of an order |
+
+##### Scenario 4-4
+| Scenario |M modifies an order|
+| ------------- |:-------------:| 
+| Precondition | the user has to be logged as manager M;|
+| 	| M made an order but is not yet arrived.  |
+|Postcondition | The order is correctly updated |	 
+| Step # | Description |
+| 1 	| M checks the list of active orders |
+| 2 | M checks the status of an order |
+| 3 | M modifies the quantity of a certain item or adds new item |
+| 4 | The order is correctly updated |
+
+##### Scenario 4-6
+| Scenario |M notifies the arrival of an order to WE|
+| ------------- |:-------------:| 
+| Precondition | the user has to be logged as manager M;
+| | the order has to be arrived |
+|Postcondition | The order is taken in charge by the WE |	 
+| Step # | Description |
+| 1 | M receives the notification for the arrival of an order |
+| 2 | M sends a notification to the WE |
+
+##### Scenario 4-6
+| Scenario |M confirms the order that is just arrived|
+| ------------- |:-------------:| 
+| Precondition | An order has to be arrived;|
+| |  |
+|Postcondition | The system is updated |	 
+| Step # | Description |
+| 1 | M confirms the order |
+| 2 | The system is updated |
+
+
+
+
+### Use case 5, UC5 Manage internal orders
 
 | Actors Involved        | OU Employee, Warehouse Employee |
 | ------------- |:-------------:| 
@@ -407,6 +503,27 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | Database is updated |
 |  4     | Order now counts as confirmed |
 |  5     | OU Order Alert disappears |
+
+### Use case 7, UC7 Manage return transaction
+
+| Actors Involved        | Manager M, Supplier S, Qaulity Check Office QCO |
+| ------------- |:-------------:| 
+|  Precondition     | User has to be logged as manager M; |
+|				| Quality check office QCO has to make a report of the tested items |
+|  Post condition     | The faulty items are sent back to the supplier S |
+|  Nominal Scenario     | M receives a report from QCO and then decides to send back the faulty items to S.  |
+|  Variants     | The faulty items are not sent back to the S |
+
+##### Scenario 7-1
+| Scenario |M sends back the faulty items|
+| ------------- |:-------------:| 
+|  Precondition     | User has to be logged as manager M; |
+|				| Quality check office QCO has to make a report of the tested items |
+|Postcondition | The faulty items are sent back to the supplier S |	 
+| Step | Description |
+| 1 | M receives the the report from QCO |
+| 2 | M selects which items send back |
+| 3 | M sends back the faulty items to the supplier S |
 
 # Glossary
 
