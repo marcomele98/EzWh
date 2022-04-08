@@ -1,9 +1,9 @@
 
  #Requirements Document 
 
-Date: 22 march 2022
+Date: 8 april 2022
 
-Version: 1.2
+Version: 1.4
 
  
 | Version number | Change |
@@ -12,6 +12,7 @@ Version: 1.2
 | 1.1 | Fixed Stakeholders, Context Diagram, FR. Added NFR and Deployment Diagram | 
 | 1.2 | Add functional requirements, modify context diagram |
 | 1.3 | Add use case diagram |
+| 1.4 | Add use case 1,2. Add Stories and personas WE. Add access right table |
 
 
 # Contents
@@ -31,15 +32,46 @@ Version: 1.2
 - [Stories and personas](#stories-and-personas)
 - [Functional and non functional requirements](#functional-and-non-functional-requirements)
 	- [Functional Requirements](#functional-requirements)
+		- [Access right, actor vs function](#access-right-actor-vs-function)
 	- [Non Functional Requirements](#non-functional-requirements)
 - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
 	- [Use case diagram](#use-case-diagram)
-		- [Use case 1, UC1](#use-case-1-uc1)
-				- [Scenario 1.1](#scenario-11)
-				- [Scenario 1.2](#scenario-12)
-				- [Scenario 1.x](#scenario-1x)
-		- [Use case 2, UC2](#use-case-2-uc2)
-		- [Use case x, UCx](#use-case-x-ucx)
+		- [Use case 1, UC1 - Manage users and rights](#use-case-1-uc1---manage-users-and-rights)
+				- [Scenario 1-1](#scenario-1-1)
+				- [Scenario 1-2](#scenario-1-2)
+				- [Scenario 1-3](#scenario-1-3)
+		- [Use case 2, UC2 - Manage inventory](#use-case-2-uc2---manage-inventory)
+				- [Scenario 2-1](#scenario-2-1)
+				- [Scenario 2-2](#scenario-2-2)
+				- [Scenario 2-3](#scenario-2-3)
+				- [Scenario 2-4](#scenario-2-4)
+				- [Scenario 2-5](#scenario-2-5)
+				- [Scenario 2-6](#scenario-2-6)
+				- [Scenario 2-7](#scenario-2-7)
+		- [Use case 3, UC3 Manage supplier's catalog](#use-case-3-uc3-manage-suppliers-catalog)
+				- [Scenario 3-1](#scenario-3-1)
+				- [Scenario 3-2](#scenario-3-2)
+				- [Scenario 3-3](#scenario-3-3)
+				- [Scenario 3-4](#scenario-3-4)
+				- [Scenario 3-5](#scenario-3-5)
+				- [Scenario 3-6](#scenario-3-6)
+		- [Use case 4, UC4 Manage orders to supplier](#use-case-4-uc4-manage-orders-to-supplier)
+				- [Scenario 4-1](#scenario-4-1)
+				- [Scenario 4-2](#scenario-4-2)
+				- [Scenario 4-3](#scenario-4-3)
+				- [Scenario 4-4](#scenario-4-4)
+				- [Scenario 4-5](#scenario-4-5)
+				- [Scenario 4-6](#scenario-4-6)
+		- [Use case 5, UC5 Manage internal orders](#use-case-5-uc5-manage-internal-orders)
+				- [Scenario 5-1](#scenario-5-1)
+				- [Scenario 5-2](#scenario-5-2)
+				- [Scenario 5-3](#scenario-5-3)
+				- [Scenario 5-4](#scenario-5-4)
+				- [Scenario 5-5](#scenario-5-5)
+				- [Scenario 5-6](#scenario-5-6)
+				- [Scenario 5-7](#scenario-5-7)
+		- [Use case 7, UC7 Manage return transaction](#use-case-7-uc7-manage-return-transaction)
+				- [Scenario 7-1](#scenario-7-1)
 - [Glossary](#glossary)
 - [System Design](#system-design)
 - [Deployment Diagram](#deployment-diagram)
@@ -113,6 +145,21 @@ Story:
 As every morning, Jhon check his emails, in order to start thinking to the possible solutions for the new issues. He has a lots of responsability: indeed he has to monitor the status of the orders and the items, with their quantities.
 Sometimes he has difficulties due to the internal orders, coming from the OU employees, because some transaction are not registered: in this way the information about the quantities of the items are no longer consistent.
 However he has to work hard because he must keep trace about the items that are nearly out of orders. By doing so he can create a new orders, selecting a specific suppliers, and require the needed quantity of items for the company. 
+
+
+###Persona
+Persona: Peter Jacobs (Warehouse employee): Male, young, recently started working, low income, not married.
+
+Work day: wake up, breakfast, drive to the warehouse, work for 8 hours with a pause for lunch, drive to the home, shower, watch a film, go to sleep.
+
+Weekend day: wake up, breakfast, takes a walk, lunch, shower, go out with friends or girlfriend, go to sleep.
+
+Peter's job is to put in order the products that arrive and manage the inventory. The inventory is currently on a paper ledger, which is very difficult to update.
+
+Goal: wants to manage inventory more efficiently
+
+Story: It's Thursday afternoon, a new order has been received and Peter needs to sort out the items. He wants to be fast. Peter rearranges the items together with his colleagues. The app help him be fast and not waste his time because he can see the position where the product are to be stored and the inventory will be updated automatically. The order contains a product that has never been ordered before so Peter has to put it in the inventory, thanks to the app this is a much easier and faster process than before, so Peter comes home as soon as he finishes, he wants to do it as soon as possible because tonight at 8 pm there is the Champions League match of his favorite team and he doesn't want to be late.
+
 
 # Functional and non functional requirements
 
@@ -188,6 +235,18 @@ However he has to work hard because he must keep trace about the items that are 
 | FR8.1		| Login |
 | FR8.2		| Logout |
 
+### Access right, actor vs function
+
+| Function | Administrator | Manager | Warehouse Employee | OU employee | Quality check employee | Supplier |
+| -------- | ----- | ------------ | ------- | --------| -------- | --------- |
+| FR1 | yes | no  | no  | no  | no  | no  |
+| FR2 | yes | yes | yes | no  | no  | no  |
+| FR3 | no  | no  | no  | no  | no  | yes |
+| FR4 | yes | yes | no  | no  | no  | no  |
+| FR5 | no  | no  | no  | yes | no  | no  |
+| FR7 | no  | no  | no  | no  | yes | no  |
+| FR8 | yes | yes | yes | yes | yes | yes |
+
 
 ## Non Functional Requirements
 
@@ -209,6 +268,179 @@ However he has to work hard because he must keep trace about the items that are 
 
 
 \<next describe here each use case in the UCD>
+
+### Use case 1, UC1 - Manage users and rights
+
+| Actors Involved        | Administrator |
+| ------------- |:-------------:|
+|  Precondition | Administrator A exists and is logged in |
+|  Post condition |  |
+|  Nominal Scenario |  A defines a new user and its access rights  |
+|  Variants     | A modifies access rights or other fields of an existing user |
+
+##### Scenario 1-1
+
+| Scenario |  Create new user and define it’s rights |
+| ------------- |:-------------:| 
+|  Precondition     | Admin A exists and is logged in |
+|  Post condition     | Account C is created |
+| Step#        | Description  |
+|  1    |  A defines the credentials of the new Account C |  
+|  2    |  A selects the access rights for the new account C |
+|  3    |  A confirms the inserted data |
+
+
+##### Scenario 1-2
+
+| Scenario |  Delete user |
+| ------------- |:-------------:| 
+|  Precondition     | Admin A exists and is logged in |
+|  | Account C exists |
+|  Post condition     | Account C deleted |
+| Step#        | Description  |
+|  1    |  A selects account C  |
+|  2    |  C deleted from the system |
+
+##### Scenario 1-3
+
+| Scenario |  Modify user rights |
+| ------------- |:-------------:| 
+|  Precondition     | Admin A exists and is logged in |
+|  | Account C exists |
+|  Post condition     | C's rights modified |
+| Step#        | Description  |
+|  1    |  A selects account C  |
+|  2    |  A modify the access rights for C |
+|  3    |  A confirms the inserted data |
+
+
+
+### Use case 2, UC2 - Manage inventory
+
+| Actors Involved        | Warehouse employee WE |
+| ------------- |:-------------:|
+|  Precondition | Warehouse employee WE exists and is logged in |
+|  Post condition | |
+|  Nominal Scenario | The Warehouse employee is able to make changes to the warehouse inventory |
+|  Variants  | Show available items and their quantities |
+| | Add new item to the inventory |
+| | Delete item from inventory |
+| | Update product quantity |
+| | Modify PT position in the warehouse |
+| | Seach product by barcode |
+| Exception | Format error |
+
+
+##### Scenario 2-1
+
+| Scenario | Show available items and their quantities |
+| ------------- |:-------------:| 
+|  Precondition     | Warehouse employee WE exists and is logged in |
+|  Post condition   | |
+| Step#        | Description  |
+|  1    |  WE open the inventory |
+|  2    |  WE read products and their quantities from a list |
+
+
+
+##### Scenario 2-2
+
+| Scenario | Add new item to the inventory |
+| ------------- |:-------------:| 
+|  Precondition     | Warehouse employee WE exists and is logged in |
+|  | Product PT doesn’t exist in the inventory |
+|  | Product PT exists in order O |
+|  | Position P is free |
+|  Post condition     | PT added to the inventory |
+|  | PT.units = O.units |
+|  | PT.position = P |
+| Step#        | Description  |
+|  1    |  WE insert new product description |
+|  2	|  WE insert new product barcode |
+|  3    |  WE inserts new product notes |
+|  4    |  WE enters position of PT |
+|  5    |  WE confirms the entered data |
+
+
+##### Scenario 2-3
+
+| Scenario | Delete item from inventory |
+| ------------- |:-------------:| 
+|  Precondition     | Warehouse employee WE exists and is logged in |
+|  | Product type PT exists |
+|  Post condition     | Item deleted from the inventory |
+|  | PT.position = free |
+| Step#        | Description  |
+|  1    |  WE searches PT in the inventory by Name |
+|  2    |  WE selects PT's record |
+|  3    |  WE delete item |
+|  4    |  WE confirm the deletion |
+
+
+
+##### Scenario 2-4
+
+| Scenario | Update quantity of product PT after a sale S |
+| ------------- |:-------------:| 
+|  Precondition     | Warehouse employee WE exists and is logged in |
+| | Product PT exists in the inventory |
+| | Warehouse sells a product |
+|  Post condition     | PT.units -= S.units  |
+| Step#        | Description  |
+|  1    |  WE searches PT in the inventory by Name |
+|  2    |  WE selects PT's record |
+|  3    |  WE insert a new available quantity for a product |
+|  4    |  WE confirms the entered data |
+
+
+##### Scenario 2-5
+
+| Scenario | Modify PT position in the warehouse |
+| ------------- |:-------------:| 
+|  Precondition     | Warehouse employee WE exists and is logged in |
+|  | Product type PT exists |
+|  | Position P is free |
+|  Post condition     |  PT.Old_position = free |
+|  | PT.New_position = P |
+| Step#        | Description  |
+|  1    |  WE searches PT in the inventory by Name |
+|  2    |  WE selects PT's record |
+|  3    |  WE selects a new position for a product |
+|  4    |  WE confirms the entered data |
+
+##### Scenario 2-6
+
+| Scenario | Search product by barcode |
+| ------------- |:-------------:| 
+|  Precondition     | Warehouse employee WE exists and is logged in |
+|  | Product type PT exists |
+|  | Position P is free |
+|  Post condition     |  PT.Old_position = free |
+|  | PT.New_position = P |
+| Step#        | Description  |
+|  1    |  WE scans the product barcode |
+|  2    |  The system find the product |
+|  3    |  WE can read the information that he need |
+|  4    |  WE confirms the entered data |
+
+
+##### Scenario 2-7
+
+| Scenario | Format error |
+| ------------- |:-------------:| 
+|  Precondition     | Warehouse employee WE exists and is logged in |
+|  Post condition   | Product non added to the inventory |
+| Step#        | Description  |
+|  1    |  WE insert new product description |
+|  2	|  WE insert new product barcode |
+|  3    |  WE inserts new product notes |
+|  4    |  WE enters position of PT |
+|  5    |  User makes mistake in input format |
+|  6    |  Alert shown notifying about Input Error |
+|  7    |  Input cleared |
+
+
+
 ### Use case 3, UC3 Manage supplier's catalog
 
 | Actors Involved        |  Supplier |
@@ -368,7 +600,7 @@ However he has to work hard because he must keep trace about the items that are 
 | 3 | M modifies the quantity of a certain item or adds new item |
 | 4 | The order is correctly updated |
 
-##### Scenario 4-6
+##### Scenario 4-5
 | Scenario |M notifies the arrival of an order to WE|
 | ------------- |:-------------:| 
 | Precondition | the user has to be logged as manager M;
@@ -383,7 +615,8 @@ However he has to work hard because he must keep trace about the items that are 
 | ------------- |:-------------:| 
 | Precondition | An order has to be arrived;|
 | |  |
-|Postcondition | The system is updated |	 
+|Postcondition | The system is updated |
+| | Products.units += Order.units |	 
 | Step # | Description |
 | 1 | M confirms the order |
 | 2 | The system is updated |
