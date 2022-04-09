@@ -3,7 +3,7 @@
 
 Date: 8 april 2022
 
-Version: 1.4
+Version: 1.5
 
  
 | Version number | Change |
@@ -13,6 +13,7 @@ Version: 1.4
 | 1.2 | Add functional requirements, modify context diagram |
 | 1.3 | Add use case diagram |
 | 1.4 | Add use case 1,2. Add Stories and personas WE. Add access right table |
+| 1.5 | Add use case 6, 8. Add stories and personas QCE. |
 
 
 # Contents
@@ -132,7 +133,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 \<stories will be formalized later as scenarios in use cases>
 
-###Persona
+### Persona
 Persona:Jhon White, 46 years old, Manager, future father, married,charismatic.
 
 Work day: Wakes up early, checks the emails, goes to the office, organizes meetings, reads the report of quality check office, handles the different issues related to the warehouse company, goes to the gym, watch a film with his wife, checks the email, goes to sleep.
@@ -147,7 +148,7 @@ Sometimes he has difficulties due to the internal orders, coming from the OU emp
 However he has to work hard because he must keep trace about the items that are nearly out of orders. By doing so he can create a new orders, selecting a specific suppliers, and require the needed quantity of items for the company. 
 
 
-###Persona
+### Persona
 Persona: Peter Jacobs (Warehouse employee): Male, young, recently started working, low income, not married.
 
 Work day: wake up, breakfast, drive to the warehouse, work for 8 hours with a pause for lunch, drive to the home, shower, watch a film, go to sleep.
@@ -160,6 +161,20 @@ Goal: wants to manage inventory more efficiently
 
 Story: It's Thursday afternoon, a new order has been received and Peter needs to sort out the items. He wants to be fast. Peter rearranges the items together with his colleagues. The app help him be fast and not waste his time because he can see the position where the product are to be stored and the inventory will be updated automatically. The order contains a product that has never been ordered before so Peter has to put it in the inventory, thanks to the app this is a much easier and faster process than before, so Peter comes home as soon as he finishes, he wants to do it as soon as possible because tonight at 8 pm there is the Champions League match of his favorite team and he doesn't want to be late.
 
+### Persona
+
+Persona: Christian Red (Quality Check employee): medium income, male, married, with cildren, 50 yo, bad memory
+
+Work day: wake up early, breakfast, drive children to school, go to office, deals with quality tests of objects, returns home, watch tv, goes to sleep.
+
+Weekend day: wake up late, goes out with his wife and children, returns home, watch tv, goes to sleep.
+
+Christian's job is to do and report result of tests on various object. Currently, the list of products and related tests is on paper. Searching tests for items is very boring, time consuming and error-prone procedure.
+
+Goal: wants to retrieve information about tests faster, without errors.
+
+Story: It's monday morning, he spent the night awake because of his children. He arrives at the office and has to know all tests 
+that needs to be done for the objects he must test. He is really tired but cannot make mistakes. Thanks to the EzWh app he can safely and easily find the informations he needs.
 
 # Functional and non functional requirements
 
@@ -737,6 +752,36 @@ Story: It's Thursday afternoon, a new order has been received and Peter needs to
 |  4     | Order now counts as confirmed |
 |  5     | OU Order Alert disappears |
 
+### Use case 6, UC6 : Authenticate
+| Actors Involved       | Employee, Supplier (X in the following) |
+| -------------         |:-------------:| 
+|  Precondition         |  |
+|  Post condition       |  |
+|  Nominal Scenario     | Login: X enters credentials, the system checks them and grants access |
+|  Variants             | Login: X enters wrong credentials, system prevent access |
+|                       | Logout: X asks the system to terminate the session |
+
+##### Scenario 6.1 
+
+| Scenario 6.1      | Login |
+| -------------     |:-------------:| 
+|  Precondition     | Account for X exists |
+|  Post condition   | System grants access to X |
+| Step#             | Description  |
+|  1                | X enters id |  
+|  2                | X enters password |
+|  3                | System shows available functionalitites to X |
+
+##### Scenario 6.2 
+
+| Scenario 6.2      | Logout |
+| -------------     |:-------------:| 
+|  Precondition     | X logged in |
+|  Post condition   | X logged out |
+| Step#             | Description  |
+|  1                | X logs out |  
+|  2                | System brings X to application's login page |
+
 ### Use case 7, UC7 Manage return transaction
 
 | Actors Involved        | Manager M, Supplier S, Qaulity Check Office QCO |
@@ -757,6 +802,33 @@ Story: It's Thursday afternoon, a new order has been received and Peter needs to
 | 1 | M receives the the report from QCO |
 | 2 | M selects which items send back |
 | 3 | M sends back the faulty items to the supplier S |
+
+### Use case 8, UC8 : Manage quality test
+| Actors Involved       | quality check employee (QCE in the following)|
+| -------------         |:-------------:| 
+|  Precondition         | Order has been received |
+|  Post condition       | Appropriate alert sent to who it concerns |
+|  Nominal Scenario     | QCE selects some items of recent orders which will be checked and report result |
+|  Variants             | QCE select specific orders (specifc type of products, specific suppliers) |
+|                       | QCE select items in a random fashion |
+|  Exceptions           | Items are not in the wharehouse yet |
+|                       | Missing barcode of product |
+
+##### Scenario 8.1
+
+| Scenario 8.1      | Do tests and report result |
+| -------------     |:-------------:| 
+|  Precondition     | QCE correctly logged in and authenticated |
+|                   | Product exists in the invetory |
+|                   | Barcode of physical product exists |
+|  Post condition   | System sends appropriate alert message |
+|                   | Quantity of products updated |
+| Step#             | Description  |
+|  1                | QCE opens list of recent orders |  
+|  2                | QCE select a sample of items through its barcodes |
+|  3                | System shows list of tests for selected product(s) |
+|  4                | QCE update information about tests of selected item(s) |
+|  5                | System performs controls over the values according to which appropriate alert will be sent |
 
 # Glossary
 
