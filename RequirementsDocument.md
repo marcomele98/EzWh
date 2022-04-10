@@ -1,9 +1,9 @@
 
  #Requirements Document 
 
-Date: 8 april 2022
+Date: 10 april 2022
 
-Version: 1.5
+Version: 1.6
 
  
 | Version number | Change |
@@ -14,6 +14,7 @@ Version: 1.5
 | 1.3 | Add use case diagram |
 | 1.4 | Add use case 1,2. Add Stories and personas WE. Add access right table |
 | 1.5 | Add use case 6, 8. Add stories and personas QCE. |
+| 1.6 | Add Glossary |
 
 
 # Contents
@@ -31,6 +32,9 @@ Version: 1.5
 	- [Context Diagram](#context-diagram)
 	- [Interfaces](#interfaces)
 - [Stories and personas](#stories-and-personas)
+		- [Persona](#persona)
+		- [Persona](#persona-1)
+		- [Persona](#persona-2)
 - [Functional and non functional requirements](#functional-and-non-functional-requirements)
 	- [Functional Requirements](#functional-requirements)
 		- [Access right, actor vs function](#access-right-actor-vs-function)
@@ -49,14 +53,14 @@ Version: 1.5
 				- [Scenario 2-5](#scenario-2-5)
 				- [Scenario 2-6](#scenario-2-6)
 				- [Scenario 2-7](#scenario-2-7)
-		- [Use case 3, UC3 Manage supplier's catalog](#use-case-3-uc3-manage-suppliers-catalog)
+		- [Use case 3, UC3 - Manage supplier's catalog](#use-case-3-uc3---manage-suppliers-catalog)
 				- [Scenario 3-1](#scenario-3-1)
 				- [Scenario 3-2](#scenario-3-2)
 				- [Scenario 3-3](#scenario-3-3)
 				- [Scenario 3-4](#scenario-3-4)
 				- [Scenario 3-5](#scenario-3-5)
 				- [Scenario 3-6](#scenario-3-6)
-		- [Use case 4, UC4 Manage orders to supplier](#use-case-4-uc4-manage-orders-to-supplier)
+		- [Use case 4, UC4 - Manage orders to supplier](#use-case-4-uc4---manage-orders-to-supplier)
 				- [Scenario 4-1](#scenario-4-1)
 				- [Scenario 4-2](#scenario-4-2)
 				- [Scenario 4-3](#scenario-4-3)
@@ -71,8 +75,15 @@ Version: 1.5
 				- [Scenario 5-5](#scenario-5-5)
 				- [Scenario 5-6](#scenario-5-6)
 				- [Scenario 5-7](#scenario-5-7)
-		- [Use case 7, UC7 Manage return transaction](#use-case-7-uc7-manage-return-transaction)
+		- [Use case 6, UC6 - Manage return transaction](#use-case-6-uc6---manage-return-transaction)
+				- [Scenario 6-1](#scenario-6-1)
+		- [Use case 7, UC7 - Authenticate](#use-case-7-uc7---authenticate)
 				- [Scenario 7-1](#scenario-7-1)
+				- [Scenario 7-2](#scenario-7-2)
+		- [Use case 8, UC8 : Manage quality test](#use-case-8-uc8--manage-quality-test)
+				- [Scenario 8-1](#scenario-8-1)
+				- [Scenario 8-2](#scenario-8-2)
+				- [Scenario 8-3](#scenario-8-3)
 - [Glossary](#glossary)
 - [System Design](#system-design)
 - [Deployment Diagram](#deployment-diagram)
@@ -195,13 +206,13 @@ that needs to be done for the objects he must test. He is really tired but canno
 | | |
 | FR2		| Manage Inventory |
 | FR2.1		| Modify quantity available for a product in the warehouse |
-| FR2.2		| Modify position for a item |
-| FR2.3		| Show available items and their quantities |
-| FR2.4		| Search for location of a certain item |
+| FR2.2		| Modify position for a product |
+| FR2.3		| Show available products and their quantities |
+| FR2.4		| Search for location of a certain products |
 | FR2.5		| Compute available space |
-| FR2.6		| Add new item |
-| FR2.7		| Delete item |
-| FR2.8		| Search item |
+| FR2.6		| Add new product |
+| FR2.7		| Delete product |
+| FR2.8		| Search product |
 | | |
 | FR3		| Manage suppliers catalog |
 | FR3.1		| Add new item |
@@ -241,8 +252,8 @@ that needs to be done for the objects he must test. He is really tired but canno
 |  FR6.5 	| Send alert message when item is in the pick up area |
 | | |
 |  FR7		| Manage quality check |
-|  FR7.1	| Select item to check from an order |
-|  FR7.2	| Show test to be done for a certain item |
+|  FR7.1	| Select product to check from an order |
+|  FR7.2	| Show test to be done for a certain product |
 |  FR7.3	| Report test result |
 |  FR7.4	| Add test to a product |
 | | |
@@ -337,9 +348,9 @@ that needs to be done for the objects he must test. He is really tired but canno
 |  Precondition | Warehouse employee WE exists and is logged in |
 |  Post condition | |
 |  Nominal Scenario | The Warehouse employee is able to make changes to the warehouse inventory |
-|  Variants  | Show available items and their quantities |
-| | Add new item to the inventory |
-| | Delete item from inventory |
+|  Variants  | Show available products and their quantities |
+| | Add new product to the inventory |
+| | Delete product from inventory |
 | | Update product quantity |
 | | Modify PT position in the warehouse |
 | | Seach product by barcode |
@@ -348,7 +359,7 @@ that needs to be done for the objects he must test. He is really tired but canno
 
 ##### Scenario 2-1
 
-| Scenario | Show available items and their quantities |
+| Scenario | Show available products and their quantities |
 | ------------- |:-------------:| 
 |  Precondition     | Warehouse employee WE exists and is logged in |
 |  Post condition   | |
@@ -360,7 +371,7 @@ that needs to be done for the objects he must test. He is really tired but canno
 
 ##### Scenario 2-2
 
-| Scenario | Add new item to the inventory |
+| Scenario | Add new product to the inventory |
 | ------------- |:-------------:| 
 |  Precondition     | Warehouse employee WE exists and is logged in |
 |  | Product PT doesn’t exist in the inventory |
@@ -379,16 +390,16 @@ that needs to be done for the objects he must test. He is really tired but canno
 
 ##### Scenario 2-3
 
-| Scenario | Delete item from inventory |
+| Scenario | Delete product from inventory |
 | ------------- |:-------------:| 
 |  Precondition     | Warehouse employee WE exists and is logged in |
 |  | Product type PT exists |
-|  Post condition     | Item deleted from the inventory |
+|  Post condition     | product deleted from the inventory |
 |  | PT.position = free |
 | Step#        | Description  |
 |  1    |  WE searches PT in the inventory by Name |
 |  2    |  WE selects PT's record |
-|  3    |  WE delete item |
+|  3    |  WE delete product |
 |  4    |  WE confirm the deletion |
 
 
@@ -456,7 +467,7 @@ that needs to be done for the objects he must test. He is really tired but canno
 
 
 
-### Use case 3, UC3 Manage supplier's catalog
+### Use case 3, UC3 - Manage supplier's catalog
 
 | Actors Involved        |  Supplier |
 | ------------- |:-------------:| 
@@ -554,7 +565,7 @@ that needs to be done for the objects he must test. He is really tired but canno
 |  7     | No item shown |
 |  7     | Error Message displayed about Search not conclusive |
 
-### Use case 4, UC4 Manage orders to supplier
+### Use case 4, UC4 - Manage orders to supplier
 | Actors Involved        | Manager M, Warehouse Employee WE, Supplier S |
 | ------------- |:-------------:| 
 |  Precondition     | the user has to be logged as manager M; |
@@ -636,8 +647,7 @@ that needs to be done for the objects he must test. He is really tired but canno
 | 1 | M confirms the order |
 | 2 | The system is updated |
 
-
-
+quality
 
 ### Use case 5, UC5 Manage internal orders
 
@@ -752,39 +762,9 @@ that needs to be done for the objects he must test. He is really tired but canno
 |  4     | Order now counts as confirmed |
 |  5     | OU Order Alert disappears |
 
-### Use case 6, UC6 : Authenticate
-| Actors Involved       | Employee, Supplier (X in the following) |
-| -------------         |:-------------:| 
-|  Precondition         |  |
-|  Post condition       |  |
-|  Nominal Scenario     | Login: X enters credentials, the system checks them and grants access |
-|  Variants             | Login: X enters wrong credentials, system prevent access |
-|                       | Logout: X asks the system to terminate the session |
+### Use case 6, UC6 - Manage return transaction
 
-##### Scenario 6.1 
-
-| Scenario 6.1      | Login |
-| -------------     |:-------------:| 
-|  Precondition     | Account for X exists |
-|  Post condition   | System grants access to X |
-| Step#             | Description  |
-|  1                | X enters username |  
-|  2                | X enters password |
-|  3                | System shows available functionalitites to X |
-
-##### Scenario 6.2 
-
-| Scenario 6.2      | Logout |
-| -------------     |:-------------:| 
-|  Precondition     | X logged in |
-|  Post condition   | X logged out |
-| Step#             | Description  |
-|  1                | X logs out |  
-|  2                | System brings X to application's login page |
-
-### Use case 7, UC7 Manage return transaction
-
-| Actors Involved        | Manager M, Supplier S, Qaulity Check Office QCO |
+| Actors Involved        | Manager M, Supplier S, Quality Check Office QCO |
 | ------------- |:-------------:| 
 |  Precondition     | User has to be logged as manager M; |
 |				| Quality check office QCO has to make a report of the tested items |
@@ -792,7 +772,7 @@ that needs to be done for the objects he must test. He is really tired but canno
 |  Nominal Scenario     | M receives a report from QCO and then decides to send back the faulty items to S.  |
 |  Variants     | The faulty items are not sent back to the S |
 
-##### Scenario 7-1
+##### Scenario 6-1
 | Scenario |M sends back the faulty items|
 | ------------- |:-------------:| 
 |  Precondition     | User has to be logged as manager M; |
@@ -802,6 +782,38 @@ that needs to be done for the objects he must test. He is really tired but canno
 | 1 | M receives the the report from QCO |
 | 2 | M selects which items send back |
 | 3 | M sends back the faulty items to the supplier S |
+
+
+### Use case 7, UC7 - Authenticate
+| Actors Involved       | Employee, Supplier (X in the following) |
+| -------------         |:-------------:| 
+|  Precondition         |  |
+|  Post condition       |  |
+|  Nominal Scenario     | Login: X enters credentials, the system checks them and grants access |
+|  Variants             | Login: X enters wrong credentials, system prevent access |
+|                       | Logout: X asks the system to terminate the session |
+
+##### Scenario 7-1 
+
+| Scenario		    | Login |
+| -------------     |:-------------:| 
+|  Precondition     | Account for X exists |
+|  Post condition   | System grants access to X |
+| Step#             | Description  |
+|  1                | X enters username |  
+|  2                | X enters password |
+|  3                | System shows available functionalitites to X |
+
+##### Scenario 7-2 
+
+| Scenario      | Logout |
+| -------------     |:-------------:| 
+|  Precondition     | X logged in |
+|  Post condition   | X logged out |
+| Step#             | Description  |
+|  1                | X logs out |  
+|  2                | System brings X to application's login page |
+
 
 ### Use case 8, UC8 : Manage quality test
 | Actors Involved       | quality check employee (QCE in the following)|
@@ -814,7 +826,8 @@ that needs to be done for the objects he must test. He is really tired but canno
 |  Exceptions           | Products are not in the wharehouse yet |
 |                       | Missing barcode of product |
 
-| Scenario 8.1      | Add product to test-list |
+##### Scenario 8-1
+| Scenario      | Add product to test-list |
 | -------------     |:-------------:| 
 |  Precondition     | QCE correctly logged in and authenticated |
 |                   | Product exists in the invetory |
@@ -826,7 +839,8 @@ that needs to be done for the objects he must test. He is really tired but canno
 |  3                | System shows list of product(s) for a certain order |
 |  4                | QCE add product to list of product to be tested |
 
-| Scenario 8.2      | Report of tests |
+##### Scenario 8-2
+| Scenario      | Report of tests |
 | -------------     |:-------------:| 
 |  Precondition     | QCE correctly logged in and authenticated |
 |                   | Product exists in the invetory |
@@ -837,7 +851,9 @@ that needs to be done for the objects he must test. He is really tired but canno
 |  2                | QCE select some product(s) |
 |  3                | QCE inserts results of test(s) |
 
-| Scenario 8.3      | Add test to product |
+
+##### Scenario 8-3
+| Scenario      | Add test to product |
 | -------------     |:-------------:| 
 |  Precondition     | QCE correctly logged in and authenticated |
 |                   | Product exists in the invetory |
@@ -849,11 +865,14 @@ that needs to be done for the objects he must test. He is really tired but canno
 |  3                | QCE inserts test description |
 |  4                | QCE inserts requirements for tests |
 
+
 # Glossary
 
 \<use UML class diagram to define important terms, or concepts in the domain of the system, and their relationships> 
 
 \<concepts are used consistently all over the document, ex in use cases, requirements etc>
+
+![Glossary](./EzWhGlossary.png)
 
 # System Design
 \<describe here system design>
