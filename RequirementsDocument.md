@@ -768,7 +768,7 @@ that needs to be done for the objects he must test. He is really tired but canno
 |  Precondition     | Account for X exists |
 |  Post condition   | System grants access to X |
 | Step#             | Description  |
-|  1                | X enters id |  
+|  1                | X enters username |  
 |  2                | X enters password |
 |  3                | System shows available functionalitites to X |
 
@@ -808,27 +808,46 @@ that needs to be done for the objects he must test. He is really tired but canno
 | -------------         |:-------------:| 
 |  Precondition         | Order has been received |
 |  Post condition       | Appropriate alert sent to who it concerns |
-|  Nominal Scenario     | QCE selects some items of recent orders which will be checked and report result |
+|  Nominal Scenario     | QCE selects some products of recent orders which will be checked and report result |
 |  Variants             | QCE select specific orders (specifc type of products, specific suppliers) |
-|                       | QCE select items in a random fashion |
-|  Exceptions           | Items are not in the wharehouse yet |
+|                       | QCE select products in a random fashion |
+|  Exceptions           | Products are not in the wharehouse yet |
 |                       | Missing barcode of product |
 
-##### Scenario 8.1
-
-| Scenario 8.1      | Do tests and report result |
+| Scenario 8.1      | Add product to test-list |
 | -------------     |:-------------:| 
 |  Precondition     | QCE correctly logged in and authenticated |
 |                   | Product exists in the invetory |
-|                   | Barcode of physical product exists |
-|  Post condition   | System sends appropriate alert message |
-|                   | Quantity of products updated |
+|                   | Barcode and ID of product exist and are correct |
+|  Post condition   | Add product to test-list |
 | Step#             | Description  |
 |  1                | QCE opens list of recent orders |  
-|  2                | QCE select a sample of items through its barcodes |
-|  3                | System shows list of tests for selected product(s) |
-|  4                | QCE update information about tests of selected item(s) |
-|  5                | System performs controls over the values according to which appropriate alert will be sent |
+|  2                | QCE select some order(s) |
+|  3                | System shows list of product(s) for a certain order |
+|  4                | QCE add product to list of product to be tested |
+
+| Scenario 8.2      | Report of tests |
+| -------------     |:-------------:| 
+|  Precondition     | QCE correctly logged in and authenticated |
+|                   | Product exists in the invetory |
+|                   | Barcode and ID of product exist and are correct |
+|  Post condition   | Appropriate alert sent to who it concerns |
+| Step#             | Description  |
+|  1                | QCE opens list of products to be tested |  
+|  2                | QCE select some product(s) |
+|  3                | QCE inserts results of test(s) |
+
+| Scenario 8.3      | Add test to product |
+| -------------     |:-------------:| 
+|  Precondition     | QCE correctly logged in and authenticated |
+|                   | Product exists in the invetory |
+|                   | Barcode of product exists and is correct |
+|  Post condition   | Test added to list of tests for product |
+| Step#             | Description  |
+|  1                | QCE selects a product |  
+|  2                | QCE inserts test id |
+|  3                | QCE inserts test description |
+|  4                | QCE inserts requirements for tests |
 
 # Glossary
 
