@@ -584,7 +584,7 @@ that needs to be done for the objects he must test. He is really tired but canno
 |			 |the suppliers S have to upload their list of items|
 |Postcondition | The order is created |	 
 | Step # | Description |
-| 1 | M checks the quantity of the nearly out of order items |
+| 1 | M checks the quantity of the nearly out of order products |
 | 2 | M checks the list of suppliers |
 | 3 | M selects the specific supplier |
 | 4 | M selects the needed quantity of an item |
