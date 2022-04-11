@@ -60,7 +60,7 @@ Changes Applied
 
 Warehouse Employee Home Page
 
-![WE_Add_New_Product](./GUI/GUIWE_Add_New_Product.png)
+![WE_Add_New_Product](./GUI/GUIWE_Add_new_product.png)
 
 Add new product to the inventory
 
