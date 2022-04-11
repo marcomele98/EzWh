@@ -1,9 +1,9 @@
 
  #Requirements Document 
 
-Date: 10 april 2022
+Date: 11 april 2022
 
-Version: 1.6
+Version: 1.7
 
  
 | Version number | Change |
@@ -15,6 +15,7 @@ Version: 1.6
 | 1.4 | Add use case 1,2. Add Stories and personas WE. Add access right table |
 | 1.5 | Add use case 6, 8. Add stories and personas QCE. |
 | 1.6 | Add Glossary |
+| 1.7 | Add System Design |
 
 
 # Contents
@@ -283,7 +284,7 @@ that needs to be done for the objects he must test. He is really tired but canno
 |  NFR1     | Usability 	| Application should be used with no specific training for the users | All FR |
 |  NFR2     | Performance 	| All functions should complete in < 0.5 sec  | All FR |
 |  NFR3     | Privacy		| The data should not be disclosed outside the application | All FR |
-|  NFR4 	| Reliability 	| Mean time to failure... | All FR | 
+|  NFR4 	| Reliability 	| Maximum of one failure over 1 year | All FR | 
 
 
 # Use case diagram and use cases
@@ -874,10 +875,14 @@ quality
 
 ![Glossary](./EzWhGlossary.png)
 
+Business rule: the barcode is unique for each product descriptor. The product id is unique for each physical product.
+
 # System Design
 \<describe here system design>
 
 \<must be consistent with Context diagram>
+
+![SystemDesign](./SystemDesginEzWh.png)
 
 # Deployment Diagram 
 
