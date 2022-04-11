@@ -800,39 +800,7 @@ quality
 | 2 | M selects which items send back |
 | 3 | M sends back the faulty items to the supplier S |
 
-
-### Use case 7, UC7 - Authenticate
-| Actors Involved       | Employee, Supplier (X in the following) |
-| -------------         |:-------------:| 
-|  Precondition         |  |
-|  Post condition       |  |
-|  Nominal Scenario     | Login: X enters credentials, the system checks them and grants access |
-|  Variants             | Login: X enters wrong credentials, system prevent access |
-|                       | Logout: X asks the system to terminate the session |
-
-##### Scenario 7-1 
-
-| Scenario		    | Login |
-| -------------     |:-------------:| 
-|  Precondition     | Account for X exists |
-|  Post condition   | System grants access to X |
-| Step#             | Description  |
-|  1                | X enters username |  
-|  2                | X enters password |
-|  3                | System shows available functionalitites to X |
-
-##### Scenario 7-2 
-
-| Scenario      | Logout |
-| -------------     |:-------------:| 
-|  Precondition     | X logged in |
-|  Post condition   | X logged out |
-| Step#             | Description  |
-|  1                | X logs out |  
-|  2                | System brings X to application's login page |
-
-
-### Use case 8, UC8 : Manage quality test
+### Use case 7, UC7 : Manage quality test
 | Actors Involved       | quality check employee (QCE in the following)|
 | -------------         |:-------------:| 
 |  Precondition         | Order has been received |
@@ -843,7 +811,7 @@ quality
 |  Exceptions           | Products are not in the wharehouse yet |
 |                       | Missing barcode of product |
 
-##### Scenario 8-1
+##### Scenario 7-1
 | Scenario      | Add product to test-list |
 | -------------     |:-------------:| 
 |  Precondition     | QCE correctly logged in and authenticated |
@@ -856,7 +824,7 @@ quality
 |  3                | System shows list of product(s) for a certain order |
 |  4                | QCE add product to list of product to be tested |
 
-##### Scenario 8-2
+##### Scenario 7-2
 | Scenario      | Report of tests |
 | -------------     |:-------------:| 
 |  Precondition     | QCE correctly logged in and authenticated |
@@ -869,7 +837,7 @@ quality
 |  3                | QCE inserts results of test(s) |
 
 
-##### Scenario 8-3
+##### Scenario 7-3
 | Scenario      | Add test to product |
 | -------------     |:-------------:| 
 |  Precondition     | QCE correctly logged in and authenticated |
@@ -882,6 +850,35 @@ quality
 |  3                | QCE inserts test description |
 |  4                | QCE inserts requirements for tests |
 
+### Use case 8, UC8 - Authenticate
+| Actors Involved       | Employee, Supplier (X in the following) |
+| -------------         |:-------------:| 
+|  Precondition         |  |
+|  Post condition       |  |
+|  Nominal Scenario     | Login: X enters credentials, the system checks them and grants access |
+|  Variants             | Login: X enters wrong credentials, system prevent access |
+|                       | Logout: X asks the system to terminate the session |
+
+##### Scenario 8-1 
+
+| Scenario		    | Login |
+| -------------     |:-------------:| 
+|  Precondition     | Account for X exists |
+|  Post condition   | System grants access to X |
+| Step#             | Description  |
+|  1                | X enters username |  
+|  2                | X enters password |
+|  3                | System shows available functionalitites to X |
+
+##### Scenario 8-2 
+
+| Scenario      | Logout |
+| -------------     |:-------------:| 
+|  Precondition     | X logged in |
+|  Post condition   | X logged out |
+| Step#             | Description  |
+|  1                | X logs out |  
+|  2                | System brings X to application's login page |
 
 # Glossary
 
