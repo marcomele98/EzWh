@@ -11,20 +11,20 @@ Consider the EZWH  project as described in YOUR requirement document, assume tha
 |             | Estimate                        |             
 | ----------- | ------------------------------- |  
 | NC =  Estimated number of classes to be developed   |        42                   |             
-|  A = Estimated average size per class, in LOC       |        500                    | 
+| A = Estimated average size per class, in LOC       |        500                    | 
 | S = Estimated size of project, in LOC (= NC * A) | 21000 |         
-| E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)  |            2100                    |   
+| E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)  |    2100     |   
 | C = Estimated cost, in euro (here use 1 person hour cost = 30 euro) | 63000 | 
-| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week ) |   13,2            |               
+| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week ) |  13,2    |               
 
 # Estimate by product decomposition
 ### 
 |         component name    | Estimated effort (person hours)   |             
 | ----------- | ------------------------------- | 
-|requirement document   | 60 |
-| GUI prototype | 40 |
-|design document | 50 |
-|code | 1500 |
+| requirements document   | 60 |
+| GUI prototype | 30 |
+| design document | 50 |
+| code | 1500 |
 | unit tests | 500 |
 | api tests | 500 |
 | management documents  | 70 |
@@ -35,8 +35,19 @@ Consider the EZWH  project as described in YOUR requirement document, assume tha
 ### 
 |         Activity name    | Estimated effort (person hours)   |             
 | ----------- | ------------------------------- | 
-| Define stakeholders  | 4 |
-| 
+| Define stakeholders                   | 4  |
+| Define FR                             | 14 |
+| Define NFR                            | 2  |
+| Define Use Cases and Scenarios        | 20 |
+| Draw diagrams                         | 8  |      
+| Define stories and personas           | 4  |
+| GUI prototype                         | 30 |
+| Produce design document               | 50 |
+| Write code                            | 1500 |
+| Do unit tests                         | 500 |
+| Do api tests                          | 500 |
+| Produce management documents          | 70 |
+
 ###
 Insert here Gantt chart with above activities
 
@@ -44,11 +55,11 @@ Insert here Gantt chart with above activities
 
 Report here the results of the three estimation approaches. The  estimates may differ. Discuss here the possible reasons for the difference
 
-|             | Estimated effort                        |   Estimated duration |          
+|             | Estimated effort (person hours)    |   Estimated duration (calendar weeks) |          
 | ----------- | ------------------------------- | ---------------|
-| estimate by size | 2100 | 13,2
-| estimate by product decomposition | 2720 | 17
-| estimate by activity decomposition ||
+| estimate by size | 2100 | 13,2 |
+| estimate by product decomposition | 2710 | 17 |
+| estimate by activity decomposition | 2702 | 16,9 |
 
 
 
