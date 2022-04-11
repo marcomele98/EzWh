@@ -667,11 +667,11 @@ quality
 
 | Scenario | Make order |
 | ------------- |:-------------:| 
-|  Precondition     | Items are in the warehouse |
+|  Precondition     | Products are in the warehouse |
 |  Post condition     | Alert is sent to warehouse employees notifing about order made |
 | Step#        | Description  |
-|  1     | Open List of Items|  
-|  2     | Select Available Items from Warehouse Inventory |
+|  1     | Open List of Products|  
+|  2     | Select Available Products from Warehouse Inventory |
 |  3     | Select the quantities |
 |  4     | Confirm Order |
 |  5     | Display Recap of Order |
@@ -682,11 +682,11 @@ quality
 
 | Scenario | Input Error |
 | ------------- |:-------------:| 
-|  Precondition     | Items are in the warehouse |
+|  Precondition     | Products are in the warehouse |
 |  Post condition     | Order not confirmed and user able to re-enter data |
 | Step#        | Description |
-|  1     | Open List of Items |  
-|  2     | Select Items to Order |
+|  1     | Open List of Products |  
+|  2     | Select Products to Order |
 |  3     | Select the quantities |
 |  4     | User makes mistake in input format |
 |  5     | Alert shown notifying about Input Error |
@@ -738,7 +738,7 @@ quality
 
 | Scenario | Order not found |
 | ------------- |:-------------:| 
-|  Precondition     | Items are in the warehouse |
+|  Precondition     | Products are in the warehouse |
 |  Post condition     | Order not confirmed and user able to re-input data |
 | Step#        | Description |
 |  1     | Open History of Orders  |  
