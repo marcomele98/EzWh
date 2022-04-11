@@ -188,6 +188,22 @@ Goal: wants to retrieve information about tests faster, without errors.
 Story: It's monday morning, he spent the night awake because of his children. He arrives at the office and has to know all tests 
 that needs to be done for the objects he must test. He is really tired but cannot make mistakes. Thanks to the EzWh app he can safely and easily find the informations he needs.
 
+### Persona
+
+Persona: Enrico Pasquale (Supplier), Owner of farm, Male, 30 years old and low level of education
+
+Work day: Wakes up early, he has to take care of his farm by handling the watering, fertilization and pruning of his crops and trees. 
+
+Weekend: Wakes up later in order to go back to his hometown and visit his parents. 
+
+Enrico Pasquale  is a farmer, he works hard, and therefore, its troublesome for him to handle all the calls that arrive to order his products, 
+he may miss some important business opportunities and therefore really needs a quicker and intuitive method to sell its products to the market. 
+
+Goal: A more efficient way to handle sales and record their history.
+
+Story: Enrico Pasquale also really needs to get ready for the work week by knowing which products were the ones that were most sold.
+Having an idea of which are the products more in demand, to figure out how to make the most sales, EzWh may help him in being able to afford the car of his dreams.
+
 # Functional and non functional requirements
 
 ## Functional Requirements
