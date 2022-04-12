@@ -1,9 +1,9 @@
 
  #Requirements Document 
 
-Date: 11 april 2022
+Date: 12 april 2022
 
-Version: 1.7
+Version: 1.8
 
  
 | Version number | Change |
@@ -16,6 +16,7 @@ Version: 1.7
 | 1.5 | Add use case 6, 8. Add stories and personas QCE. |
 | 1.6 | Add Glossary |
 | 1.7 | Add System Design |
+| 1.8 | Add info to the access right table |
 
 
 # Contents
@@ -36,6 +37,7 @@ Version: 1.7
 		- [Persona](#persona)
 		- [Persona](#persona-1)
 		- [Persona](#persona-2)
+		- [Persona](#persona-3)
 - [Functional and non functional requirements](#functional-and-non-functional-requirements)
 	- [Functional Requirements](#functional-requirements)
 		- [Access right, actor vs function](#access-right-actor-vs-function)
@@ -78,13 +80,13 @@ Version: 1.7
 				- [Scenario 5-7](#scenario-5-7)
 		- [Use case 6, UC6 - Manage return transaction](#use-case-6-uc6---manage-return-transaction)
 				- [Scenario 6-1](#scenario-6-1)
-		- [Use case 7, UC7 - Authenticate](#use-case-7-uc7---authenticate)
+		- [Use case 7, UC7 : Manage quality test](#use-case-7-uc7--manage-quality-test)
 				- [Scenario 7-1](#scenario-7-1)
 				- [Scenario 7-2](#scenario-7-2)
-		- [Use case 8, UC8 : Manage quality test](#use-case-8-uc8--manage-quality-test)
+				- [Scenario 7-3](#scenario-7-3)
+		- [Use case 8, UC8 - Authenticate](#use-case-8-uc8---authenticate)
 				- [Scenario 8-1](#scenario-8-1)
 				- [Scenario 8-2](#scenario-8-2)
-				- [Scenario 8-3](#scenario-8-3)
 - [Glossary](#glossary)
 - [System Design](#system-design)
 - [Deployment Diagram](#deployment-diagram)
@@ -282,13 +284,15 @@ Having an idea of which are the products more in demand, to figure out how to ma
 
 | Function | Administrator | Manager | Warehouse Employee | OU employee | Quality check employee | Supplier |
 | -------- | ----- | ------------ | ------- | --------| -------- | --------- |
-| FR1 | yes | no  | no  | no  | no  | no  |
-| FR2 | yes | yes | yes | no  | no  | no  |
-| FR3 | no  | no  | no  | no  | no  | yes |
-| FR4 | yes | yes | no  | no  | no  | no  |
-| FR5 | no  | no  | no  | yes | no  | no  |
-| FR7 | no  | no  | no  | no  | yes | no  |
-| FR8 | yes | yes | yes | yes | yes | yes |
+| FR1 	| yes | no  | no  | no  | no  | no  |
+| FR2 	| yes | yes | yes | no  | no  | no  |
+| FR2.3 | yes | yes | yes | yes | no  | no  |
+| FR3 	| no  | no  | no  | no  | no  | yes |
+| FR4 	| yes | yes | no  | no  | no  | no  |
+| FR4.10| yes | yes | no  | no  | yes | no  |
+| FR5 	| no  | no  | no  | yes | no  | no  |
+| FR7 	| no  | no  | no  | no  | yes | no  |
+| FR8 	| yes | yes | yes | yes | yes | yes |
 
 
 ## Non Functional Requirements

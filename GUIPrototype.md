@@ -2,81 +2,82 @@
 
 Authors:
 
-Date: 11 april 2022
+Date: 12 april 2022
 
-Version: 1.0
+Version: 1.1
 
 | Version 1.0 | Add UC1 and UC2 |
+| Version 1.1 | Add UC3 and UC5 |
 
 \<Report here the GUI that you propose. You are free to organize it as you prefer. A suggested presentation matches the Use cases and scenarios defined in the Requirement document. The GUI can be shown as a sequence of graphical files (jpg, png)  >
 
 ### Use case 1, UC1 - Manage users and rights
 
 
-![Admin_Home_Page](./GUI/GUIAdmin_Home_Page.png)
+![Admin_Home_Page](./GUI/1.0/GUIAdmin_Home_Page.png)
 
 Admin Home Page
 
-![User_List](./GUI/GUIUser_List.png)
+![User_List](./GUI/1.0/GUIUser_List.png)
 
 User List
 
-![Create_User](./GUI/GUICreate_User.png)
+![Create_User](./GUI/1.0/GUICreate_User.png)
 
 Create User
 
-![Modify_User](./GUI/GUIModify_User.png)
+![Modify_User](./GUI/1.0/GUIModify_User.png)
 
 Modify User
 
-![Delete_User](./GUI/GUIDelete_User.png)
+![Delete_User](./GUI/1.0/GUIDelete_User.png)
 
 Delete User
 
-![Supplier_List](./GUI/GUISupplier_list.png)
+![Supplier_List](./GUI/1.0/GUISupplier_list.png)
 
 Supplier List
 
-![Create_Supplier](./GUI/GUICreate_Supplier.png)
+![Create_Supplier](./GUI/1.0/GUICreate_Supplier.png)
 
 Create Supplier
 
-![Modify_Supplier](./GUI/GUIModify_Supplier.png)
+![Modify_Supplier](./GUI/1.0/GUIModify_Supplier.png)
 
 Modify Supplier
 
-![Delete_Supplier](./GUI/GUIDelete_Supplier.png)
+![Delete_Supplier](./GUI/1.0/GUIDelete_Supplier.png)
 
 Delete Supplier
 
-![Changes_Applied](./GUI/GUIChanges_applied.png)
+![Changes_Applied](./GUI/1.0/GUIChanges_applied.png)
 
 Changes Applied
 
 
 ### Use case 2, UC2 - Manage inventory
 
-![WE_Home_Page](./GUI/GUIWE_Home_page.png)
+![WE_Home_Page](./GUI/2.0/GUIWE_Home_page.png)
 
 Warehouse Employee Home Page
 
-![WE_Add_New_Product](./GUI/GUIWE_Add_new_product.png)
+![WE_Add_New_Product](./GUI/2.0/GUIWE_Add_new_product.png)
 
 Add new product to the inventory
 
-![WE_Modify_Product](./GUI/GUIWE_Modify_quantity_or_position.png)
+![WE_Modify_Product](./GUI/2.0/GUIWE_Modify_quantity_or_position.png)
 
 Modify quantity or position of a product
 
-![WE_Delete_Product](./GUI/GUIWE_Delete_product.png)
+![WE_Delete_Product](./GUI/2.0/GUIWE_Delete_product.png)
 
 Delete product from inventory
 
-![Changes_Applied_WE](./GUI/GUIChanges_applied_inventory.png)
+![Changes_Applied_WE](./GUI/2.0/GUIChanges_applied_inventory.png)
 
 Inventory has been updated
 
-![Format_Error](./GUI/GUIWE_Format_Error.png)
+![Format_Error](./GUI/2.0/GUIWE_Format_Error.png)
 
 Format Error
 
