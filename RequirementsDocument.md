@@ -3,7 +3,7 @@
 
 Date: 12 april 2022
 
-Version: 1.8
+Version: 1.9
 
  
 | Version number | Change |
@@ -17,7 +17,7 @@ Version: 1.8
 | 1.6 | Add Glossary |
 | 1.7 | Add System Design |
 | 1.8 | Add info to the access right table |
-
+| 1.9 | final corrections |
 
 # Contents
 
@@ -110,12 +110,12 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
-|  Administrator  		| Handles application maintenance (bugs), handles user privileges | 
+|  Administrator  		| Install application and manages user privileges | 
 |  Manager  			| Has information about the inventory and manages stock of products | 
-|  Supplier  			| Receive orders and provides items | 
+|  Supplier  			| Receives orders and provides items | 
 |  Warehouse employee 	| Collects items and store them into the warehouse, handles the inventory, provides the request items to the pick up area |  
-| OU employee     		| Issue internal orders, pick them from pick up area | 
-| Quality check office 	| Test quality of supplies | 
+| OU employee     		| Issues internal orders, picks them from pick up area | 
+| Quality check employee 	| Tests quality of supplies | 
 
 
 # Context Diagram and interfaces
