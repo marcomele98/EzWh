@@ -4,10 +4,12 @@ Authors:
 
 Date: 12 april 2022
 
-Version: 1.1
+Version: 1.3
 
 | Version 1.0 | Add UC1 and UC2 |
 | Version 1.1 | Add UC3 and UC5 |
+| Version 1.2 | Add UC7 and UC8  |
+| Version 1.3 | Add UC4 and UC6  |
 
 \<Report here the GUI that you propose. You are free to organize it as you prefer. A suggested presentation matches the Use cases and scenarios defined in the Requirement document. The GUI can be shown as a sequence of graphical files (jpg, png)  >
 
@@ -182,6 +184,111 @@ Input Format Error
 Item Search Done
 
 #
+### Use case 4, UC4 : Manage orders
+NOTE: Confirmations messages appear every time after the systems asks the user if he is sure about the action. However in the following those views are omitted. Only the first one has been left.
+
+![Manager_Menu](./GUI/4.0/1-menu.png)
+
+Manager Menu
+
+#
+
+![list_suppliers](./GUI/4.0/2-listsuppliers.png)
+
+List Suppliers
+
+#
+
+![Make_new_order](./GUI/4.0/3-MakeNewOrder.png)
+
+Make new order
+
+#
+
+![item_added](./GUI/4.0/3-1addeditem.png)
+
+Add new item to the order
+
+#
+
+![view_cart](./GUI/4.0/4-ViewCart.png)
+
+View cart of an order
+
+#
+
+![delete_item_from_order](./GUI/4.0/4-1DeleteItemFromOrder.png)
+
+Delete item from the order
+
+#
+
+![Modify_item_from_order](./GUI/4.0/4-2ModifyItemFromOrder.png)
+
+Modify item from the order
+
+#
+
+![confirm_order](./GUI/4.0/5-orderConfirm.png)
+
+The order has been made
+
+#
+
+![](./GUI/4.0/5-1DiscarOrder.png)
+
+Discard all the order
+
+#
+
+![list_orders](./GUI/4.0/6-listOfOrders1.png)
+
+List of all orders
+
+#
+
+![confirm arrived orders](./GUI/4.0/7-ConfirmationOrder.png)
+
+Confirm an arrived order
+
+#
+
+![info_order_arrived](./GUI/4.0/8-Info%20Order%20arrived.png)
+
+Info about arrived order
+
+#
+
+![Info_order_yet_arrived](./GUI/4.0/9-Info%20order%20noy%20yet%20arrived.png)
+
+Info about not arrived order
+
+#
+
+![delete_order](./GUI/4.0/10-DeleteOrder.png)
+
+Delete order
+
+#
+
+![update_order](./GUI/4.0/11-1Update%20Order.png)
+
+Update order
+
+#
+
+![confirm_updates](./GUI/4.0/11-Confirm%20updates.png)
+
+Confirm updates about the order
+
+#
+
+![notification_center](./GUI/4.0/Notification%20center.png)
+
+Notification Center
+
+#
+
 
 ### Use case 5, UC5 - Manage internal order
 
@@ -238,6 +345,65 @@ Show Internal Order History
 Show Internal Order History Items
 
 #
+
+### Use case 6, UC6 : Manage return transaction
+NOTE: Confirmations messages appear every time after the systems asks the user if he is sure about the action. However in the following those views are omitted. Only the first one has been left.
+
+![manage_reports](./GUI/6.0/1-MANAGE%20REPORTS.png)
+
+Manage reports from manager menu
+
+#
+
+![info_report_closed](./GUI/6.0/1-1InfoReportClosed.png)
+
+Info about closed report
+
+#
+
+![info_report_open](./GUI/6.0/2Info%20ReportOpen.png)
+
+Info about open report
+
+#
+
+![discard_item](./GUI/6.0/2-1DiscardItem.png)
+
+Add item to the discard list
+
+#
+
+![keep_item](./GUI/6.0/2-2ItemKept.png)
+
+Keep item from the report
+
+#
+
+![view_discard_list](./GUI/6.0/3-ViewDiscardList.png)
+
+View discard list
+
+#
+
+![make_return_order](./GUI/6.0/4-MakeReturnOrder%20confirm.png)
+
+Make return order
+
+#
+
+![view_return_orders](./GUI/6.0/5-ViewReturnOrders.png)
+
+View return orders
+
+#
+
+![delete_return_order](./GUI/6.0/6-DeleteReturnOrder.png)
+
+Delete return order
+
+#
+
+
 
 ### Use case 7, UC7 : Manage quality test
 
