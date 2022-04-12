@@ -1,7 +1,7 @@
 # Project Estimation  
-Date:
+Date: 10 April 2022
 
-Version:
+Version: 1.0
 
 
 # Estimation approach
@@ -10,24 +10,24 @@ Consider the EZWH  project as described in YOUR requirement document, assume tha
 ### 
 |             | Estimate                        |             
 | ----------- | ------------------------------- |  
-| NC =  Estimated number of classes to be developed   |                             |             
-|  A = Estimated average size per class, in LOC       |                            | 
-| S = Estimated size of project, in LOC (= NC * A) | |
-| E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)  |                                      |   
-| C = Estimated cost, in euro (here use 1 person hour cost = 30 euro) | | 
-| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week ) |                    |               
+| NC =  Estimated number of classes to be developed   |        42                   |             
+| A = Estimated average size per class, in LOC       |        250                  | 
+| S = Estimated size of project, in LOC (= NC * A) | 10500 |         
+| E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)  |    1050     |   
+| C = Estimated cost, in euro (here use 1 person hour cost = 30 euro) | 31500| 
+| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week ) |  6,6    |               
 
 # Estimate by product decomposition
 ### 
 |         component name    | Estimated effort (person hours)   |             
 | ----------- | ------------------------------- | 
-|requirement document    | |
-| GUI prototype ||
-|design document ||
-|code ||
-| unit tests ||
-| api tests ||
-| management documents  ||
+| requirements document   | 60 |
+| GUI prototype | 30 |
+| design document | 50 |
+| code | 500 |
+| unit tests | 100 |
+| api tests | 100 |
+| management documents  | 50 |
 
 
 
@@ -35,19 +35,31 @@ Consider the EZWH  project as described in YOUR requirement document, assume tha
 ### 
 |         Activity name    | Estimated effort (person hours)   |             
 | ----------- | ------------------------------- | 
-| | |
+| Define stakeholders                   | 4  |
+| Define FR                             | 14 |
+| Define NFR                            | 2  |
+| Define Use Cases and Scenarios        | 20 |
+| Draw diagrams                         | 8  |      
+| Define stories and personas           | 4  |
+| GUI prototype                         | 30 |
+| Produce design document               | 50 |
+| Write code                            | 500 |
+| Do unit tests                         | 100 |
+| Do api tests                          | 100 |
+| Produce management documents          | 50 |
+
 ###
 Insert here Gantt chart with above activities
-
+![Gantt chart](./gantt.png)
 # Summary
 
 Report here the results of the three estimation approaches. The  estimates may differ. Discuss here the possible reasons for the difference
 
-|             | Estimated effort                        |   Estimated duration |          
+|             | Estimated effort (person hours)    |   Estimated duration (calendar weeks) |          
 | ----------- | ------------------------------- | ---------------|
-| estimate by size ||
-| estimate by product decomposition ||
-| estimate by activity decomposition ||
+| estimate by size | 1050 | 6,6 |
+| estimate by product decomposition | 890 | 5,6 |
+| estimate by activity decomposition | 882 | 5,5 |
 
 
 
