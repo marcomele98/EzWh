@@ -80,7 +80,93 @@ Inventory has been updated
 
 Format Error
 
+### Use case 3, UC3 - Manage suppliers catalog
 
+![List_Of_Items_MAINPAGE](./GUI/3.0/List%20All%20Items%20(3.4).png)
+
+Supplier's Main Page
+
+![Add_New_Item](./GUI/3.0/Add%20New%20Item%20(3.1).png)
+
+Add new Item
+
+![Item_Match_Error](./GUI/3.0/Item%20Match%20Error.png)
+
+Item Match Error
+
+![Delete_Item_Search](./GUI/3.0/Delete%20Item%20Search%20(3.3).png)
+
+Delete Item Search
+
+![Delete_Item_Select](./GUI/3.0/Delete%20Item%20Search%20(3.3).png)
+
+Delete Item Select
+
+![Delete_Item_Confirm](./GUI/3.0/Delete%20Item%20Confrim%20(3.3).png)
+
+Delete Item Confirm
+
+![Modify_Item_Search](./GUI/3.0/Modify%20Item%20Search%20(3.2)%20.png)
+
+Modify Item Search
+
+![Modify_Item_Select](./GUI/3.0/Modify%20Item%20Select%20(3.2).png)
+
+Modify Item Select
+
+![Modify_Item_Form](./GUI/3.0/Modify%20Item%20Form%20(3.2).png)
+
+Modify Item Form
+
+![Item_Search](./GUI/3.0/Item%20Search%20(3.5)%20.png)
+
+Item Search
+
+![Input_Format_Error](./GUI/3.0/Input%20Format%20Error.png)
+
+Input Format Error
+
+![Item_Search_Done](./GUI/3.0/Item%20Search%20Done%20(3.5).png)
+
+Item Search Done
+
+### Use case 5, UC5 - Manage internal order
+
+![OU_Order_List_MAINPAGE](./GUI/5.0/OU%20Order%20List%20(5.0).png)
+
+OU Order List
+
+![Create_Internal_Order](./GUI/5.0/Create%20Internal%20Order%20(5.1).png)
+
+Create Internal Order
+
+![Search_Available_Item](./GUI/5.0/Search%20Available%20Item%20(5.1).png)
+
+Search Available Item
+
+![Select_Available_Item](./GUI/5.0/Select%20Available%20Item%20(5.2-5.3-5.4).png)
+
+Select Available Item
+
+![Confirm_Internal_Order](./GUI/5.0/Confirm%20Internal%20Order%20(5.5).png)
+
+Confirm Internal Order
+
+![Delete_Internal_Order](./GUI/5.0/Delete%20Intenal%20Order%20(5.6).png)
+
+Delete Internal Order
+
+![Confirm_Delete_Internal_Order](./GUI/5.0/Confirm%20Delete%20Intenal%20Order%20(5.6).png)
+
+Confirm Delete Internal Order
+
+![Show_Internal_Order_History](./GUI/5.0/Show%20Internal%20Order%20History%20(5.7).png)
+
+Show Internal Order History
+
+![Show_Internal_Order_History_Items](./GUI/5.0/Show%20Internal%20Order%20History%20Items%20(5.7).png)
+
+Show Internal Order History Items
 
 
 
