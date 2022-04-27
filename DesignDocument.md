@@ -5,7 +5,7 @@ Authors:
 
 Date: 27 April 2022
 
-Version: 1.0
+Version: 1.1
 
 
 # Contents
@@ -24,29 +24,28 @@ The design must satisfy the Official Requirements document, notably functional a
 
 # High level design 
 
-<discuss architectural styles used, if any>
-<report package diagram, if needed>
+
+For what concern high level desgìign we used the 3 tier architecture. We focused our attention on the Application and data layers since the frontend is provided to us.
 
 
-
+![High_Level](./DesignDiagrams/HighLevel.jpg)
 
 
 
 # Low level design
 
-<for each package in high level design, report class diagram. Each class should detail attributes and operations>
 
+For the low level design we used a facade class (EzWarehouse) which is the point of interaction between frontend and backend. After that we consider different management classes that implements and solve the API requests using other classes that represents the different tables of the database.
 
+![DatabaseDiagram](./DesignDiagrams/DatabaseDiagram.jpg)
 
-
-
+![DesignDiagram](./DesignDiagrams/DesignDiagram.jpg)
 
 
 
 
 # Verification traceability matrix
 
-\<for each functional requirement from the requirement document, list which classes concur to implement it>
 
 ||EZWarehouse| UserManagement | PositionManagement | SKUItemManagement  | ReturnOrderManagement | RestockOrderManagement | ItemManagement | InternalOrderManagement | SKUManagement | TestManagement | Account | Position | ReturnOrder | RestockOrder | SKUItem  | TransportNote | Item | InternalOrder | SKU | TestDescriptor | TestResult |
 | --- |:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
@@ -105,12 +104,16 @@ The design must satisfy the Official Requirements document, notably functional a
 |FR6.10  |X| | | | | | |X| | |X| | | |X| | |X|X| | |
 |FR7     |X| | | | | |X| | | |X| | | | | |X| |X| | |
 
-
-
-
-
+In the design phase we assumed that in the account class there is an attribute that allows to distinguish the different types of user. For this reason we checked the account class for every FR.
 
 
 # Verification sequence diagrams 
-\<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
+
+##Scenario 5.1
+
+![Scenario5.1](./DesignDiagrams/Scenario5-1.jpg)
+
+##Scenario 5.2
+
+![Scenario5.2](./DesignDiagrams/Scenario5-2.jpg)
