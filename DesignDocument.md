@@ -25,7 +25,7 @@ The design must satisfy the Official Requirements document, notably functional a
 # High level design 
 
 
-For what concern high level desgìign we used the 3 tier architecture. We focused our attention on the Application and data layers since the frontend is provided to us.
+For what concern high level design we used the 3 tier architecture. We focused our attention on the Application and data layers since the frontend is provided to us.
 
 
 ![High_Level](./DesignDiagrams/HighLevel.jpg)
@@ -35,7 +35,7 @@ For what concern high level desgìign we used the 3 tier architecture. We focuse
 # Low level design
 
 
-For the low level design we used a facade class (EzWarehouse) which is the point of interaction between frontend and backend. After that we consider different management classes that implements and solve the API requests using other classes that represents the different tables of the database.
+For the low level design we used a facade class (EzWarehouse) which is the point of interaction between frontend and backend. After that we consider different management classes that implements and solve the API requests using other classes that represent the different tables of the database.
 
 ![DatabaseDiagram](./DesignDiagrams/DatabaseDiagram.jpg)
 
@@ -110,10 +110,18 @@ In the design phase we assumed that in the account class there is an attribute t
 # Verification sequence diagrams 
 
 
-##Scenario 5.1
+## Scenario 5.1
 
 ![Scenario5.1](./DesignDiagrams/Scenario5-1.jpg)
 
-##Scenario 5.2
+## Scenario 5.2
 
 ![Scenario5.2](./DesignDiagrams/Scenario5-2.jpg)
+
+## Scenario 6.1
+
+![Scenario6.1](./DesignDiagrams/scenario6-1.png)
+
+## Scenario 9.1
+
+![Scenario9.1](./DesignDiagrams/scenario9-1.png)
