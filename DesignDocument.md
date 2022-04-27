@@ -48,7 +48,7 @@ For the low level design we used a facade class (EzWarehouse) which is the point
 
 
 ||EZWarehouse| UserManagement | PositionManagement | SKUItemManagement  | ReturnOrderManagement | RestockOrderManagement | ItemManagement | InternalOrderManagement | SKUManagement | TestManagement | Account | Position | ReturnOrder | RestockOrder | SKUItem  | TransportNote | Item | InternalOrder | SKU | TestDescriptor | TestResult |
-| --- |:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
+| --- |:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
 |FR1     |X|X| | | | | | | | |X| | | | | | | | | | |
 |FR1.1   |X|X| | | | | | | | |X| | | | | | | | | | |
 |FR1.2   |X|X| | | | | | | | |X| | | | | | | | | | |
