@@ -33,6 +33,21 @@ function TestManagement() {
         });
     }
 
+        // fn that get a test descriptors given its id.
+        this.getTestDescriptorByID = (db, id) => {
+            return new Promise((resolve, reject) => {
+                const sql = 'SELECT * FROM test_descriptors WHERE id=?';
+                db.get(sql, [id], (err, row) => {
+                    if(err)
+                        reject(err);
+                    else {
+                        const testDescriptor = mapToTestDescriptor(row);
+                        resolve(testDescriptor);
+                    }
+                });
+            });
+        }
+
     // fn that modifies a test descriptor given its id. Return a boolean
     this.modifyTestDescriptorByID = (db, id, name, procedure, idSku) => {
         return new Promise((resolve, reject) => {
@@ -86,9 +101,51 @@ function TestManagement() {
                 if(err)
                     reject(err);
                 else {
-                    const testResult = row.mapToTestResult(row);
+                    const testResult = mapToTestResult(row);
                     resolve(testResult);
                 }
+            });
+        });
+    }
+
+    // fn that inserts in the db a new test result. Returns a boolean
+    this.insertNewTestResult = (db, id, date, result, idTestDescriptor) => {
+        return new Promise((resolve, reject) => {
+            const sql = 'INSERT INTO test_results (id, date, result, idTestDescriptor) VALUES (?, ?, ?, ?)';
+            db.run(sql, [id, date, result, idTestDescriptor], function(err) {
+              if(err) reject(err);
+              else {
+                  if(this.changes !== 0) resolve(true);
+                  else resolve(false);
+              }
+            });
+        });
+    }
+
+    // fn that modifies the attributes of a test-result given its id. Returns a boolean
+    this.modifyTestResult = (db, id, date, result, idTestDescriptor) => {
+        return new Promise((resolve, reject) => {
+            const sql = 'UPDATE test_results SET date=?, result=?, idTestDescriptor=?, WHERE id = ?';
+            db.run(sql, [date, result, idTestDescriptor, id], function(err) {
+              if(err) reject(err);
+              else {
+                  if(this.changes !== 0) resolve(true);
+                  else resolve(false);
+              }
+            });
+        });
+    }
+
+    // fn that deletes a test result from the db. Returns a boolean
+    this.deleteTestResult = (db, id) => {
+        return new Promise((resolve, reject) => {
+            const sql = 'DELETE FROM test_results WHERE id=?';
+            db.run(sql, [id], function(err) {
+              if(err) reject(err);
+              else {
+                  if(this.changes !== 0) resolve(true);
+                  else resolve(false);
+              }
             });
         });
     }
