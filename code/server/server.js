@@ -6,7 +6,9 @@ const ItemManagement = require('./modules/management/item-management');
 const InternalOrderManagement = require('./modules/management/internalOrder-management');
 //const db = new DAO('database');
 const SkuManagement = require ('./modules/management/sku-management');
+const PositionManagement = require('./modules/management/position-management');
 
+const position = new PositionManagement();
 const item = new ItemManagement;
 const internalOrder = new InternalOrderManagement;
 const sku = new SkuManagement;
@@ -97,6 +99,10 @@ app.delete('/api/skus/:id', async(req,res) =>{
   return sku.deleteSkuById(req,res);
 });
 
+/* ------------------- POSITION ------------------- */
+app.get('/api/positions', async(req,res) => {
+  return position.getListAllPositionsWH(req, res);
+});
 
 // activate the server
 app.listen(port, () => {
