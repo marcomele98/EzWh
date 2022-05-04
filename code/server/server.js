@@ -34,6 +34,9 @@ app.get('/api/items/:id', async (req,res) => {
   return item.getItemById(req, res);
 });
 
+app.put('/api/items/:id', async (req,res) => {
+  return item.modifyItemById(req, res);
+});
 
 app.delete('/api/items/:id', async (req,res) => {
   return item.deleteItemById(req, res);

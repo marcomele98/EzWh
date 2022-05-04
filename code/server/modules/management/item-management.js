@@ -28,7 +28,7 @@ class ItemManagement {
     }
 
     async getItemById(req, res) {
-        const id = req.params.id
+        const id = req.params.id;
         if (id == undefined || id == '') {
             return res.status(422).json({ error: `Invalid id` });
         }
@@ -41,7 +41,20 @@ class ItemManagement {
         }
     }
 
-
+    async modifyItemById(req, res) {
+        const id = req.params.id;
+        const data = req.body;
+        if (id == undefined || id == '') {
+            return res.status(422).json({ error: `Invalid id` });
+        }
+        const integerID = parseInt(id, 10);
+        try {
+            const item = await db.modifyItemById(integerID, data);
+            res.status(200).json(item);
+        } catch (err) {
+            res.status(404).end();
+        }
+    }
 
     deleteItemById(req, res) {
         try {

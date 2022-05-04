@@ -93,6 +93,17 @@ class DAO {
         });
     }
 
+    modifyItemById = (id, data) => {
+        return new Promise((resolve, reject) => {
+            const updateQuery = 'UPDATE items SET DESCRIPTION = ?, PRICE = ? WHERE ID = ?';
+            this.db.run(updateQuery, [data.newDescription, data.newPrice, id], (err, rows) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve();
+            });
+        });
+    };
 
 
     deleteItemById = (id) => {
