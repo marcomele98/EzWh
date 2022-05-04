@@ -3,9 +3,11 @@ const express = require('express');
 
 //const DAO = require('./modules/DAO');
 const ItemManagement = require('./modules/management/item-management');
+const InternalOrderManagement = require('./modules/management/internalOrder-management');
 //const db = new DAO('database');
 
 const item = new ItemManagement;
+const internalOrder = new InternalOrderManagement;
 
 // init express
 const app = new express();
@@ -22,6 +24,35 @@ app.get('/api/hello', (req,res)=>{
   return res.status(200).json(message);
 });
 
+
+// internal order api
+app.post('/api/internalOrders', async (req,res) => {
+  return internalOrder.createNewInternalOrder(req, res);
+});
+
+app.get('/api/internalOrders', async (req,res) => {
+  return internalOrder.getListInternalOrders(req, res);
+});
+
+app.get('/api/internalOrdersIssued', async (req,res) => {
+  return internalOrder.getListIssuedInternalOrders(req, res);
+});
+
+app.get('/api/internalOrdersAccepted', async (req,res) => {
+  return internalOrder.getListAcceptedInternalOrders(req, res);
+});
+
+app.get('/api/internalOrders/:id', async (req,res) => {
+  return internalOrder.getInternalOrderById(req, res);
+});
+
+app.delete('/api/internalOrders/:id', async (req,res) => {
+  return internalOrder.deleteInternalOrderById(req, res);
+});
+
+
+
+// item api
 app.post('/api/items', async (req,res) => {
   return item.createNewItem(req, res);
 });
@@ -41,7 +72,6 @@ app.put('/api/items/:id', async (req,res) => {
 app.delete('/api/items/:id', async (req,res) => {
   return item.deleteItemById(req, res);
 });
-
 
 
 // activate the server
