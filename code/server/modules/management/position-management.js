@@ -45,4 +45,32 @@ function PositionManagement() {
         });
     }
 
+    //fn that modifies the attributes of a position tuple in db. Returns a boolean
+    this.modifyPositionAttributes = (db, id, aisle, row, column, maxWeight, maxVolume, occupiedWeight, occupiedVolume) => {
+        return new Promise((resolve, reject) => {
+            const sql = 'UPDATE positions SET aisle = ?, row = ?, column = ?, maxWeight= ?, maxVolume= ?, occupiedWeight= ?, occupiedVolume= ? WHERE id = ?';
+            db.run(sql, [aisle, row, column, maxWeight, maxVolume, occupiedWeight, occupiedVolume, id], function(err) {
+              if(err) reject(err);
+              else {
+                  if(this.changes !== 0) resolve(true);
+                  else resolve(false);
+              }
+            });
+        });
+    }
+
+    //fn that creates a new tuple of position in db. Return a boolean.
+    this.createNewPositionWH = (db, id, aisle, row, column, maxWeight, maxVolume, occupiedWeight, occupiedVolume) => {
+        return new Promise((resolve, reject) => {
+            const sql = 'INSERT INTO positions (id, aisle, row, column, maxWeight, maxVolume, occupiedWeight, occupiedVolume) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+            db.run(sql, [id, aisle, row, column, maxWeight, maxVolume, occupiedWeight, occupiedVolume], function(err) {
+              if(err) reject(err);
+              else {
+                  if(this.changes !== 0) resolve(true);
+                  else resolve(false);
+              }
+            });
+        });
+    }
+
 }
