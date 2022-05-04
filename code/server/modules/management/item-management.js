@@ -6,16 +6,22 @@ class ItemManagement {
     constructor() { }
 
     async createNewItem(req, res) {
-        if (Object.keys(req.body).length === 0) {
-            return res.status(422).json({ error: `Empty body request` });
-        }
         let item = req.body;
-        if (item.description === '' || item.price == 0 || item.skuId == '' || item.supplierId == '') {
-            return res.status(422).json({ error: `Invalid item data` });
+        const skuSupp = await db.getSkuBySupplier(req.body.SKUId, req.body.supplierId)
+        if (skuSupp.length !== 0 || item.length === 0 || item.id == 0 || item.description === '' || item.price == 0 || item.skuId == 0 || item.supplierId == 0) {
+            return res.status(422).end();
         }
-        await db.newTableItem();
-        db.storeItem(item);
-        return res.status(201).end();
+        const sku = await db.getSkuById(req.body.SKUId);
+        if (sku.length === 0){
+            return res.status(404).end();
+        }
+        try {
+            await db.newTableItem();
+            db.storeItem(item);
+            res.status(201).end();
+        } catch (err) {
+            res.status(503).end();
+        }
     }
 
     async getListItems(req, res) {
@@ -23,45 +29,53 @@ class ItemManagement {
             const listItem = await db.getListItems();
             res.status(200).json(listItem);
         } catch (err) {
-            res.status(404).end();
+            res.status(500).end();
         }
     }
 
     async getItemById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '') {
-            return res.status(422).json({ error: `Invalid id` });
+        if (id == undefined || id == '' || id == 0) {
+            return res.status(422).end();
         }
-        const integerID = parseInt(id, 10);
-        try {
-            const item = await db.getItemById(integerID);
-            res.status(200).json(item);
-        } catch (err) {
-            res.status(404).end();
-        }
+        const item = await db.getItemById(id);
+        if(item.length === 0) {
+            return res.status(404).end();
+        } else if (item.length !== 0) {
+            return res.status(200).json(item);
+        } 
+        return res.status(500).end();
     }
 
     async modifyItemById(req, res) {
         const id = req.params.id;
         const data = req.body;
-        if (id == undefined || id == '') {
-            return res.status(422).json({ error: `Invalid id` });
+        if (data.length == 0 || data.newDescription == '' || data.newPrice == 0) {
+            return res.status(422).end();
         }
-        const integerID = parseInt(id, 10);
-        try {
-            const item = await db.modifyItemById(integerID, data);
-            res.status(200).json(item);
-        } catch (err) {
+        const item = await db.getItemById(id);
+        if( item.length !== 0 ) {
+            try{
+                await db.modifyItemById(id, data);
+                res.status(200).end();
+            } catch(err) {
+                res.status(503).end();
+            }
+        } else {
             res.status(404).end();
         }
     }
 
     deleteItemById(req, res) {
+        const id = req.params.id;
+        if (id == undefined || id == '' || id == 0) {
+            return res.status(422).end();
+        }
         try {
             db.deleteItemById(req.params.id);
             res.status(204).end();
         } catch (err) {
-            res.status(500).end();
+            res.status(503).end();
         }
     }
 }

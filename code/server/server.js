@@ -5,10 +5,11 @@ const express = require('express');
 const ItemManagement = require('./modules/management/item-management');
 const InternalOrderManagement = require('./modules/management/internalOrder-management');
 //const db = new DAO('database');
+const SkuManagement = require ('./modules/management/sku-management');
 
 const item = new ItemManagement;
 const internalOrder = new InternalOrderManagement;
-
+const sku = new SkuManagement;
 // init express
 const app = new express();
 const port = 3001;
@@ -71,6 +72,29 @@ app.put('/api/items/:id', async (req,res) => {
 
 app.delete('/api/items/:id', async (req,res) => {
   return item.deleteItemById(req, res);
+});
+
+
+/* ------------------SKU ROUTES ----------------- */
+app.get('/api/skus', async(req,res) => {
+  return sku.getSkuList(req,res);
+});
+
+app.get('/api/skus/:id', async(req,res) => {
+  return sku.getSkuById(req,res);
+})
+
+app.post('/api/sku', async(req,res) => {
+  return sku.addSku(req,res);
+});
+
+
+app.put('/api/sku/:id', async(req,res) => {
+  return sku.updateSkuInfo(req,res);
+});
+
+app.delete('/api/skus/:id', async(req,res) =>{
+  return sku.deleteSkuById(req,res);
 });
 
 
