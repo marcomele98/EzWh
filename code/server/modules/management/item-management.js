@@ -1,6 +1,7 @@
 "use strict"
-const DAO = require('../DAO');
-const db = new DAO('database');
+
+const db = require('../database/itemDAO');
+
 class ItemManagement {
 
     constructor() { }
@@ -11,10 +12,10 @@ class ItemManagement {
         if (skuSupp.length !== 0 || item.length === 0 || item.id == 0 || item.description === '' || item.price == 0 || item.skuId == 0 || item.supplierId == 0) {
             return res.status(422).end();
         }
-        const sku = await db.getSkuById(req.body.SKUId);
-        if (sku.length === 0){
-            return res.status(404).end();
-        }
+//        const sku = await db.getSkuById(req.body.SKUId);
+//        if (sku.length === 0){
+//            return res.status(404).end();
+ //       }
         try {
             await db.newTableItem();
             db.storeItem(item);

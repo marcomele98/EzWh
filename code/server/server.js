@@ -1,16 +1,18 @@
 'use strict';
 const express = require('express');
 
-//const DAO = require('./modules/DAO');
+
 const ItemManagement = require('./modules/management/item-management');
 const InternalOrderManagement = require('./modules/management/internalOrder-management');
-//const db = new DAO('database');
+
 const SkuManagement = require ('./modules/management/sku-management');
 const PositionManagement = require('./modules/management/position-management');
 
 const position = new PositionManagement();
+
 const item = new ItemManagement;
 const internalOrder = new InternalOrderManagement;
+
 const sku = new SkuManagement;
 // init express
 const app = new express();
@@ -47,6 +49,10 @@ app.get('/api/internalOrdersAccepted', async (req,res) => {
 
 app.get('/api/internalOrders/:id', async (req,res) => {
   return internalOrder.getInternalOrderById(req, res);
+});
+
+app.put('/api/internalOrders/:id', async (req,res) => {
+  return internalOrder.modifyInternalOrderById(req, res);
 });
 
 app.delete('/api/internalOrders/:id', async (req,res) => {

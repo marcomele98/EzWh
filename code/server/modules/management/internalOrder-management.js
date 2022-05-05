@@ -1,6 +1,6 @@
 "use strict"
-const DAO = require('../DAO');
-const db = new DAO('database');
+
+const db = require('../database/internalOrderDAO');
 
 class InternalOrderManagement {
 
@@ -11,11 +11,15 @@ class InternalOrderManagement {
             return res.status(422).json({ error: `Empty body request` });
         }
         let internalOrder = req.body;
-        if (internalOrder.issueDate === '' || internalOrder.producst === '' || internalOrder.customerId === '' ) {
+        if (internalOrder.issueDate === '' || internalOrder.products === '' || internalOrder.customerId === '' ) {
             return res.status(422).json({ error: `Invalid Internal Order data` });
         }
         await db.newTableInternalOrder();
-        db.storeInternalOrder(internalOrder);
+        await db.newTableProducts();
+        await db.newTableSkuIO();
+        await db.storeInternalOrder(internalOrder);
+        const IO = await db.getLastId();
+        db.storeProducts(internalOrder.products, IO["MAX(id)"]);
         return res.status(201).end();
     }
 
@@ -51,29 +55,30 @@ class InternalOrderManagement {
         if (id == undefined || id == '') {
             return res.status(422).json({ error: `Invalid id` });
         }
-        const integerID = parseInt(id, 10);
         try {
-            const internalOrder = await db.getInternalOrderById(integerID);
+            const internalOrder = await db.getInternalOrderById(id);
             res.status(200).json(internalOrder);
         } catch (err) {
             res.status(404).end();
         }
     }
 
-    async modifyItemById(req, res) {
+ /*   async modifyInternalOrderById(req, res) {
         const id = req.params.id;
         const data = req.body;
         if (id == undefined || id == '') {
             return res.status(422).json({ error: `Invalid id` });
         }
-        const integerID = parseInt(id, 10);
         try {
-            const item = await db.modifyItemById(integerID, data);
-            res.status(200).json(item);
+            const internalOrder = await db.modifyStateInternalOrderById(data.newState, id);
+            if(data.newState === 'COMPLETED') {
+                db.storeSkuIO(data.products, id);
+            }
+            res.status(200).json(internalOrder);
         } catch (err) {
             res.status(404).end();
         }
-    }
+    } */
 
     deleteInternalOrderById(req, res) {
         try {
