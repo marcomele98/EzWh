@@ -8,7 +8,7 @@ const InternalOrderManagement = require('./modules/management/internalOrder-mana
 const SkuManagement = require ('./modules/management/sku-management');
 const PositionManagement = require('./modules/management/position-management');
 
-const position = new PositionManagement();
+const position = new PositionManagement;
 
 const item = new ItemManagement;
 const internalOrder = new InternalOrderManagement;
@@ -108,6 +108,22 @@ app.delete('/api/skus/:id', async(req,res) =>{
 /* ------------------- POSITION ------------------- */
 app.get('/api/positions', async(req,res) => {
   return position.getListAllPositionsWH(req, res);
+});
+
+app.put('/api/position/:positionID', async(req,res) => {
+  return position.modifyPositionAttributes(req, res);
+});
+
+app.put('/api/position/:positionID/changeID', async(req,res) => {
+  return position.modifyPositionID(req, res);
+});
+
+app.post('/api/position', async(req,res) => {
+  return position.createNewPosition(req, res);
+});
+
+app.delete('/api/position/:positionID', async(req,res) => {
+  return position.deletePositionWHByID(req, res);
 });
 
 // activate the server
