@@ -8,11 +8,11 @@ class ItemManagement {
 
     async createNewItem(req, res) {
         let item = req.body;
-        const skuSupp = await db.getSkuBySupplier(req.body.SKUId, req.body.supplierId)
-        if (skuSupp !== undefined || item == '' || item == undefined || item.description == undefined || item.description === ''
-            || item.price == 0 || item.price == undefined || item.price == 0 || isNaN(item.price) || item.supplierId == 0
+        const skuSupp = await db.getSkuBySupplier(req.body.SKUId, req.body.supplierId);
+        if (skuSupp != undefined || item == '' || item == undefined || item.description == undefined || item.description === ''
+            || item.price == 0 || item.price == undefined || isNaN(item.price) || item.price == 0 || item.supplierId == 0
             || item.supplierId == undefined || item.supplierId == '' || isNaN(item.supplierId) || item.id == 0 || item.id == undefined
-            || item.id == '' || isNaN(item.id) || item.skuId == 0 || isNaN(item.skuId) || item.skuId == '') {
+            || item.id == '' || isNaN(item.id) || item.SKUId == 0 || isNaN(item.SKUId) || item.SKUId == '' || item.SKUId == undefined) {
             return res.status(422).end();
         }
         const sku = await db.getSkuById(req.body.SKUId);
