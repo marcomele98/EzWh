@@ -8,9 +8,11 @@ const InternalOrderManagement = require('./modules/management/internalOrder-mana
 const SkuManagement = require ('./modules/management/sku-management');
 const PositionManagement = require('./modules/management/position-management');
 const TestDescriptorManagement = require('./modules/management/test-descriptor-management');
+const TestResultManagement = require('./modules/management/test-result-management');
 
 const position = new PositionManagement;
 const testDescriptor = new TestDescriptorManagement;
+const testResult = new TestResultManagement;
 
 const item = new ItemManagement;
 const internalOrder = new InternalOrderManagement;
@@ -147,6 +149,28 @@ app.put('/api/testDescriptor/:id', async(req,res) => {
 
 app.delete('/api/testDescriptor/:id', async(req,res) => {
   return testDescriptor.deleteTestDescriptorByID(req, res);
+});
+
+/*------------------- TEST RESULTS ------------------- */
+
+app.get('/api/skuitems/:rfid/testResults', async(req,res) => {
+  return testResult.getTestResultsListByRfid(req, res);
+});
+
+app.get('/api/skuitems/:rfid/testResults/:id', async(req,res) => {
+  return testResult.getTestResultByIds(req, res);
+});
+
+app.post('/api/skuitems/testResult', async(req,res) => {
+  return testResult.createTestResultByRfid(req, res);
+});
+
+app.put('/api/skuitems/:rfid/testResult/:id', async(req,res) => {
+  return testResult.modifyTestResultByIds(req, res);
+});
+
+app.delete('/api/skuitems/:rfid/testResult/:id', async(req,res) => {
+  return testResult.deleteTestResultByIds(req, res);
 });
 
 // activate the server
