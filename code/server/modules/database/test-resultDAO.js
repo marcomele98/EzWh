@@ -4,6 +4,11 @@
 
 const db = require('./DAO');
 
+exports.getLastID = () => {
+    const query = 'SELECT MAX(id) AS last FROM TESTRESULTS';
+    return db.get(query, []);
+}
+
 exports.getTestResultsListByRfid = (rfid) => {
     const query = 'SELECT id, idTestDescriptor, Date, Result FROM TESTRESULTS WHERE rfid = ?';
     db.all(query, [rfid]);
@@ -14,12 +19,14 @@ exports.getTestResultByIds = (id, rfid) => {
     db.get(query, [rfid, id]);
 }
 
-exports.createTestResultByRfid = () => {
-    const query = '';
+exports.createTestResultByRfid = (id, data) => {
+    const query = 'INSERT INTO TESTRESULTS(id, idTestDescriptor, Date, Result, rfid) VALUES (?, ?, ?, ?, ?)';
+    db.run(query, [id, data.idTestDescriptor, data.Date, data.Result, data.rfid])
 }
 
-exports.modifyTestResultByIds = () => {
-    const query = '';
+exports.modifyTestResultByIds = (id, data, rfid) => {
+    const query = 'UPDATE TESTRESULTS SET idTestDescriptor= ?, Date= ?, Result= ? WHERE id= ? AND rfid= ?';
+    db.run(query, [data.newIdTestDescriptor, data.newDate, data.newResult, id, rfid]);
 }
 
 exports.deleteTestResultByIds = (id, rfid) => {
@@ -28,7 +35,7 @@ exports.deleteTestResultByIds = (id, rfid) => {
 }
 
 exports.newTableTestResults = () => {
-    const query = 'CREATE TABLE IF NOT EXISTS TESTRESULTS (id NUMBER PRIMARY KEY, idTestDescriptor NUMBER, Date STRING, Result INTEGER, rfid STRING)';
+    const query = 'CREATE TABLE IF NOT EXISTS TESTRESULTS (id NUMBER PRIMARY KEY, idTestDescriptor NUMBER, Date STRING, Result INTEGER, rfid TEXT)';
     db.run(query, []);
 }
 
