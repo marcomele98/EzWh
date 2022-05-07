@@ -7,6 +7,7 @@ const InternalOrderManagement = require('./modules/management/internalOrder-mana
 
 const SkuManagement = require('./modules/management/sku-management');
 const PositionManagement = require('./modules/management/position-management');
+const SkuItemManagement = require('./modules/management/sku-item-management');
 const TestDescriptorManagement = require('./modules/management/test-descriptor-management');
 const TestResultManagement = require('./modules/management/test-result-management');
 const UserManagement = require('./modules/management/user-management')
@@ -20,6 +21,7 @@ const internalOrder = new InternalOrderManagement;
 const user = new UserManagement;
 
 const sku = new SkuManagement;
+const skuItem = new SkuItemManagement;
 
 // init express
 const app = new express();
@@ -41,6 +43,7 @@ app.get('/api/userinfo', (req, res) => {
   return res.status(200).end();
 });
 
+// internal order api
 app.get('/api/suppliers', (req, res) => {
   return user.getListSuppliers(req, res);
 });
@@ -122,6 +125,7 @@ app.delete('/api/internalOrders/:id', async (req, res) => {
 
 
 
+
 /* ------------------- ITEM ------------------- */
 app.post('/api/items', async (req, res) => {
   return item.createNewItem(req, res);
@@ -144,8 +148,8 @@ app.delete('/api/items/:id', async (req, res) => {
 });
 
 
+/* ------------------     SKU   ------------------- */
 
-/* ------------------SKU ROUTES ----------------- */
 app.get('/api/skus', async (req, res) => {
   return sku.getSkuList(req, res);
 });
@@ -158,16 +162,44 @@ app.post('/api/sku', async (req, res) => {
   return sku.addSku(req, res);
 });
 
+
 app.put('/api/sku/:id', async (req, res) => {
   return sku.updateSkuInfo(req, res);
 });
+
+app.put('/api/sku/:id/position', async (req, res) => {
+  return sku.updateSkuPosition(req, res);
+})
 
 app.delete('/api/skus/:id', async (req, res) => {
   return sku.deleteSkuById(req, res);
 });
 
 
+/* --------------------SKU ITEM ------------------- */
+app.get('/api/skuitems', async (req, res) => {
+  return skuItem.getSkuItemList(req, res);
+})
 
+app.post('/api/skuitem', async (req, res) => {
+  return skuItem.addSkuItem(req, res);
+})
+
+app.get('/api/skuitems/:rfid', async (req, res) => {
+  return skuItem.getSkuItemByRfid(req, res);
+})
+
+app.get('/api/skuitems/sku/:id', async (req, res) => {
+  return skuItem.getSkuItemBySkuId(req, res);
+})
+
+app.put('/api/skuitems/:rfid', async (req, res) => {
+  return skuItem.editInfoSkuItem(req, res);
+})
+
+app.delete('/api/skuitems/:rfid', async (req, res) => {
+  return skuItem.deleteSkuItemById(req, res);
+})
 /* ------------------- POSITION ------------------- */
 app.get('/api/positions', async (req, res) => {
   return position.getListAllPositionsWH(req, res);
