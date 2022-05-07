@@ -6,18 +6,18 @@ const db = require('./DAO');
 
 exports.newTablePositions = () => {
     const query = 'CREATE TABLE IF NOT EXISTS POSITIONS(positionID STRING PRIMARY KEY, aisleID STRING, row STRING, col STRING, maxWeight NUMBER, maxVolume NUMBER, occupiedWeight NUMBER, occupiedVolume NUMBER)'
-    return db.run(query);
+    return db.run(query, []);
 }
 
 exports.dropPositions = () => {
     const query = 'DROP TABLE POSITIONS';
-    return db.run(query);
+    return db.run(query, []);
 }
 
 // this fn returns the list of all positions in the database
 exports.getListAllPositionsWH = () => {
     const query = 'SELECT * FROM POSITIONS';
-    return db.get(query);
+    return db.all(query, []);
 }
 
 // fn that returns a position given its id

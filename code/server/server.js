@@ -7,8 +7,10 @@ const InternalOrderManagement = require('./modules/management/internalOrder-mana
 
 const SkuManagement = require ('./modules/management/sku-management');
 const PositionManagement = require('./modules/management/position-management');
+const TestDescriptorManagement = require('./modules/management/test-descriptor-management');
 
 const position = new PositionManagement;
+const testDescriptor = new TestDescriptorManagement;
 
 const item = new ItemManagement;
 const internalOrder = new InternalOrderManagement;
@@ -124,6 +126,27 @@ app.post('/api/position', async(req,res) => {
 
 app.delete('/api/position/:positionID', async(req,res) => {
   return position.deletePositionWHByID(req, res);
+});
+
+/*------------------- TEST DESCRIPTORS ------------------- */
+app.post('/api/testDescriptor', async(req,res) => {
+  return testDescriptor.createTestDescriptor(req, res);
+});
+
+app.get('/api/testDescriptors', async(req,res) => {
+  return testDescriptor.getListTestDescriptors(req, res);
+});
+
+app.get('/api/testDescriptors/:id', async(req,res) => {
+  return testDescriptor.getTestDescriptorByID(req, res);
+});
+
+app.put('/api/testDescriptor/:id', async(req,res) => {
+  return testDescriptor.modifyTestDescriptorByID(req, res);
+});
+
+app.delete('/api/testDescriptor/:id', async(req,res) => {
+  return testDescriptor.deleteTestDescriptorByID(req, res);
 });
 
 // activate the server

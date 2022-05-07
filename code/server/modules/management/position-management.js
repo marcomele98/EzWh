@@ -17,8 +17,15 @@ class PositionManagement {
 
     async createNewPosition(req, res) {
         const data = req.body;
-        if (data.length === 0 || data.positionID.length !== 12 || data.aisleID.length !== 4 || data.row.length !== 4 || data.col.length !== 4 ||
-            data.maxWeight === 0 || data.maxVolume === 0) {
+        if (data.length === 0 || data.positionID === undefined || data.aisleID === undefined ||
+            data.row === undefined || data.col === undefined ||
+            data.positionID.length !== 12 ||
+            data.aisleID.length !== 4 || 
+            data.row.length !== 4 || 
+            data.col.length !== 4 ||  
+            data.maxWeight === undefined || data.maxVolume === undefined ||
+            isNaN(data.maxWeight) || isNaN(data.maxVolume) ||
+            data.maxWeight <= 0 || data.maxVolume <= 0) {
             return res.status(422).end();
         }
         const id = data.aisleID + data.row + data.col;
@@ -35,15 +42,18 @@ class PositionManagement {
 
     async modifyPositionAttributes(req, res) {
         const data = req.body;
-        if (data.length === 0 || req.params.positionID.length !== 12 || data.newAisleID.length !== 4 || data.newRow.length !== 4 || data.newCol.length !== 4 ||
-            data.newMaxWeight === 0 || data.newMaxVolume === 0 || data.newOccupiedVolume < 0 || data.newOccupiedWeight < 0) {
+        if (data.length === 0 || req.params.positionID === undefined || data.newAisleID === undefined ||
+            data.newRow === undefined || data.newCol === undefined || 
+            req.params.positionID.length !== 12 || data.newAisleID.length !== 4 || data.newRow.length !== 4 || data.newCol.length !== 4 ||
+            isNaN(data.newMaxWeight) || isNaN(data.newMaxVolume) || isNaN(data.newOccupiedVolume) || isNaN(data.newOccupiedWeight) ||
+            data.newMaxWeight <= 0 || data.newMaxVolume <= 0 || data.newOccupiedVolume < 0 || data.newOccupiedWeight < 0) {
             return res.status(422).end();
         }
         try {
             const id = req.params.positionID;
             const tuple = await db.getPositionByID(id);
             const newId = data.newAisleID + data.newRow + data.newCol;
-            if (tuple === undefined){
+            if (tuple === undefined || tuple === null){
                 return res.status(404).end();
             }
             db.modifyPositionAttributes(data, newId);
@@ -56,12 +66,14 @@ class PositionManagement {
     async modifyPositionID(req, res) {
         const newId = req.body.newPositionID;
         const oldId = req.params.positionID;
-        if (req.body.length === 0 || oldId.length !== 12 || newId.length !== 12) {
+        if (req.body.length === 0 || newId === null || newId === undefined ||
+            oldId === null || oldId === undefined ||
+            oldId.length !== 12 || newId.length !== 12) {
             return res.status(422).end();
         }
         try {
             const tuple = await db.getPositionByID(oldId);
-            if (tuple === undefined){
+            if (tuple === undefined || tuple === null){
                 return res.status(404).end();
             }
             const aisle = newId.slice(0, 4);
@@ -76,7 +88,7 @@ class PositionManagement {
 
     async deletePositionWHByID(req, res) {
         const id = req.params.positionID;
-        if (id.length !== 12) {
+        if (id === undefined || id === null || id.length !== 12) {
             return res.status(422).end();
         }
         try {
