@@ -7,16 +7,17 @@ const db = require('./DAO');
 
 // function for Internal Order
 exports.newTableInternalOrder = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS internalOrders(id integer PRIMARY KEY AUTOINCREMENT, issueDate STRING, state STRING, products STRING, customerId STRING )';
+    const sql = 'CREATE TABLE IF NOT EXISTS internalOrders(id integer PRIMARY KEY AUTOINCREMENT, issueDate STRING, state TEXT, products STRING, customerId STRING )';
     return db.run(sql);
 }
+
 exports.newTableProducts = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS products(IOId INTEGER, SKUId INTEGER , description STRING, price float, quantity INTEGER, PRIMARY KEY("IOId","SKUId"))';
+    const sql = 'CREATE TABLE IF NOT EXISTS products(IOId INTEGER, SKUId INTEGER , description TEXT, price float, quantity INTEGER, PRIMARY KEY("IOId","SKUId"))';
     return db.run(sql);
 }
 
 exports.newTableSkuIO = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS skuIO(IOId INTEGER, SKUId INTEGER, RFID TEXT, PRIMARY KEY("IOId","RFID"))';
+    const sql = 'CREATE TABLE IF NOT EXISTS skuIO (IOid INTEGER, SKUId INTEGER, RFID TEXT PRIMARY KEY)';
     return db.run(sql);
 }
 
@@ -26,24 +27,28 @@ exports.storeInternalOrder = (data) => {
 }
 
 exports.storeProducts = (data, IOid) => {
-    const sql1 = 'INSERT INTO Products (IOid, SKUId, description, price, quantity) VALUES(?, ?, ?, ?, ?)'
-    for(var i = 0; i < data.length; i++){
+    const sql1 = 'INSERT INTO Products (IOId, SKUId, description, price, quantity) VALUES(?, ?, ?, ?, ?)'
+    for (var i = 0; i < data.length; i++) {
         db.run(sql1, [IOid, data[i].SKUId, data[i].description, data[i].price, data[i].qty])
     }
 }
 
 exports.storeSkuIO = (data, IOid) => {
-    const sql1 = 'INSERT INTO skuIO(IOid, SKUId, RFID) VALUES(?, ?, ?)'
-    for(var i = 0; i < data.length; i++){
+    const sql1 = 'INSERT OR IGNORE INTO skuIO (IOid, SKUId, RFID) VALUES(?, ?, ?)'
+    for (var i = 0; i < data.length; i++) {
         db.run(sql1, [IOid, data[i].SkuID, data[i].RFID]);
     }
 }
 
 exports.getListProducts = (id) => {
-    const sql = 'SELECT * FROM products WHERE IOid = ?';
+    const sql = 'SELECT SKUId, description, price, quantity FROM products WHERE IOid = ?';
     return db.all(sql, [id]);
 }
 
+exports.getListSKU = (id) => {
+    const sql = 'SELECT SKUId, RFID FROM skuIO WHERE IOid = ?';
+    return db.all(sql, [id]);
+}
 
 exports.getLastId = () => {
     const sql = 'SELECT MAX(id) FROM internalOrders';
@@ -73,9 +78,9 @@ exports.getInternalOrderById = (id) => {
     return IO;
 }
 
-exports.modifyStateInternalOrderById = (state, id) => {
+exports.modifyStateInternalOrderById = (data, id) => {
     const sql = 'UPDATE internalOrders SET state = ? WHERE ID = ?';
-    return db.run(sql, [state, id]);
+    return db.run(sql, [data.newState, id]);
 }
 
 exports.deleteInternalOrderById = (id) => {
@@ -83,4 +88,11 @@ exports.deleteInternalOrderById = (id) => {
     db.run(sql, [id]);
     const sql1 = 'DELETE FROM products WHERE IOid = ?';
     db.run(sql1, [id]);
+    const sql2 = 'DELETE FROM skuIO WHERE IOid = ?';
+    db.run(sql2, [id]);
 };
+
+
+this.newTableInternalOrder();
+this.newTableProducts();
+this.newTableSkuIO();

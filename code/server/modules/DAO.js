@@ -74,97 +74,51 @@ class DAO {
     }
 
 }
+    // --------------------------------------- FUNCTIONS FOR TEST RESULTS --------------------------------------
 
-/* ------------ POSITION METHODS-------------------- */
-
-// this fn returns the list of all positions in the database
-this.getListAllPositionsWH = () => {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM positions';
-        this.db.all(sql, [], (err, rows) => {
-            if (err)
-                reject(err);
-            else {
-                const positions = rows.map(dbrow => ({
-                    id: dbrow.id,
-                    aisle: dbrow.id,
-                    row: dbrow.row,
-                    column: dbrow.column,
-                    maxWeight: dbrow.maxWeight,
-                    maxVolume: dbrow.maxVolume,
-                    occupiedWeight: dbrow.occupiedWeight,
-                    occupiedVolume: dbrow.occupiedVolume
-                }));
-                resolve(positions);
-            }
+    // fn that returns a list of all test results in db for a given sku item
+    this.getAllTestResultsForRFID = (rfid) => {
+        return new Promise((resolve, reject) => {
+            const sql = 'SELECT t.id AS id, t.date AS date, t.result AS result, t.idTestDescriptor AS idTestDescriptor FROM test_results t, sku_items s WHERE s.rfid=? AND s.testId=t.id';
+            this.db.all(sql, [rfid], (err, rows) => {
+                if(err)
+                    reject(err);
+                else {
+                    const testResults = rows.map( dbRow => ({id : dbRow.id, 
+                        date: dbRow.date, 
+                        result: dbRow.result,
+                        idTestDescriptor: dbRow.idTestDescriptor}) );
+                    resolve(testResults);
+                }
+            });
         });
-    });
-}
+    }
 
-// this fn deletes a position in the database give its id. Returns a boolean
-this.deletePositionWHByID = (id) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'DELETE FROM positions WHERE id = ?';
-        this.db.run(sql, [id], function (err) {
-            if (err) reject(err);
-            else {
-                if (this.changes !== 0) resolve(true);
-                else resolve(false);
-            }
+    // fn that returns a single test result of a sku item given its id
+    this.getTestResultForRFID = (rfid, testId) => {
+        return new Promise((resolve, reject) => {
+            const sql = 'SELECT t.id AS id, t.date AS date, t.result AS result, t.idTestDescriptor AS idTestDescriptor FROM test_results t, sku_items s WHERE s.rfid=? AND s.testId=t.id AND t.id =?';
+            this.db.get(sql, [rfid, testId], (err, row) => {
+                if(err)
+                    reject(err);
+                else {
+                    const testResult = row.map( dbRow => ({id : dbRow.id, 
+                        date: dbRow.date, 
+                        result: dbRow.result,
+                        idTestDescriptor: dbRow.idTestDescriptor}) );
+                    resolve(testResult);
+                }
+            });
         });
-    });
-}
+    }
 
-// this fn modifies the id of a position, leaving all its other attributes unmodified
-this.modifyPositionID = (oldId, newId) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'UPDATE positions SET id = ? WHERE id = ?';
-        this.db.run(sql, [newId, oldId], function (err) {
-            if (err) reject(err);
-            else {
-                if (this.changes !== 0) resolve(true);
-                else resolve(false);
-            }
-        });
-    });
-}
-
-//fn that modifies the attributes of a position tuple in db. Returns a boolean
-this.modifyPositionAttributes = (id, aisle, row, column, maxWeight, maxVolume, occupiedWeight, occupiedVolume) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'UPDATE positions SET aisle = ?, row = ?, column = ?, maxWeight= ?, maxVolume= ?, occupiedWeight= ?, occupiedVolume= ? WHERE id = ?';
-        this.db.run(sql, [aisle, row, column, maxWeight, maxVolume, occupiedWeight, occupiedVolume, id], function (err) {
-            if (err) reject(err);
-            else {
-                if (this.changes !== 0) resolve(true);
-                else resolve(false);
-            }
-        });
-    });
-}
-
-//fn that creates a new tuple of position in db. Return a boolean.
-this.createNewPositionWH = (id, aisle, row, column, maxWeight, maxVolume, occupiedWeight, occupiedVolume) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO positions (id, aisle, row, column, maxWeight, maxVolume, occupiedWeight, occupiedVolume) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-        this.db.run(sql, [id, aisle, row, column, maxWeight, maxVolume, occupiedWeight, occupiedVolume], function (err) {
-            if (err) reject(err);
-            else {
-                resolve(this.lastID);
-            }
-        });
-    });
-}
-
-// --------------------------------------- FUNCTIONS FOR TEST DESCRIPTORS --------------------------------------
-
-// fn that inserts a new test descriptor in the db. Returns a boolean
-this.createTestDescriptor = (id, name, procedure, idSku) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO test_descriptors (id, name, procedure, idSku) VALUES (?, ?, ?, ?)';
-        this.db.run(sql, [id, name, procedure, idSku], function (err) {
-            if (err) reject(err);
-            else {
+    // fn that inserts in the db a new test result. Returns a boolean
+    this.insertNewTestResult = (id, date, result, idTestDescriptor) => {
+        return new Promise((resolve, reject) => {
+            const sql = 'INSERT INTO test_results (id, date, result, idTestDescriptor) VALUES (?, ?, ?, ?)';
+            this.db.run(sql, [id, date, result, idTestDescriptor], function(err) {
+              if(err) reject(err);
+              else {
                 resolve(this.lastID);
             }
         });
