@@ -3,21 +3,49 @@
 const dayjs = require('dayjs')
 const db = require('../database/test-resultDAO');
 const dbTestDescriptor = require('../database/test-descriptorDAO');
+const dbSKUItem = require('../database/skuItemDAO');
 
 class TestResultManagement {
 
     constructor() { }
+    noContent = (data) => {
+        return data=== null || data === undefined;
+    }
+
+    isNotValidRFID = (rfid) => {
+        return rfid === undefined || rfid === null || rfid.length !== 32;
+    }
+
+    isNotValidID = (id) => {
+        return id === undefined || id === null || isNaN(id);
+    }
+
+    isNotValidIdTestDescriptor = (idTestDescriptor) => {
+        return idTestDescriptor === undefined || idTestDescriptor === null || isNaN(idTestDescriptor);
+    }
+
+    isNotValidResult = (Result) => {
+        return Result === undefined || Result === null || !(Result === true || Result === false);
+    }
+
+    isNotValidBody = (data) => {
+        return data === undefined || data === null || data.length === 0;
+    }
+
+    isNotValidDate = (Date) => {
+        return dayjs(Date, 'YYYY-MM-DD', true).isValid() !== true;
+    }
 
     async getTestResultsListByRfid(req, res){
         const rfid = req.params.rfid;
-        if(rfid === undefined || rfid === null || rfid.length !== 32){
+        if(this.isNotValidRFID(rfid)){
             return res.status(422).end();
         }
         try{
-            // const skuItem = await db.getSKUITEMbyRFID(rfid);
-            // if (skuItem === undefined || skuItem === null){
-            //     res.status(404).end();
-            // }
+            const skuItem = await dbSKUItem.getSKUITEMbyRFID(rfid);
+            if (this.noContent(skuItem)){
+                res.status(404).end();
+            }
             const listResults = await db.getTestResultsListByRfid(rfid);
             res.status(200).json(listResults.map( e => ({
                 id: e.id,
@@ -33,15 +61,14 @@ class TestResultManagement {
     async getTestResultByIds(req, res){
         const rfid = req.params.rfid;
         const id = req.params.id;
-        if (rfid === undefined || rfid === null || rfid.length !== 32 ||
-            id === undefined || id === null || isNaN(id)){
+        if (this.isNotValidRFID(rfid) || this.isNotValidID(id)){
                 return res.status(422).end(); 
         }
         try{
-            // const skuItem = await db.getSKUITEMbyRFID(rfid);
-            // if (skuItem === undefined || skuItem === null){
-            //     res.status(404).end();
-            // }
+            const skuItem = await dbSKUItem.getSKUITEMbyRFID(rfid);
+            if (this.noContent(skuItem)){
+                res.status(404).end();
+            }
             const result = await db.getTestResultByIds(id, rfid);
             res.status(200).json(result.map( e => ({
                 id: e.id,
@@ -56,19 +83,15 @@ class TestResultManagement {
 
     async createTestResultByRfid(req, res){
         const data = req.body;
-        if(data === undefined || data === null || data.length === 0 || 
-            data.rfid === undefined || data.rfid === null || data.rfid.length !== 32 || 
-            data.idTestDescriptor === undefined || data.idTestDescriptor === null || isNaN(data.idTestDescriptor) ||
-            data.Result === undefined || data.Result === null || !(data.Result === true || data.Result === false) ||
-            dayjs(data.Date, 'YYYY-MM-DD', true).isValid() !== true ){
+        if(this.isNotValidBody(data) || this.isNotValidRFID(data.rfid) || 
+            this.isNotValidIdTestDescriptor(data.idTestDescriptor) ||
+            this.isNotValidResult(data.Result) || this.isNotValidDate(data.Date)){
                 return res.status(422).end();
         }
         try{
-            // const skuItem = await db.getSKUITEMbyRFID(rfid);
+            const skuItem = await dbSKUItem.getSKUITEMbyRFID(rfid);
             const testDescriptor = await dbTestDescriptor.getTestDescriptorByID(data.idTestDescriptor);
-             if (testDescriptor === undefined || testDescriptor === null
-            //     || skuItem === undefined || skuItem === null
-            ){
+             if ( this.noContent(testDescriptor) || this.noContent(skuItem)){
                 return res.status(404).end();
             }
 
@@ -91,22 +114,16 @@ class TestResultManagement {
         const rfid = req.params.rfid;
         const id = req.params.id;
         let data = req.body;
-        if (rfid === undefined || rfid === null || rfid.length !== 32 ||
-            id === undefined || id === null || isNaN(id) ||
-            data === undefined || data === null || data.length === 0 || 
-            data.newIdTestDescriptor === undefined || data.newIdTestDescriptor === null || isNaN(data.newIdTestDescriptor) ||
-            data.newResult === undefined || data.newResult === null || !(data.newResult === true || data.newResult === false) ||
-            dayjs(data.newDate, 'YYYY-MM-DD', true).isValid() !== true ){
+        if ( this.isNotValidBody(data) || this.isNotValidRFID(rfid) || this.isNotValidID(id) ||
+            this.isNotValidIdTestDescriptor(data.newIdTestDescriptor) ||
+            this.isNotValidResult(data.newResult) || this.isNotValidDate(data.newDate)){
                 return res.status(422).end(); 
         }
         try{
-            // const skuItem = await db.getSKUITEMbyRFID(rfid);
+            const skuItem = await dbSKUItem.getSKUITEMbyRFID(rfid);
             const testDescriptor = await dbTestDescriptor.getTestDescriptorByID(data.newIdTestDescriptor);
             const testResult = await db.getTestResultByIds(id, rfid);
-             if (testDescriptor === undefined || testDescriptor === null ||
-                testResult === undefined || testResult === null
-            //     || skuItem === undefined || skuItem === null
-            ){
+             if ( this.noContent(testDescriptor) || this.noContent(testResult) || this.noContent(skuItem)){
                 return res.status(404).end();
             }
             data = data.map( d => ({
@@ -124,8 +141,7 @@ class TestResultManagement {
     async deleteTestResultByIds(req, res){
         const rfid = req.params.rfid;
         const id = req.params.id;
-        if (rfid === undefined || rfid === null || rfid.length !== 32 ||
-            id === undefined || id === null || isNaN(id)){
+        if ( this.isNotValidRFID(rfid) || this.isNotValidID(id)){
                 return res.status(422).end(); 
         }
         try{

@@ -1,32 +1,57 @@
 'use strict'
 
 const db = require('../database/test-descriptorDAO');
+const dbSKU = require('../database/skuDAO');
 
 class TestDescriptorManagement {
 
     constructor() { }
 
+    noContent = (data) => {
+        return data=== null || data === undefined;
+    }
+
+    isNotValidBody = (data) => {
+        return data === undefined || data === null || data.length === 0;
+    }
+
+    isNotValidProcedureDesc = (procedureDescription) => {
+        return procedureDescription === undefined || procedureDescription === '' || procedureDescription === null;
+    }
+
+    isNotValidIdSKU = (idSKU) => {
+        idSKU === undefined || isNaN(idSKU) || idSKU === null
+    }
+
+    isNotValidID = (id) => {
+        return id === undefined || id === null || isNaN(id);
+    }
+
+    isNotValidName = (name) => {
+        return name === undefined || name === '' || name === null;
+    }
+
     async createTestDescriptor(req, res) {
         const data = req.body;
-        if (data.length === 0 || data.name === undefined || data.name === '' || data.name === null ||
-            data.procedureDescription === undefined || data.procedureDescription === '' || data.procedureDescription === null ||
-            data.idSKU === undefined || isNaN(data.idSKU) || data.idSKU === null) {
+        if (this.isNotValidBody(data) || this.isNotValidName(data.name) ||
+            this.isNotValidProcedureDesc(data.procedureDescription) ||
+            this.isNotValidIdSKU(data.idSKU)) {
             return res.status(422).end();
         }
 
-        // const sku = await getSkuById(data.idSKU);
-        // if(sku === undefined || sku === null){
-        //     res.status(404).end();
-        // }
-
-        let lastID = await db.getLastID();
-        if (lastID['last'] === null){
-            lastID['last'] = 0;
-        }
-        else{
-            lastID['last'] += 1;
-        }
         try {
+            const sku = await dbSKU.getSkuById(data.idSKU);
+            if(this.noContent(sku)){
+                res.status(404).end();
+            }
+
+            let lastID = await db.getLastID();
+            if (lastID['last'] === null){
+                lastID['last'] = 0;
+            }
+            else{
+                lastID['last'] += 1;
+            }
             db.createTestDescriptor(lastID['last'], data);
             res.status(201).end();
         } catch (err) {
@@ -45,13 +70,13 @@ class TestDescriptorManagement {
 
     async getTestDescriptorByID(req, res) {
         const id = req.params.id;
-        if(isNaN(id) || id === undefined || id === null) {
+        if(this.isNotValidID(id)) {
             return res.status(422).end();
         }
 
         try{
             const testDescriptor = await db.getTestDescriptorByID(id);
-            if ( testDescriptor === undefined || testDescriptor === null){
+            if ( this.noContent(testDescriptor)){
                 return res.status(404).end();
             }
             else{
@@ -65,18 +90,17 @@ class TestDescriptorManagement {
     async modifyTestDescriptorByID(req, res) {
         const data = req.body;
         const id = req.params.id;
-        if (data.length === 0 || data.newName === undefined || data.newName === '' || data.newName === null ||
-            data.newIdSKU === undefined || isNaN(data.newIdSKU) || data.newName === null ||
-            data.newProcedureDescription === '' || data.newProcedureDescription === undefined || data.newProcedureDescription === null ||
-            isNaN(id) || id === undefined || id === null) {
+        if (this.isNotValidBody(data) || this.isNotValidName(data.newName) ||
+            this.isNotValidIdSKU(data.newIdSKU)|| this.isNotValidProcedureDesc(data.newProcedureDescription) ||
+            this.isNotValidID(id)) {
             return res.status(422).end();
         }
         try {
-            //const sku = await getSkuByID(data.newIdSKU);
+            const sku = await dbSKU.getSkuByID(data.newIdSKU);
             const testDescriptor = await db.getTestDescriptorByID(id);
             if(
-                //sku === undefined || sku === null || 
-                testDescriptor === undefined || testDescriptor === null){
+                this.noContent(sku) ||
+                this.noContent(testDescriptor)){
                 res.status(404).end();
             }
             db.modifyTestDescriptorByID(id, data);
@@ -88,7 +112,7 @@ class TestDescriptorManagement {
 
     async deleteTestDescriptorByID(req, res) {
         const id = req.params.id;
-        if (id === null || id === undefined || isNaN(id)) {
+        if (this.isNotValidID(id)) {
             return res.status(422).end();
         }
         try {
