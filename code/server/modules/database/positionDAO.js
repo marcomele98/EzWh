@@ -38,6 +38,10 @@ exports.modifyPositionAttributes = (data, newId) => {
     return db.run(query, [newId, data.aisleID, data.row, data.col, data.maxWeight, data.maxVolume, data.occupiedWeight, data.occupiedVolume, data.positionID]);
 }
 
+exports.updateInfoBySKU = (id, newWeight, newVolume) => {
+    const sql = 'UPDATE POSITIONS SET occupiedWeight = ?, occupiedVolume = ? WHERE positionID = ?';
+    return db.run(sql, [newWeight, newVolume, id]);
+}
 // this fn modifies the id of a position, leaving all its other attributes unmodified
 exports. modifyPositionID = (oldId, newId, aisle, row, col) => {
     const query = 'UPDATE POSITIONS SET positionID = ?, aisleID = ?, row = ?, col = ? WHERE positionID = ?';

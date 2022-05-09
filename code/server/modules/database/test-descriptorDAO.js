@@ -39,4 +39,8 @@ exports.deleteTestDescriptorByID = (id) => {
     return db.run(query, [id]);
 }
 
+exports.getTestListBySKU = (id) => {
+    const sql = 'SELECT id FROM TESTDESCRIPTORS WHERE idSKU = ?'
+    return db.all(sql, [id]);
+}
 this.newTableTestDescriptors();
