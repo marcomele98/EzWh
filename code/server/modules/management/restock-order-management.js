@@ -1,131 +1,185 @@
-function RestockOrderManagement() {
+"use strict"
 
-    // RESTOCK ORDER POST REQUESTS
+const dayjs = require('dayjs');
+const db = require('../database/restockOrderDAO');
 
-    this.createNewRestockOrder = (db, id, issueDate, state, transportNote, idSupplier, SkuList, SkuItemList, SkuReturnItemList) => {
-        return new Promise((resolve, reject) => {
-            const sql = 'INSERT INTO restock_orders (id, issueDate, state, transportNote, idSupplier, SkuList, SkuItemList, SkuReturnItemList) VALUES (?, ?, ?, ?, ?, ?, ? ,? ,?)';
-            db.run(sql, [id, issueDate, state, transportNote, idSupplier, SkuList, SkuItemList, SkuReturnItemList], function(err) {
-              if(err) reject(err);
-              else {
-                  if(this.changes !== 0) resolve(true);
-                  else resolve(false);
-              }
-            });
-        });
+class RestockOrderManagement {
+
+    constructor() { }
+
+    async createNewRestockOrder(req, res) {
+        let restockOrder = req.body;
+        if (restockOrder === undefined || restockOrder.issueDate === undefined || restockOrder.products === undefined || restockOrder.supplierId === undefined
+            || restockOrder == '' || restockOrder.issueDate === '' || restockOrder.products === '' || restockOrder.supplierId === "" || restockOrder.supplierId == 0
+            || isNaN(internalOrder.supplierId) || dayjs(restockOrder.issueDate, 'YYYY-MM-DD HH:mm', true).isValid() !== true) {
+            return res.status(422).end();
+        }
+        try {
+            await db.storeRestockOrder(restockOrder);
+            const RE = await db.getLastId();
+            db.storeProducts(restockOrder.products, RE["MAX(id)"]);
+            return res.status(201).end();
+        }
+        catch (err) {
+            return res.status(503).end();
+        }
     }
 
-    // RESTOCK ORDER GET REQUESTS
+    async getListRestockOrder(req, res) {
+        try {
+            const listRestockOrders = await db.getListRestockOrders();
+            for (var i = 0; i < listRestockOrders.length; i++) {
+                const products = await db.getListProducts(listRestockOrders[i].id);
+                listRestockOrders[i].products = products;
 
-    this.getListRestockOrder = (db) => {
-        return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM restock_orders';
-            db.all(sql, [], (err, rows) => {
-                if(err)
-                    reject(err);
-                else {
-                    const restockOrders = rows.map(row => mapToRestockOrder(row));
-                    resolve(restockOrders);
+                if (listRestockOrders[i].state == 'ISSUED') {
+                    listRestockOrders[i].transportNote = '';
+                    listRestockOrders[i].skuReturnItems = '';
                 }
-            });
-        });
-    }
-
-    this.getListIssuedRestockOrder = (db) => {
-        return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM restock_orders, WHERE state = issued';
-            db.all(sql, [], (err, rows) => {
-                if(err)
-                    reject(err);
-                else {
-                    const restockOrders = rows.map(row => mapToRestockOrder(row));
-                    resolve(restockOrders);
+                else if (listRestockOrders[i].state == 'DELIVERY'){
+                    listRestockOrders[i].skuReturnItems = '';
                 }
-            });
-        });
+
+            }
+            res.status(200).json(listRestockOrders);
+        } catch (err) {
+            res.status(500).end();
+        }
     }
 
-    this.getRestockOrderByID = (db, id) => {
-        return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM restock_orders, WHERE id = ?';
-            db.all(sql, [id], (err, rows) => {
-                if(err)
-                    reject(err);
-                else {
-                    const restockOrder = rows.map(row => mapToRestockOrder(row));
-                    resolve(restockOrder);
-                }
-            });
-        });
+    async getListIssuedRestockOrders(req, res) {
+        try {
+            const listRestockOrders = await db.getListIssuedRestockOrders();
+            for (var i = 0; i < listRestockOrders.length; i++) {
+                const products = await db.getListProducts(listRestockOrders[i].id);
+                listRestockOrders[i].products = products;
+                listRestockOrders[i].transportNote = '';
+                listRestockOrders[i].skuReturnItems = '';
+            }
+            res.status(200).json(listRestockOrders);
+        } catch (err) {
+            res.status(404).end();
+        }
     }
 
-    this.getListSKUItemsToReturn = (db, id) => {
-        return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM restock_orders, WHERE id = ?';
-            db.all(sql, [id], (err, rows) => {
-                if(err)
-                    reject(err);
-                else {
-                    const SkuItemList = rows.map(row => mapToSkuItemList(row));
-                    resolve(SkuItemList);
-                }
-            });
-        });
+    async getRestockOrderById(req, res) {
+        const id = req.params.id;
+        if (id == undefined || id == '' || isNaN(id)) {
+            return res.status(422).end();
+        }
+        try {
+            const restockOrder = await db.getRestockOrderById(id);
+            if (restockOrder == undefined) {
+                return res.status(404).end();
+            }
+            if (restockOrder.state == 'ISSUED') {
+                restockOrder.skuReturnItems = '';
+                restockOrder.transportNote = '';
+
+            } else if (restockOrder.state == 'DELIVERY'){
+                restockOrder.skuReturnItems = '';
+            }
+            const products = await db.getListProducts(id);
+            restockOrder.products = products;
+            
+            return res.status(200).json(restockOrder);
+        } catch (err) {
+            res.status(500).end();
+        }
     }
 
-    // RESTOCK ORDER PUT REQUESTS
-
-    this.modifyStateRestockOrder = (db, id, state) => {
-        return new Promise((resolve, reject) => {
-            const sql = 'UPDATE restock_orders SET state=?, WHERE id = ?';
-            db.run(sql, [id, state], function(err) {
-              if(err) reject(err);
-              else {
-                  if(this.changes !== 0) resolve(true);
-                  else resolve(false);
-              }
-            });
-        });
+    async getListSKUItemsToReturn(req, res) {
+        const id = req.params.id;
+        if (id == undefined || id == '' || isNaN(id)) {
+            return res.status(422).end();
+        }
+        try {
+            const SkuReturn = await db.getListSKURET(id);
+            const restockOrder = await db.getRestockOrderById(id);
+            if (restockOrder.state != 'COMPLETEDRETURN') {
+                return res.status(422).end();
+            }
+            if (restockOrder == undefined) {
+                return res.status(404).end();
+            }
+            return res.status(200).json(SkuReturn);
+        } catch (err) {
+            res.status(500).end();
+        }
     }
 
-    this.addSKUItemsToRestockOrder = (db, id, SkuItemList) => {
-        return new Promise((resolve, reject) => {
-            const sql = 'UPDATE restock_orders SET SkuItemList=?, WHERE id = ?';
-            db.run(sql, [id, SkuItemList], function(err) {
-              if(err) reject(err);
-              else {
-                  if(this.changes !== 0) resolve(true);
-                  else resolve(false);
-              }
-            });
-        });
+    async modifyStateRestockOrderById(req, res) {
+        const id = req.params.id;
+        const data = req.body;
+        if (id == undefined || id == '' || isNaN(id)) {
+            return res.status(422).end();
+        }
+        const RE = await db.getRestockOrderById(id);
+        if (RE != undefined) {
+            try {
+                const restockOrder = await db.modifyStateRestockOrderOrderById(data, id);
+                return res.status(200).json(restockOrder);
+            } catch (err) {
+                res.status(503).end();
+            }
+        } else {
+            return res.status(404).end();
+        }
     }
 
-    this.addTransportNotetoRestockOrder = (db, id, transportNote) => {
-        return new Promise((resolve, reject) => {
-            const sql = 'UPDATE restock_orders SET transportNote=?, WHERE id = ?';
-            db.run(sql, [id, transportNote], function(err) {
-              if(err) reject(err);
-              else {
-                  if(this.changes !== 0) resolve(true);
-                  else resolve(false);
-              }
-            });
-        });
+    async addSKUItemsToRestockOrder(req, res) {
+        const id = req.params.id;
+        const data = req.body;
+        if (id == undefined || id == '' || isNaN(id)) {
+            return res.status(422).end();
+        }
+        const RE = await db.getRestockOrderById(id);
+        if (RE != undefined) {
+            try {
+                const products = await db.storeProducts(data, id);
+                return res.status(200).json(products);
+            } catch (err) {
+                res.status(503).end();
+            }
+        } else {
+            return res.status(404).end();
+        }
     }
 
-    this.deleteRestockOrderByID = (db, id) => {
-        return new Promise((resolve, reject) => {
-            const sql = 'DELETE FROM restock_orders WHERE id=?';
-            db.run(sql, [id], function(err) {
-              if(err) reject(err);
-              else {
-                  if(this.changes !== 0) resolve(true);
-                  else resolve(false);
-              }
-            });
-        });
+    async addTransportNoteToRestockOrder(req, res) {
+        const id = req.params.id;
+        const data = req.body;
+        if (id == undefined || id == '' || isNaN(id)) {
+            return res.status(422).end();
+        }
+        const RE = await db.getRestockOrderById(id);
+        if (RE != undefined) {
+            try {
+                const transportNote = await db.storeTransportNote(data, id);
+                return res.status(200).json(transportNote);
+            } catch (err) {
+                res.status(503).end();
+            }
+        } else {
+            return res.status(404).end();
+        }
+    }
+
+    async deleteRestockOrderById(req, res) {
+        const id = req.params.id;
+        if (id == undefined || id == '' || isNaN(id)) {
+            return res.status(422).end();
+        }
+        try {
+            db.deleteRestockOrderById(id);
+            res.status(204).end();
+        } catch (err) {
+            res.status(500).end();
+        }
     }
 
     
+    
 }
+
+module.exports = RestockOrderManagement;

@@ -33,9 +33,9 @@ exports.createNewPositionWH = (data) => {
 }
 
 //fn that modifies the attributes of a position tuple in db
-exports.modifyPositionAttributes = (data, newId) => {
+exports.modifyPositionAttributes = (data, newId, oldId) => {
     const query = 'UPDATE POSITIONS SET positionID = ?, aisleID = ?, row = ?, col = ?, maxWeight= ?, maxVolume= ?, occupiedWeight= ?, occupiedVolume= ? WHERE positionID = ?';
-    return db.run(query, [newId, data.aisleID, data.row, data.col, data.maxWeight, data.maxVolume, data.occupiedWeight, data.occupiedVolume, data.positionID]);
+    return db.run(query, [newId, data.aisleID, data.row, data.col, data.maxWeight, data.maxVolume, data.occupiedWeight, data.occupiedVolume, oldId]);
 }
 
 exports.updateInfoBySKU = (id, newWeight, newVolume) => {
