@@ -2,6 +2,8 @@
 
 const db = require('../database/skuItemDAO');
 const dayjs = require('dayjs')
+var customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat);
 class SkuItemManagement {
     constructor() { }
 
@@ -60,8 +62,8 @@ class SkuItemManagement {
         if (skuItem.RFID.length !== 32 || skuItem.RFID === '' || skuItem.RFID == 0 || skuItem.RFID == undefined || isNaN(skuItem.RFID) ||
             skuItem.SKUId=== '' || skuItem.SKUId == undefined || skuItem.SKUId == 0 || isNaN(skuItem.SKUId) ||  
             skuItem.DateOfStock == undefined || skuItem.DateOfStock == '' ||
-             dayjs(skuItem.DateOfStock, 'YYYY-MM-DD HH:mm', true).isValid() !== true || dayjs(skuItem.DateOfStock).format('YYYY-MM-DD HH:mm') !== true) {
-            return res.status(422).json({ error: `Invalid skuItemitem data` });
+             !dayjs(skuItem.DateOfStock, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm'], true).isValid()){ 
+            return res.status(422).json({ error: `Invalid skuItem data` });
         }
         try {
             await db.newTableSkuItem();
