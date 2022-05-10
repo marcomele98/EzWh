@@ -11,7 +11,7 @@ exports.newTableRestockOrder = () => {
     return db.run(sql);
 }
 
-exports.newTableProducts = () => {
+exports.newTableProductsRE = () => {
     const sql = 'CREATE TABLE IF NOT EXISTS productsRE(REid INTEGER, SKUId INTEGER , description TEXT, price float, quantity INTEGER, PRIMARY KEY("REid","SKUId"))';
     return db.run(sql);
 }

@@ -1,6 +1,8 @@
 "use strict"
 const dayjs = require('dayjs')
 const db = require('../database/internalOrderDAO');
+const { getSkuById } = require('../database/skuDAO');
+const dbSKU = require('../database/skuItemDAO')
 
 class InternalOrderManagement {
 
@@ -14,12 +16,15 @@ class InternalOrderManagement {
             return res.status(422).end();
         }
         for (var i = 0; i < internalOrder.products.length; i++){
+            const sku = getSkuById(internalOrder.products[i].SKUId);
             if(internalOrder.products[i].SKUId == undefined || internalOrder.products[i].SKUId <= 0 || internalOrder.products[i].SKUId == '' || isNaN(internalOrder.products.SKUId)
             || internalOrder.products[i].description == undefined || internalOrder.products[i].description == '' || internalOrder.products[i].price <= 0 || 
             internalOrder.products[i].price == undefined || internalOrder.products[i].price == '' || isNaN(internalOrder.products.price) || 
-            internalOrder.products[i].qty == undefined || internalOrder.products[i].qty <= 0 || internalOrder.products[i].qty == '' || isNaN(internalOrder.products[i].qty)) {
+            internalOrder.products[i].qty == undefined || internalOrder.products[i].qty <= 0 || internalOrder.products[i].qty == '' || isNaN(internalOrder.products[i].qty)
+            || internalOrder.products[i].qty > sku.qty) {
                 return res.status(422).end();
             }
+            
         }
         try {
             await db.storeInternalOrder(internalOrder);
@@ -89,8 +94,6 @@ class InternalOrderManagement {
             if (internalOrder.state == 'COMPLETED') {
                 const products = await db.getListSKU(id);
                 internalOrder.products = products;
-                /* funzione per settare SKUitem availability = 0 
-                e decrementare la quantità di SKU available */
             } else {
                 const products = await db.getListProducts(id);
                 internalOrder.products = products;
@@ -116,6 +119,7 @@ class InternalOrderManagement {
                         || data.products[i].RFID == undefined || data.products[i].RFID == '' || data.products[i].RFID.length != 32) {
                             return res.status(422).end();
                         }
+                        dbSKU.setAvailable(data.products[i].RFID, 0);
                     }
                     db.storeSkuIO(data.products, id);
                 }
@@ -134,6 +138,10 @@ class InternalOrderManagement {
         const id = req.params.id;
         if (id == undefined || id == '' || isNaN(id)) {
             return res.status(422).end();
+        }
+        const internalOrder = await db.getInternalOrderById(id);
+        if (internalOrder === undefined) {
+            return res.status(404).end();
         }
         try {
             db.deleteInternalOrderById(id);

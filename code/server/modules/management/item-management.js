@@ -1,6 +1,7 @@
 "use strict"
 
 const db = require('../database/itemDAO');
+const dbSKU = require('../database/skuDAO')
 
 class ItemManagement {
 
@@ -15,8 +16,8 @@ class ItemManagement {
             || item.id == '' || isNaN(item.id) || item.SKUId <= 0 || isNaN(item.SKUId) || item.SKUId == '' || item.SKUId == undefined) {
             return res.status(422).end();
         }
-        const sku = await db.getSkuById(req.body.SKUId);
-        if (sku.length === 0) {
+        const sku = await dbSKU.getSkuById(item.SKUId);
+        if (sku === undefined) {
             return res.status(404).end();
         }
         try {
@@ -57,10 +58,19 @@ class ItemManagement {
     async modifyItemById(req, res) {
         const id = req.params.id;
         const data = req.body;
-        if (data.length == 0 || data.newDescription == '' || data.newPrice == 0) {
+        const item = await db.getItemById(id);
+
+        if (data.newDescription == undefined) {
+            data.newDescription = item.description;
+        }
+        if (data.newPrice == undefined) {
+            data.newPrice = item.price;
+        }
+        if (data.length == 0 || data == undefined || data.newDescription == undefined || data.newDescription == ''
+            || data.newPrice <= 0 || isNaN(data.newPrice) || data.newPrice == undefined || data.newPrice == '') {
             return res.status(422).end();
         }
-        const item = await db.getItemById(id);
+
         if (item !== undefined) {
             try {
                 await db.modifyItemById(id, data);
@@ -77,6 +87,10 @@ class ItemManagement {
         const id = req.params.id;
         if (id == undefined || id == '' || id == 0 || isNaN(id)) {
             return res.status(422).end();
+        }
+        const item = await db.getItemById(id);
+        if (item === undefined) {
+            return res.status(404).end();
         }
         try {
             await db.deleteItemById(req.params.id);

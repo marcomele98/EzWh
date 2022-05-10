@@ -131,7 +131,7 @@ app.delete('/api/internalOrders/:id', async (req, res) => {
 
 
 /* ------------------- ITEM ------------------- */
-app.post('/api/items', async (req, res) => {
+app.post('/api/item', async (req, res) => {
   return item.createNewItem(req, res);
 });
 
@@ -143,7 +143,7 @@ app.get('/api/items/:id', async (req, res) => {
   return item.getItemById(req, res);
 });
 
-app.put('/api/items/:id', async (req, res) => {
+app.put('/api/item/:id', async (req, res) => {
   return item.modifyItemById(req, res);
 });
 

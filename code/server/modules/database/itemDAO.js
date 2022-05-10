@@ -7,7 +7,7 @@ const db = require('./DAO');
 
 // function for Item
 exports.newTableItem = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS items(id INTEGER PRIMARY KEY , description STRING, price FLOAT, SKUId INTEGER, supplierId INTEGER )';
+    const sql = 'CREATE TABLE IF NOT EXISTS items(id INTEGER PRIMARY KEY, description TEXT, price FLOAT, SKUId INTEGER, supplierId INTEGER )';
     return db.run(sql);
 }
 
