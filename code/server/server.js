@@ -276,7 +276,7 @@ app.delete('/api/skuitems/:rfid/testResult/:id', async (req, res) => {
 
 /*------------------- RESTOCK ORDER ------------------- */
 app.get('/api/restockOrders', async (req, res) => {
-  return restockOrder.getListRestockOrders(req, res);
+  return restockOrder.getListRestockOrder(req, res);
 });
 
 app.get('/api/restockOrdersIssued', async (req, res) => {
