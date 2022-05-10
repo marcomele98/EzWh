@@ -1,8 +1,11 @@
 "use strict"
 const dayjs = require('dayjs')
 const db = require('../database/internalOrderDAO');
-const { getSkuById } = require('../database/skuDAO');
-const dbSKU = require('../database/skuItemDAO')
+const dbSKU = require('../database/skuDAO');
+const dbSKUitem = require('../database/skuItemDAO')
+const dbPos = require('../database/positionDAO')
+
+const possibleType = ['ISSUED', 'ACCEPTED', 'REFUSED', 'CANCELED', 'COMPLETED'];
 
 class InternalOrderManagement {
 
@@ -11,20 +14,20 @@ class InternalOrderManagement {
     async createNewInternalOrder(req, res) {
         let internalOrder = req.body;
         if (internalOrder === undefined || internalOrder.issueDate === undefined || internalOrder.products === undefined || internalOrder.customerId === undefined
-            || internalOrder == '' || internalOrder.issueDate === '' || internalOrder.products === '' || internalOrder.customerId === "" || internalOrder.customerId == 0
+            || internalOrder == '' || internalOrder.issueDate === '' || internalOrder.products === '' || internalOrder.customerId === "" || internalOrder.customerId <= 0
             || isNaN(internalOrder.customerId) || dayjs(internalOrder.issueDate, 'YYYY-MM-DD HH:mm', true).isValid() !== true) {
             return res.status(422).end();
         }
-        for (var i = 0; i < internalOrder.products.length; i++){
+        for (var i = 0; i < internalOrder.products.length; i++) {
             const sku = getSkuById(internalOrder.products[i].SKUId);
-            if(internalOrder.products[i].SKUId == undefined || internalOrder.products[i].SKUId <= 0 || internalOrder.products[i].SKUId == '' || isNaN(internalOrder.products.SKUId)
-            || internalOrder.products[i].description == undefined || internalOrder.products[i].description == '' || internalOrder.products[i].price <= 0 || 
-            internalOrder.products[i].price == undefined || internalOrder.products[i].price == '' || isNaN(internalOrder.products.price) || 
-            internalOrder.products[i].qty == undefined || internalOrder.products[i].qty <= 0 || internalOrder.products[i].qty == '' || isNaN(internalOrder.products[i].qty)
-            || internalOrder.products[i].qty > sku.qty) {
+            if (internalOrder.products[i].SKUId == undefined || internalOrder.products[i].SKUId <= 0 || internalOrder.products[i].SKUId == '' || isNaN(internalOrder.products.SKUId)
+                || !isNaN(internalOrder.products[i].description) || internalOrder.products[i].description == undefined || internalOrder.products[i].description == '' || internalOrder.products[i].price <= 0 ||
+                internalOrder.products[i].price == undefined || internalOrder.products[i].price == '' || isNaN(internalOrder.products.price) ||
+                internalOrder.products[i].qty == undefined || internalOrder.products[i].qty <= 0 || internalOrder.products[i].qty == '' || isNaN(internalOrder.products[i].qty)
+                || internalOrder.products[i].qty > sku.qty) {
                 return res.status(422).end();
             }
-            
+
         }
         try {
             await db.storeInternalOrder(internalOrder);
@@ -83,7 +86,7 @@ class InternalOrderManagement {
 
     async getInternalOrderById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || isNaN(id)) {
+        if (id == undefined || id == '' || isNaN(id) || id <= 0) {
             return res.status(422).end();
         }
         try {
@@ -107,24 +110,39 @@ class InternalOrderManagement {
     async modifyInternalOrderById(req, res) {
         const id = req.params.id;
         const data = req.body;
-        if (id == undefined || id == '' || isNaN(id)) {
+        if (id == undefined || id == '' || isNaN(id) || id <= 0 || !possibleType.includes(data.newState)) {
             return res.status(422).end();
         }
         const IO = await db.getInternalOrderById(id);
         if (IO !== undefined) {
             try {
                 if (data.newState === 'COMPLETED') {
-                    for (var i = 0; i < internalOrder.products.length; i++){
-                        if(data.products[i].SKUId == undefined || data.products[i].SKUId <= 0 || data.products[i].SKUId == '' || isNaN(data.products.SKUId)
-                        || data.products[i].RFID == undefined || data.products[i].RFID == '' || data.products[i].RFID.length != 32) {
+                    for (var i = 0; i < data.products.length; i++) {
+                        if (data.products[i].SKUId == undefined || data.products[i].SKUId <= 0 || data.products[i].SKUId == '' || isNaN(data.products.SKUId)
+                            || data.products[i].RFID == undefined || data.products[i].RFID == '' || data.products[i].RFID.length != 32 || isNaN(data.products[i].RFID)) {
                             return res.status(422).end();
                         }
-                        dbSKU.setAvailable(data.products[i].RFID, 0);
+                        await dbSKUitem.setAvailable(data.products[i].RFID, 0);
                     }
-                    db.storeSkuIO(data.products, id);
+                    const prod = db.getListProducts(id);
+
+                    for (var i = 0; i < prod.length; i++) {
+
+                        const sku = dbSKU.getSkuById(prod[i].SKUId);
+                        const newAvailableQuantity = sku.availableQuantity - prod[i].qty;
+                        await dbSKU.updateQuantity(prod[i].SKUId, newAvailableQuantity);
+                        const position = sku.position;
+
+                        if (position !== undefined || position !== 0 || !isNaN(position)) {
+                            const newWeight = updatedSKU.weight * newAvailableQuantity
+                            const newVolume = updatedSKU.volume * newAvailableQuantity
+                            await dbPos.updateInfoBySKU(position, newWeight, newVolume);
+                        }
+                    }
+                    await db.storeSkuIO(data.products, id);
                 }
-                const internalOrder = await db.modifyStateInternalOrderById(data, id);
-                return res.status(200).json(internalOrder);
+                await db.modifyStateInternalOrderById(data, id);
+                return res.status(200).end();
             } catch (err) {
                 res.status(503).end();
             }
@@ -151,5 +169,7 @@ class InternalOrderManagement {
         }
     }
 }
+
+
 
 module.exports = InternalOrderManagement;
