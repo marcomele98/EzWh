@@ -31,7 +31,7 @@ exports.getTestDescriptorByID = (id) => {
 
 exports.modifyTestDescriptorByID = (id, data) => {
     const query = 'UPDATE TESTDESCRIPTORS SET name = ?, procedureDescription= ?, idSKU= ? WHERE id = ?';
-    return db.run(query, [id, data.newName, data.newProcedureDescription, data.newIdSKU]);
+    return db.run(query, [ data.newName, data.newProcedureDescription, data.newIdSKU, id]);
 }
 
 exports.deleteTestDescriptorByID = (id) => {

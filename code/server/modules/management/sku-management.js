@@ -89,6 +89,9 @@ class SkuManagement {
         if(data.newAvailableQuantity == undefined){
             data.newAvailableQuantity = oldSku.availableQuantity;
         }
+        if(data.newPrice == undefined){
+            data.newPrice = oldSku.price;
+        }
 
         //Checks on the id
         if (id == undefined || id == '' || data.length == 0 || isNaN(id) || data.newDescription == ''
@@ -100,7 +103,7 @@ class SkuManagement {
             return res.status(422).end();
         }
 
-        const position = sku.position;
+        const position = oldSku.position;
         if (oldSku !== undefined) {
             try {
                 await db.updateSkuInfo(id, data);
@@ -119,7 +122,7 @@ class SkuManagement {
 
     async updateSkuPosition(req, res) {
         const id = req.params.id;
-        const position = req.body;
+        const position = req.body.position;
         if (id == undefined || id == '' || id == 0 || position == undefined || position == 0 || position == '') {
             return res.status(422).json({ error: 'Invalid id ' });
         }

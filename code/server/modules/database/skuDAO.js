@@ -30,7 +30,7 @@ exports.updateSkuInfo = (id, data) => {
 
 exports.setPosition = (id, position) => {
     const sql = 'UPDATE sku SET position = ? WHERE id = ?';
-    return db.run(sql, [position.position, id]);
+    return db.run(sql, [position, id]);
 }
 
 exports.deleteSkuById = (id) => {

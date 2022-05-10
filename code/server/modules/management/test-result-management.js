@@ -9,14 +9,14 @@ class TestResultManagement {
 
     constructor() {
         this.regexp = new RegExp('^[0-9]+$');
-     }
+    }
 
     noContent = (data) => {
-        return data=== null || data === undefined;
+        return data === null || data === undefined;
     }
 
     isNotValidRFID = (rfid) => {
-        return rfid === undefined || rfid === null || rfid.length !== 32 || this.regexp.test(rfid);
+        return rfid === undefined || rfid === null || rfid.length !== 32 || !this.regexp.test(rfid);
     }
 
     isNotValidID = (id) => {
@@ -39,118 +39,110 @@ class TestResultManagement {
         return dayjs(Date, 'YYYY-MM-DD', true).isValid() !== true;
     }
 
-    async getTestResultsListByRfid(req, res){
+    async getTestResultsListByRfid(req, res) {
         const rfid = req.params.rfid;
-        if(this.isNotValidRFID(rfid)){
+        if (this.isNotValidRFID(rfid)) {
             return res.status(422).end();
         }
-        try{
+        try {
             const skuItem = await dbSKUItem.getSkuItemByRfid(rfid);
-            if (this.noContent(skuItem)){
+            if (this.noContent(skuItem)) {
                 return res.status(404).end();
             }
             const listResults = await db.getTestResultsListByRfid(rfid);
-            res.status(200).json(listResults.map( e => ({
+            res.status(200).json(listResults.map(e => ({
                 id: e.id,
                 idTestDescriptor: e.idTestDescriptor,
                 Date: e.Date,
-                Result: e.Result? true:false
-            }) ));
-        }catch{
+                Result: e.Result ? true : false
+            })));
+        } catch {
             res.status(500).end();
         }
     }
 
-    async getTestResultByIds(req, res){
+    async getTestResultByIds(req, res) {
         const rfid = req.params.rfid;
         const id = req.params.id;
-        if (this.isNotValidRFID(rfid) || this.isNotValidID(id)){
-                return res.status(422).end(); 
+        if (this.isNotValidRFID(rfid) || this.isNotValidID(id)) {
+            return res.status(422).end();
         }
-        try{
+        try {
             const skuItem = await dbSKUItem.getSkuItemByRfid(rfid);
-            if (this.noContent(skuItem)){
+            if (this.noContent(skuItem)) {
                 return res.status(404).end();
             }
             const result = await db.getTestResultByIds(id, rfid);
-            res.status(200).json(result.map( e => ({
-                id: e.id,
-                idTestDescriptor: e.idTestDescriptor,
-                Date: e.Date,
-                Result: e.Result? true:false
-            }) ));
-        }catch{
+            result.Result = result.Result ? true : false;
+            res.status(200).json(result);
+        } catch {
             res.status(500).end();
         }
     }
 
-    async createTestResultByRfid(req, res){
+    async createTestResultByRfid(req, res) {
         const data = req.body;
-        if(this.isNotValidBody(data) || this.isNotValidRFID(data.rfid) || 
+        if (this.isNotValidBody(data) || this.isNotValidRFID(data.rfid) ||
             this.isNotValidIdTestDescriptor(data.idTestDescriptor) ||
-            this.isNotValidResult(data.Result) || this.isNotValidDate(data.Date)){
-                return res.status(422).end();
+            this.isNotValidResult(data.Result) || this.isNotValidDate(data.Date)) {
+            return res.status(422).end();
         }
-        try{
-            const skuItem = await dbSKUItem.getSkuItemByRfid(rfid);
+        try {
+            const skuItem = await dbSKUItem.getSkuItemByRfid(data.rfid);
             const testDescriptor = await dbTestDescriptor.getTestDescriptorByID(data.idTestDescriptor);
-             if ( this.noContent(testDescriptor) || this.noContent(skuItem)){
+            if (this.noContent(testDescriptor) || this.noContent(skuItem)) {
                 return res.status(404).end();
             }
 
             let lastID = await db.getLastID();
-            if (lastID['last'] === null){
+            if (lastID['last'] === null) {
                 lastID['last'] = 0;
             }
-            else{
+            else {
                 lastID['last'] += 1;
             }
 
-            db.createTestResultByRfid(lastID['last'], data);
+            await db.createTestResultByRfid(lastID['last'], data);
             res.status(201).end();
-        }catch{
+        } catch {
             res.status(503).end();
         }
     }
 
-    async modifyTestResultByIds(req, res){
+    async modifyTestResultByIds(req, res) {
         const rfid = req.params.rfid;
         const id = req.params.id;
         let data = req.body;
-        if ( this.isNotValidBody(data) || this.isNotValidRFID(rfid) || this.isNotValidID(id) ||
+        if (this.isNotValidBody(data) || this.isNotValidRFID(rfid) || this.isNotValidID(id) ||
             this.isNotValidIdTestDescriptor(data.newIdTestDescriptor) ||
-            this.isNotValidResult(data.newResult) || this.isNotValidDate(data.newDate)){
-                return res.status(422).end(); 
+            this.isNotValidResult(data.newResult) || this.isNotValidDate(data.newDate)) {
+            return res.status(422).end();
         }
-        try{
+        try {
             const skuItem = await dbSKUItem.getSkuItemByRfid(rfid);
             const testDescriptor = await dbTestDescriptor.getTestDescriptorByID(data.newIdTestDescriptor);
             const testResult = await db.getTestResultByIds(id, rfid);
-             if ( this.noContent(testDescriptor) || this.noContent(testResult) || this.noContent(skuItem)){
+            if (this.noContent(testDescriptor) || this.noContent(testResult) || this.noContent(skuItem)) {
                 return res.status(404).end();
             }
-            data = data.map( d => ({
-                newIdTestDescriptor: data.newIdTestDescriptor,
-                newDate: data.newDate,
-                newResult: data.newResult? 1:0
-            }));
+            data.newResult = data.newResul ? 1: 0;
             await db.modifyTestResultByIds(id, data, rfid);
             res.status(200).end();
-        }catch{
+        } catch {
             res.status(503).end();
         }
     }
 
-    async deleteTestResultByIds(req, res){
+    async deleteTestResultByIds(req, res) {
         const rfid = req.params.rfid;
         const id = req.params.id;
-        if ( this.isNotValidRFID(rfid) || this.isNotValidID(id)){
-                return res.status(422).end(); 
+        if (this.isNotValidRFID(rfid) || this.isNotValidID(id)) {
+            return res.status(422).end();
         }
-        try{
+        try {
             await db.deleteTestResultByIds(id, rfid);
             res.status(204).end();
-        }catch{
+        } catch {
             res.status(503).end();
         }
     }

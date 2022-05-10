@@ -60,12 +60,12 @@ class SkuItemManagement {
         if (skuItem.RFID.length !== 32 || skuItem.RFID === '' || skuItem.RFID == 0 || skuItem.RFID == undefined || isNaN(skuItem.RFID) ||
             skuItem.SKUId=== '' || skuItem.SKUId == undefined || skuItem.SKUId == 0 || isNaN(skuItem.SKUId) ||  
             skuItem.DateOfStock == undefined || skuItem.DateOfStock == '' ||
-             dayjs(skuItem.DateOfStock, 'YYYY-MM-DD HH:mm', true).isValid() !== true ) {
+             dayjs(skuItem.DateOfStock, 'YYYY-MM-DD HH:mm', true).isValid() !== true || dayjs(skuItem.DateOfStock).format('YYYY-MM-DD HH:mm') !== true) {
             return res.status(422).json({ error: `Invalid skuItemitem data` });
         }
         try {
             await db.newTableSkuItem();
-            db.storeSkuItem(skuItem);
+            await db.storeSkuItem(skuItem);
             //db.dropTable();
             return res.status(201).end();
         } catch (err) {
@@ -100,16 +100,24 @@ class SkuItemManagement {
                 await db.editInfoSkuItem(rfid, data);
                 res.status(200).end();
             } catch (err) {
-                res.status(404).end();
+                res.status(503).end();
             }
         } else {
             res.status(404).end()
         }
     }
 
-    deleteSkuItemById(req, res) {
+    async deleteSkuItemById(req, res) {
+        const id = req.params.rfid;
+        if (id == undefined || id == '' || id == 0) {
+            res.status(422).end();
+        }
+        const skuItem = await db.getSkuItemByRfid(id);
+        if(skuItem === undefined){
+            res.status(404).end();
+        }
         try {
-            db.deleteSkuItemByRfid(req.params.rfid);
+            db.deleteSkuItemByRfid(id);
             res.status(204).end();
         } catch (err) {
             res.status(500).end();
