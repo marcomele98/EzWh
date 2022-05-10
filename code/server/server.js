@@ -268,6 +268,67 @@ app.delete('/api/skuitems/:rfid/testResult/:id', async (req, res) => {
 });
 
 
+
+
+/*------------------- RESTOCK ORDER ------------------- */
+app.get('/api/restockOrders', async (req, res) => {
+  return restockOrder.getListRestockOrders(req, res);
+});
+
+app.get('/api/restockOrdersIssued', async (req, res) => {
+  return restockOrder.getListIssuedRestockOrders(req, res);
+});
+
+app.get('/api/restockOrders/:id', async (req, res) => {
+  return restockOrder.getRestockOrderById(req, res);
+});
+
+app.get('/api/restockOrders/:id/returnItems', async (req, res) => {
+  return restockOrder.getListSKUItemsToReturn(req, res);
+});
+
+app.post('/api/restockOrders', async (req, res) => {
+  return restockOrder.createNewRestockOrder(req, res);
+});
+
+app.put('/api/restockOrder/:id', async (req, res) => {
+  return restockOrder.modifyStateRestockOrderById(req, res);
+});
+
+app.put('/api/restockOrder/:id/skuItems', async (req, res) => {
+  return restockOrder.addSKUItemsToRestockOrder(req, res);
+});
+
+app.put('/api/restockOrder/:id/transportNote', async (req, res) => {
+  return restockOrder.addTransportNoteToRestockOrder(req, res);
+});
+
+app.delete('/api/restockOrder/:id', async (req, res) => {
+  return restockOrder.deleteRestockOrderById(req, res);
+});
+
+
+
+
+/*------------------- RETURN ORDER ------------------- */
+app.get('/api/returnOrders', async (req, res) => {
+  return internalOrder.getListReturnOrder(req, res);
+});
+
+app.get('/api/returnOrders/:id', async (req, res) => {
+  return internalOrder.getReturnOrderById(req, res);
+});
+
+app.post('/api/returnOrder', async (req, res) => {
+  return internalOrder.createNewReturnOrder(req, res);
+});
+
+app.delete('/api/returnOrder/:id', async (req, res) => {
+  return internalOrder.deleteReturnOrderById(req, res);
+});
+
+
+
 // activate the server
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
