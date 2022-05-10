@@ -7,13 +7,16 @@ const dbSKUItem = require('../database/skuItemDAO');
 
 class TestResultManagement {
 
-    constructor() { }
+    constructor() {
+        this.regexp = new RegExp('^[0-9]+$');
+     }
+
     noContent = (data) => {
         return data=== null || data === undefined;
     }
 
     isNotValidRFID = (rfid) => {
-        return rfid === undefined || rfid === null || rfid.length !== 32;
+        return rfid === undefined || rfid === null || rfid.length !== 32 || this.regexp.test(rfid);
     }
 
     isNotValidID = (id) => {
