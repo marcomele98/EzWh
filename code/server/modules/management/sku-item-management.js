@@ -76,14 +76,23 @@ class SkuItemManagement {
     async editInfoSkuItem(req, res) {
         const rfid = req.params.rfid;
         const data = req.body;
-        if (data.length == 0 || data.newRFID.length !== 32 || data.newRFID == '' || data.newRFID ==undefined ||
-         data.newAvailable == undefined || data.newAvailable === '' || data.newAvailable.length !== 1 || 
-        data.newDateOfStock == undefined || data.newDateOfStock == '' || dayjs(skuItem.DateOfStock, 'YYYY-MM-DD HH-MM', true).isValid() !== true)  {
+        const oldSkuItem = await db.getSkuItemByRfid(rfid);
+        if(data.newRFID == undefined){
+            data.newRFID = oldSkuItem.RFID;
+        }
+        if(data.newAvailable == undefined){
+            data.newAvailable = oldSkuItem.Available;
+        }
+        if(data.newDateOfStock == undefined){
+            data.newDateOfStock = oldSkuItem.DateOfStock;
+        }
+
+        if (data.length == 0 || data.newRFID.length !== 32 || data.newRFID === '' ||  data.newAvailable === '' || 
+        data.newAvailable.length !== 1 || data.newDateOfStock === '' || dayjs(data.newDateOfStock, 'YYYY-MM-DD HH:mm', true).isValid() !== true)  {
             return res.status(422).end();
         }
         
-        const skuItem = await db.getSkuItemByRfid(rfid);
-        if (skuItem !== undefined) {
+        if (oldSkuItem !== undefined) {
             try {
                 await db.editInfoSkuItem(rfid, data);
                 res.status(200).end();

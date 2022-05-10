@@ -71,19 +71,37 @@ class SkuManagement {
     async updateSkuInfo(req, res) {
         const id = req.params.id;
         const data = req.body;
-        if (id == undefined || id == '' || data.length == 0 || isNaN(id) || data.newDescription == '' || data.newDescription == undefined
+        const oldSku = await db.getSkuById(id);
+
+        //Checks to get the old value when a field is undefined
+        if (data.newDescription == undefined){
+            data.newDescription = oldSku.description;
+        }
+        if(data.newVolume == undefined){
+            data.newVolume =oldSku.volume;
+        }
+        if(data.newWeight == undefined){
+            data.newWeight = oldSku.weight;
+        }
+        if(data.newNotes == undefined){
+            data.newNotes = oldSku.notes;
+        }
+        if(data.newAvailableQuantity == undefined){
+            data.newAvailableQuantity = oldSku.availableQuantity;
+        }
+
+        //Checks on the id
+        if (id == undefined || id == '' || data.length == 0 || isNaN(id) || data.newDescription == ''
             || isNaN(data.newWeight) || data.newWeight <= 0 || data.newWeight === ''
             || isNaN(data.newVolume) || data.newVolume <= 0 || data.newVolume === ''
-            || data.newNotes === '' || data.newNotes == undefined ||
-            isNaN(data.newDescription) !== true || isNaN(dataS.newNotes) !== true ||
-            data.newPrice == 0 || data.newPrice === '' || isNaN(data.newPrice)
+            || data.newNotes === '' || isNaN(data.newDescription) !== true || isNaN(data.newNotes) !== true ||
+            data.newPrice <= 0 || data.newPrice === '' || isNaN(data.newPrice)
             || data.newAvailableQuantity <= 0 || data.newAvailableQuantity === '' || isNaN(data.newAvailableQuantity)) {
             return res.status(422).end();
         }
 
-        const sku = await db.getSkuById(id);
         const position = sku.position;
-        if (sku !== undefined) {
+        if (oldSku !== undefined) {
             try {
                 await db.updateSkuInfo(id, data);
                 const updatedSKU = await db.getSkuById(id);
