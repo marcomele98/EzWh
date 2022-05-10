@@ -13,6 +13,14 @@ class InternalOrderManagement {
             || isNaN(internalOrder.customerId) || dayjs(internalOrder.issueDate, 'YYYY-MM-DD HH:mm', true).isValid() !== true) {
             return res.status(422).end();
         }
+        for (var i = 0; i < internalOrder.products.length; i++){
+            if(internalOrder.products[i].SKUId == undefined || internalOrder.products[i].SKUId <= 0 || internalOrder.products[i].SKUId == '' || isNaN(internalOrder.products.SKUId)
+            || internalOrder.products[i].description == undefined || internalOrder.products[i].description == '' || internalOrder.products[i].price <= 0 || 
+            internalOrder.products[i].price == undefined || internalOrder.products[i].price == '' || isNaN(internalOrder.products.price) || 
+            internalOrder.products[i].qty == undefined || internalOrder.products[i].qty <= 0 || internalOrder.products[i].qty == '' || isNaN(internalOrder.products[i].qty)) {
+                return res.status(422).end();
+            }
+        }
         try {
             await db.storeInternalOrder(internalOrder);
             const IO = await db.getLastId();
@@ -102,10 +110,16 @@ class InternalOrderManagement {
         const IO = await db.getInternalOrderById(id);
         if (IO !== undefined) {
             try {
-                const internalOrder = await db.modifyStateInternalOrderById(data, id);
                 if (data.newState === 'COMPLETED') {
+                    for (var i = 0; i < internalOrder.products.length; i++){
+                        if(data.products[i].SKUId == undefined || data.products[i].SKUId <= 0 || data.products[i].SKUId == '' || isNaN(data.products.SKUId)
+                        || data.products[i].RFID == undefined || data.products[i].RFID == '' || data.products[i].RFID.length != 32) {
+                            return res.status(422).end();
+                        }
+                    }
                     db.storeSkuIO(data.products, id);
                 }
+                const internalOrder = await db.modifyStateInternalOrderById(data, id);
                 return res.status(200).json(internalOrder);
             } catch (err) {
                 res.status(503).end();
