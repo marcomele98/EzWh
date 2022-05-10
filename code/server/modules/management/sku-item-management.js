@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../database/skuItemDAO');
-
+const dayjs = require('dayjs')
 class SkuItemManagement {
     constructor() { }
 
@@ -36,7 +36,7 @@ class SkuItemManagement {
 
     async getSkuItemByRfid(req, res) {
         const rfid = req.params.rfid;
-        if (rfid == undefined || rfid == '' || rfid == 0 || isNaN(rfid)) {
+    if (rfid == undefined || rfid == '' || rfid == 0 || rfid.length !== 32 || isNaN(rfid)) {
             return res.status(422).json({ error: 'Invalid id' });
         }
         try {
@@ -59,7 +59,7 @@ class SkuItemManagement {
         let skuItem = req.body;
         if (skuItem.RFID.length !== 32 || skuItem.RFID === '' || skuItem.RFID == 0 || skuItem.RFID == undefined || isNaN(skuItem.RFID) ||
             skuItem.SKUId=== '' || skuItem.SKUId == undefined || skuItem.SKUId == 0 || isNaN(skuItem.SKUId) ||  
-            skuItem.DateOfStock == undefined || skuItem.DateOfStock === '' ||
+            skuItem.DateOfStock == undefined || skuItem.DateOfStock == '' ||
              dayjs(skuItem.DateOfStock, 'YYYY-MM-DD HH-MM', true).isValid() !== true ) {
             return res.status(422).json({ error: `Invalid skuItemitem data` });
         }
