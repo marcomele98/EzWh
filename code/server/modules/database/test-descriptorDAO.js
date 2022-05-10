@@ -5,7 +5,7 @@
 const db = require('./DAO');
 
 exports.newTableTestDescriptors = () => {
-    const query = 'CREATE TABLE IF NOT EXISTS TESTDESCRIPTORS (id NUMBER PRIMARY KEY, name STRING, procedureDescription STRING, idSKU NUMBER)';
+    const query = 'CREATE TABLE IF NOT EXISTS TESTDESCRIPTORS (id NUMBER, name STRING, procedureDescription STRING, idSKU NUMBER,  PRIMARY KEY(id), FOREIGN KEY(idSKU) REFERENCES sku(id))';
     return db.run(query, []);
 }
 

@@ -56,7 +56,7 @@ class PositionManagement {
             return res.status(422).end();
         }
         try {
-            db.createNewPositionWH(data);
+            await db.createNewPositionWH(data);
             res.status(201).end();
         } catch (err) {
             res.status(503).end();
@@ -80,7 +80,7 @@ class PositionManagement {
             if (this.noContent(tuple)){
                 return res.status(404).end();
             }
-            db.modifyPositionAttributes(data, newId, id);
+            await db.modifyPositionAttributes(data, newId, id);
             res.status(200).end();
         } catch (err) {
             res.status(503).end();
@@ -102,7 +102,7 @@ class PositionManagement {
             const aisle = newId.slice(0, 4);
             const row = newId.slice(4, 8);
             const col = newId.slice(8, 12);
-            db.modifyPositionID(oldId, newId, aisle, row, col);
+            await db.modifyPositionID(oldId, newId, aisle, row, col);
             res.status(200).end();
         } catch (err) {
             res.status(503).end();
@@ -115,7 +115,7 @@ class PositionManagement {
             return res.status(422).end();
         }
         try {
-            db.deletePositionWHByID(id);
+            await db.deletePositionWHByID(id);
             res.status(204).end();
         } catch (err) {
             res.status(503).end();

@@ -34,8 +34,13 @@ exports.deleteTestResultByIds = (id, rfid) => {
     db.run(query, [id, rfid]);
 }
 
+exports.deleteTestResultsByIdTestDescriptor = (idTestDescriptor) => {
+    const query = 'DELETE FROM TESTRESULTS WHERE idTestDescriptor = ?';
+    db.run(query, [idTestDescriptor]);
+}
+
 exports.newTableTestResults = () => {
-    const query = 'CREATE TABLE IF NOT EXISTS TESTRESULTS (id NUMBER PRIMARY KEY, idTestDescriptor NUMBER, Date STRING, Result INTEGER, rfid TEXT)';
+    const query = 'CREATE TABLE IF NOT EXISTS TESTRESULTS (id NUMBER, idTestDescriptor NUMBER, Date STRING, Result INTEGER, rfid TEXT, PRIMARY KEY(id), FOREIGN KEY rfid REFERENCES skuItem(RFID), FOREIGN KEY idTestDescriptor REFERENCES TESTDESCRIPTORS(id))';
     db.run(query, []);
 }
 

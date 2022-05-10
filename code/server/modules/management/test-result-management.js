@@ -42,9 +42,9 @@ class TestResultManagement {
             return res.status(422).end();
         }
         try{
-            const skuItem = await dbSKUItem.getSKUITEMbyRFID(rfid);
+            const skuItem = await dbSKUItem.getSkuItemByRfid(rfid);
             if (this.noContent(skuItem)){
-                res.status(404).end();
+                return res.status(404).end();
             }
             const listResults = await db.getTestResultsListByRfid(rfid);
             res.status(200).json(listResults.map( e => ({
@@ -65,9 +65,9 @@ class TestResultManagement {
                 return res.status(422).end(); 
         }
         try{
-            const skuItem = await dbSKUItem.getSKUITEMbyRFID(rfid);
+            const skuItem = await dbSKUItem.getSkuItemByRfid(rfid);
             if (this.noContent(skuItem)){
-                res.status(404).end();
+                return res.status(404).end();
             }
             const result = await db.getTestResultByIds(id, rfid);
             res.status(200).json(result.map( e => ({
@@ -89,7 +89,7 @@ class TestResultManagement {
                 return res.status(422).end();
         }
         try{
-            const skuItem = await dbSKUItem.getSKUITEMbyRFID(rfid);
+            const skuItem = await dbSKUItem.getSkuItemByRfid(rfid);
             const testDescriptor = await dbTestDescriptor.getTestDescriptorByID(data.idTestDescriptor);
              if ( this.noContent(testDescriptor) || this.noContent(skuItem)){
                 return res.status(404).end();
@@ -120,7 +120,7 @@ class TestResultManagement {
                 return res.status(422).end(); 
         }
         try{
-            const skuItem = await dbSKUItem.getSKUITEMbyRFID(rfid);
+            const skuItem = await dbSKUItem.getSkuItemByRfid(rfid);
             const testDescriptor = await dbTestDescriptor.getTestDescriptorByID(data.newIdTestDescriptor);
             const testResult = await db.getTestResultByIds(id, rfid);
              if ( this.noContent(testDescriptor) || this.noContent(testResult) || this.noContent(skuItem)){
@@ -131,7 +131,7 @@ class TestResultManagement {
                 newDate: data.newDate,
                 newResult: data.newResult? 1:0
             }));
-            db.modifyTestResultByIds(id, data, rfid);
+            await db.modifyTestResultByIds(id, data, rfid);
             res.status(200).end();
         }catch{
             res.status(503).end();
@@ -145,7 +145,7 @@ class TestResultManagement {
                 return res.status(422).end(); 
         }
         try{
-            db.deleteTestResultByIds(id, rfid);
+            await db.deleteTestResultByIds(id, rfid);
             res.status(204).end();
         }catch{
             res.status(503).end();
