@@ -60,7 +60,7 @@ class SkuItemManagement {
         if (skuItem.RFID.length !== 32 || skuItem.RFID === '' || skuItem.RFID == 0 || skuItem.RFID == undefined || isNaN(skuItem.RFID) ||
             skuItem.SKUId=== '' || skuItem.SKUId == undefined || skuItem.SKUId == 0 || isNaN(skuItem.SKUId) ||  
             skuItem.DateOfStock == undefined || skuItem.DateOfStock == '' ||
-             dayjs(skuItem.DateOfStock, 'YYYY-MM-DD HH-MM', true).isValid() !== true ) {
+             dayjs(skuItem.DateOfStock, 'YYYY-MM-DD HH:mm', true).isValid() !== true ) {
             return res.status(422).json({ error: `Invalid skuItemitem data` });
         }
         try {

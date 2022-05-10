@@ -49,8 +49,8 @@ class SkuManagement {
             return res.status(422).json({ error: `Empty body request` });
         }
         let sku = req.body;
-        if (sku.description === '' || sku.price == 0 || sku.weight == 0 || sku.volume == 0 ||
-            sku.notes === '' || sku.availableQuantity == 0 || sku.description === undefined ||
+        if (sku.description === '' || sku.price <= 0  || sku.price == undefined || sku.weight <= 0 || sku.volume <= 0 ||
+            sku.notes === '' || sku.availableQuantity <= 0 || sku.description === undefined ||
             isNaN(sku.description) !== true || isNaN(sku.notes) !== true || sku.price == undefined ||
             sku.weight === undefined || sku.weight === '' || sku.volume == undefined ||
             sku.notes === undefined || sku.availableQuantity == undefined
@@ -72,12 +72,12 @@ class SkuManagement {
         const id = req.params.id;
         const data = req.body;
         if (id == undefined || id == '' || data.length == 0 || isNaN(id) || data.newDescription == '' || data.newDescription == undefined
-            || isNaN(data.newWeight) || data.newWeight == 0 || data.newWeight === ''
-            || isNaN(data.newVolume) || data.newVolume == 0 || data.newVolume === ''
+            || isNaN(data.newWeight) || data.newWeight <= 0 || data.newWeight === ''
+            || isNaN(data.newVolume) || data.newVolume <= 0 || data.newVolume === ''
             || data.newNotes === '' || data.newNotes == undefined ||
             isNaN(data.newDescription) !== true || isNaN(dataS.newNotes) !== true ||
             data.newPrice == 0 || data.newPrice === '' || isNaN(data.newPrice)
-            || data.newAvailableQuantity == 0 || data.newAvailableQuantity === '' || isNaN(data.newAvailableQuantity)) {
+            || data.newAvailableQuantity <= 0 || data.newAvailableQuantity === '' || isNaN(data.newAvailableQuantity)) {
             return res.status(422).end();
         }
 
