@@ -4,7 +4,8 @@ const express = require('express');
 
 const ItemManagement = require('./modules/management/item-management');
 const InternalOrderManagement = require('./modules/management/internalOrder-management');
-
+const RestockOrderManagement = require('./modules/management/restock-order-management');
+const ReturnOrderManagement = require('./modules/management/return-order-management');
 const SkuManagement = require('./modules/management/sku-management');
 const PositionManagement = require('./modules/management/position-management');
 const SkuItemManagement = require('./modules/management/sku-item-management');
@@ -22,6 +23,9 @@ const user = new UserManagement;
 
 const sku = new SkuManagement;
 const skuItem = new SkuItemManagement;
+
+const restockOrder = new RestockOrderManagement;
+const returnOrder = new ReturnOrderManagement;
 
 // init express
 const app = new express();
@@ -272,7 +276,7 @@ app.delete('/api/skuitems/:rfid/testResult/:id', async (req, res) => {
 
 /*------------------- RESTOCK ORDER ------------------- */
 app.get('/api/restockOrders', async (req, res) => {
-  return restockOrder.getListRestockOrders(req, res);
+  return restockOrder.getListRestockOrder(req, res);
 });
 
 app.get('/api/restockOrdersIssued', async (req, res) => {
@@ -312,19 +316,19 @@ app.delete('/api/restockOrder/:id', async (req, res) => {
 
 /*------------------- RETURN ORDER ------------------- */
 app.get('/api/returnOrders', async (req, res) => {
-  return internalOrder.getListReturnOrder(req, res);
+  return returnOrder.getListReturnOrder(req, res);
 });
 
 app.get('/api/returnOrders/:id', async (req, res) => {
-  return internalOrder.getReturnOrderById(req, res);
+  return returnOrder.getReturnOrderById(req, res);
 });
 
 app.post('/api/returnOrder', async (req, res) => {
-  return internalOrder.createNewReturnOrder(req, res);
+  return returnOrder.createNewReturnOrder(req, res);
 });
 
 app.delete('/api/returnOrder/:id', async (req, res) => {
-  return internalOrder.deleteReturnOrderById(req, res);
+  return returnOrder.deleteReturnOrderById(req, res);
 });
 
 
