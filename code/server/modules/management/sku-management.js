@@ -74,7 +74,7 @@ class SkuManagement {
             || isNaN(data.newWeight) || data.newWeight == 0 || data.newWeight === ''
             || isNaN(data.newVolume) || data.newVolume == 0 || data.newVolume === ''
             || data.newNotes === '' || data.newNotes == undefined ||
-            isNaN(sku.newDescription) !== true || isNaN(sku.newNotes) !== true ||
+            isNaN(data.newDescription) !== true || isNaN(data.newNotes) !== true ||
             data.newPrice == 0 || data.newPrice === '' || isNaN(data.newPrice)
             || data.newAvailableQuantity == 0 || data.newAvailableQuantity === '' || isNaN(data.newAvailableQuantity)) {
             return res.status(422).end();
