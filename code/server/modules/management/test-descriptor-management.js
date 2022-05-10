@@ -2,6 +2,7 @@
 
 const db = require('../database/test-descriptorDAO');
 const dbSKU = require('../database/skuDAO');
+const dbTestResult = require('../database/test-resultDAO');
 
 class TestDescriptorManagement {
 
@@ -52,7 +53,7 @@ class TestDescriptorManagement {
             else{
                 lastID['last'] += 1;
             }
-            db.createTestDescriptor(lastID['last'], data);
+            await db.createTestDescriptor(lastID['last'], data);
             res.status(201).end();
         } catch (err) {
             res.status(503).end();
@@ -96,14 +97,14 @@ class TestDescriptorManagement {
             return res.status(422).end();
         }
         try {
-            const sku = await dbSKU.getSkuByID(data.newIdSKU);
+            const sku = await dbSKU.getSkuById(data.newIdSKU);
             const testDescriptor = await db.getTestDescriptorByID(id);
             if(
                 this.noContent(sku) ||
                 this.noContent(testDescriptor)){
                 res.status(404).end();
             }
-            db.modifyTestDescriptorByID(id, data);
+            await db.modifyTestDescriptorByID(id, data);
             res.status(200).end();
         } catch (err) {
             res.status(503).end();
@@ -116,7 +117,8 @@ class TestDescriptorManagement {
             return res.status(422).end();
         }
         try {
-            db.deleteTestDescriptorByID(id);
+            await dbTestResult.deleteTestResultsByIdTestDescriptor(id);
+            await db.deleteTestDescriptorByID(id);
             res.status(204).end();
         } catch (err) {
             res.status(503).end();
