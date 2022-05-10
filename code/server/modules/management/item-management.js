@@ -10,7 +10,7 @@ class ItemManagement {
     async createNewItem(req, res) {
         let item = req.body;
         const skuSupp = await db.getSkuBySupplier(req.body.SKUId, req.body.supplierId);
-        if (skuSupp != undefined || item == '' || item == undefined || item.description == undefined || item.description === ''
+        if (skuSupp != undefined || item == '' || item == undefined || item.description == undefined || item.description === '' || !isNaN(item.description)
             || item.price <= 0 || item.price == undefined || isNaN(item.price) || item.price == '' || item.supplierId <= 0
             || item.supplierId == undefined || item.supplierId == '' || isNaN(item.supplierId) || item.id <= 0 || item.id == undefined
             || item.id == '' || isNaN(item.id) || item.SKUId <= 0 || isNaN(item.SKUId) || item.SKUId == '' || item.SKUId == undefined) {
@@ -67,10 +67,9 @@ class ItemManagement {
             data.newPrice = item.price;
         }
         if (data.length == 0 || data == undefined || data.newDescription == undefined || data.newDescription == ''
-            || data.newPrice <= 0 || isNaN(data.newPrice) || data.newPrice == undefined || data.newPrice == '') {
+            || !isNaN(data.newDescription) || data.newPrice <= 0 || isNaN(data.newPrice) || data.newPrice == undefined || data.newPrice == '') {
             return res.status(422).end();
         }
-
         if (item !== undefined) {
             try {
                 await db.modifyItemById(id, data);

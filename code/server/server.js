@@ -60,19 +60,19 @@ app.post('/api/newUser', async (req, res) => {
   return user.createNewUser(req, res);
 });
 
-app.post('/api/managerSession', async (req, res) => {
+app.post('/api/managerSessions', async (req, res) => {
   return res.status(200).json({"id":"1", "username":"manager1@ezwh.com", "name":"James"});
 });
 
-app.post('/api/customerSession', async (req, res) => {
+app.post('/api/customerSessions', async (req, res) => {
   return res.status(200).end();
 });
 
-app.post('/api/supplierSession', async (req, res) => {
+app.post('/api/supplierSessions', async (req, res) => {
   return res.status(200).end();
 });
 
-app.post('/api/clerkSession', async (req, res) => {
+app.post('/api/clerkSessions', async (req, res) => {
   return res.status(200).end();
 });
 
