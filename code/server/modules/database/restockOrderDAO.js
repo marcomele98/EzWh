@@ -109,7 +109,7 @@ exports.deleteRestockOrderById = (id) => {
 };
 
 
-this.newTableInternalOrder();
+this.newTableRestockOrder();
 this.newTableProductsRE();
 this.newTableSkuRET();
 this.newTableTransportNoteRE();
