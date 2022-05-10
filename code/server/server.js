@@ -40,7 +40,7 @@ app.get('/api/hello', (req, res) => {
 
 /* ------------------- USER ------------------- */
 app.get('/api/userinfo', (req, res) => {
-  return res.status(200).end();
+  return res.status(200).json({"id":"1", "username":"manager1@ezwh.com", "name":"Jmes", "surname":"Bond", "type":"manager"});
 });
 
 // internal order api
@@ -57,7 +57,7 @@ app.post('/api/newUser', async (req, res) => {
 });
 
 app.post('/api/managerSession', async (req, res) => {
-  return res.status(200).end();
+  return res.status(200).json({"id":"1", "username":"manager1@ezwh.com", "name":"James"});
 });
 
 app.post('/api/customerSession', async (req, res) => {
