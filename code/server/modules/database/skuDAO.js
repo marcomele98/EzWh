@@ -1,12 +1,12 @@
 'use strict'
 
 const db = require('./DAO');
-
+ /*SKU (id, description, weight,volume, notes, position, availableQuantity, price, testDescriptors)*/
 exports.newTableSku = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS sku(id INTEGER PRIMARY KEY, description STRING, weight FLOAT, volume FLOAT, price FLOAT, notes STRING, availableQuantity INTEGER, position INTEGER, testDescriptors STRING)';
+    const sql = 'CREATE TABLE IF NOT EXISTS sku(id INTEGER PRIMARY KEY, description STRING, weight FLOAT, volume FLOAT,  notes STRING, position INTEGER, availableQuantity INTEGER, price FLOAT,  testDescriptors STRING)';
     return db.run(sql);
 }
-
+   
 exports.getSkuList = () => {
     const sql = 'SELECT * FROM sku';
     return db.all(sql);
@@ -18,13 +18,13 @@ exports.getSkuById = (id) => {
 }
 
 exports.addSku = (data) => {
-    const sql = 'INSERT INTO sku (description, weight, volume, price, notes, availableQuantity) VALUES (?, ?, ?, ?, ?, ?)';
-    return db.run(sql, [data.description, data.weight, data.volume, data.price, data.notes, data.availableQuantity]);
+    const sql = 'INSERT INTO sku (description, weight, volume, notes, availableQuantity, price) VALUES (?, ?, ?, ?, ?, ?)';
+    return db.run(sql, [data.description, data.weight, data.volume,  data.notes, data.availableQuantity, data.price]);
 }
 
 exports.updateSkuInfo = (id, data) => {
-    const sql = 'UPDATE sku SET description = ?, weight = ?, volume = ?,  notes = ?, price = ?, availableQuantity = ?  WHERE id = ?';
-    return db.run(sql, [data.newDescription, data.newWeight, data.newVolume, data.newNotes, data.newPrice, data.newAvailableQuantity, id]);
+    const sql = 'UPDATE sku SET description = ?, weight = ?, volume = ?, notes = ?, availableQuantity = ?, price = ?,  WHERE id = ?';
+    return db.run(sql, [data.newDescription, data.newWeight, data.newVolume, data.newNotes, data.newAvailableQuantity, data.newPrice, id]);
 }
 
 
