@@ -291,7 +291,7 @@ app.get('/api/restockOrders/:id/returnItems', async (req, res) => {
   return restockOrder.getListSKUItemsToReturn(req, res);
 });
 
-app.post('/api/restockOrders', async (req, res) => {
+app.post('/api/restockOrder', async (req, res) => {
   return restockOrder.createNewRestockOrder(req, res);
 });
 

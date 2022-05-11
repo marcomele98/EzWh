@@ -46,3 +46,5 @@ exports.setAvailable = (rfid, available) => {
     const sql = 'UPDATE skuItem SET available = ? WHERE RFID = ?';
     return db.run(sql, [available, rfid]);
 }
+
+this.newTableSkuItem();

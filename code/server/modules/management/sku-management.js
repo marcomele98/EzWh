@@ -58,7 +58,6 @@ class SkuManagement {
             return res.status(422).json({ error: `Invalid item data` });
         }
         try {
-            await db.newTableSku();
             db.addSku(sku);
             return res.status(201).end();
 

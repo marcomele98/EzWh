@@ -6,12 +6,11 @@ const db = require('../database/restockOrderDAO');
 class RestockOrderManagement {
 
     constructor() { }
-
     async createNewRestockOrder(req, res) {
         let restockOrder = req.body;
         if (restockOrder === undefined || restockOrder.issueDate === undefined || restockOrder.products === undefined || restockOrder.supplierId === undefined
             || restockOrder == '' || restockOrder.issueDate === '' || restockOrder.products === '' || restockOrder.supplierId === "" || restockOrder.supplierId == 0
-            || isNaN(internalOrder.supplierId) || dayjs(restockOrder.issueDate, 'YYYY-MM-DD HH:mm', true).isValid() !== true) {
+            || isNaN(restockOrder.supplierId) || dayjs(restockOrder.issueDate, 'YYYY-MM-DD HH:mm', true).isValid() !== true) {
             return res.status(422).end();
         }
         try {
@@ -36,7 +35,7 @@ class RestockOrderManagement {
                     listRestockOrders[i].transportNote = '';
                     listRestockOrders[i].skuReturnItems = '';
                 }
-                else if (listRestockOrders[i].state == 'DELIVERY'){
+                else if (listRestockOrders[i].state == 'DELIVERY') {
                     listRestockOrders[i].skuReturnItems = '';
                 }
 
@@ -76,12 +75,12 @@ class RestockOrderManagement {
                 restockOrder.skuReturnItems = '';
                 restockOrder.transportNote = '';
 
-            } else if (restockOrder.state == 'DELIVERY'){
+            } else if (restockOrder.state == 'DELIVERY') {
                 restockOrder.skuReturnItems = '';
             }
             const products = await db.getListProducts(id);
             restockOrder.products = products;
-            
+
             return res.status(200).json(restockOrder);
         } catch (err) {
             res.status(500).end();
@@ -178,8 +177,8 @@ class RestockOrderManagement {
         }
     }
 
-    
-    
+
+
 }
 
 module.exports = RestockOrderManagement;

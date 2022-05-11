@@ -66,7 +66,7 @@ class SkuItemManagement {
             return res.status(422).json({ error: `Invalid skuItem data` });
         }
         try {
-            await db.newTableSkuItem();
+      
             await db.storeSkuItem(skuItem);
             //db.dropTable();
             return res.status(201).end();
@@ -90,7 +90,7 @@ class SkuItemManagement {
         }
 
         if (data.length == 0 || data.newRFID.length !== 32 || data.newRFID === '' ||  data.newAvailable === '' || 
-       data.newDateOfStock === '' || dayjs(data.newDateOfStock, 'YYYY-MM-DD HH:mm', true).isValid() !== true)  {
+       data.newDateOfStock === '' || !dayjs(data.newDateOfStock, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm'], true).isValid())  {
             return res.status(422).end();
         }
         if (data.newAvailable !== 1 && data.newAvailable !==0){

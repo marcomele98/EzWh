@@ -46,3 +46,5 @@ exports.dropTable = () => {
     const sql = 'DROP TABLE sku'
     return db.run(sql);
 }
+
+this.newTableSku();
