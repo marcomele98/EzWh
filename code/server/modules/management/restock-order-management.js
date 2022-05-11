@@ -2,6 +2,8 @@
 
 const dayjs = require('dayjs');
 const db = require('../database/restockOrderDAO');
+var customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat);
 
 class RestockOrderManagement {
 
@@ -10,7 +12,7 @@ class RestockOrderManagement {
         let restockOrder = req.body;
         if (restockOrder === undefined || restockOrder.issueDate === undefined || restockOrder.products === undefined || restockOrder.supplierId === undefined
             || restockOrder == '' || restockOrder.issueDate === '' || restockOrder.products === '' || restockOrder.supplierId === "" || restockOrder.supplierId == 0
-            || isNaN(restockOrder.supplierId) || dayjs(restockOrder.issueDate, 'YYYY-MM-DD HH:mm', true).isValid() !== true) {
+            || isNaN(restockOrder.supplierId) || !dayjs(restockOrder.issueDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm'], true).isValid()) {
             return res.status(422).end();
         }
         try {

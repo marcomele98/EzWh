@@ -7,7 +7,7 @@ const db = require('./DAO');
 
 // function for Restock Order
 exports.newTableRestockOrder = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS restockOrders(id integer PRIMARY KEY AUTOINCREMENT, issueDate STRING, state TEXT, transportNote STRING, products STRING, customerId STRING, SKUReturn STRING )';
+    const sql = 'CREATE TABLE IF NOT EXISTS restockOrders(id integer PRIMARY KEY AUTOINCREMENT, issueDate STRING, state TEXT, transportNote STRING, products STRING, supplierId STRING, SKUReturn STRING )';
     return db.run(sql);
 }
 
@@ -72,7 +72,7 @@ exports.getLastId = () => {
 
 exports.getListRestockOrders = () => {
     const sql = 'SELECT * FROM restockOrders';
-    return db.all(sql, []);
+    return db.all(sql);
 }
 
 exports.getListIssuedRestockOrders = () => {
@@ -108,8 +108,14 @@ exports.deleteRestockOrderById = (id) => {
     db.run(sql4, [id]);
 };
 
+exports.dropTable = () =>{
+    const sql = 'DROP TABLE restockOrders'
+    return db.run(sql);
+}
+
 
 this.newTableRestockOrder();
+
 this.newTableProductsRE();
 this.newTableSkuRET();
 this.newTableTransportNoteRE();
