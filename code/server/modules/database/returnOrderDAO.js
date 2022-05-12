@@ -7,7 +7,7 @@ const db = require('./DAO');
 
 // function for Return Order
 exports.newTableReturnOrder = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS returnOrders(id integer PRIMARY KEY AUTOINCREMENT, returnDate STRING, restockOrderID INTEGER, SKUReturn STRING )';
+    const sql = 'CREATE TABLE IF NOT EXISTS returnOrders(id integer PRIMARY KEY AUTOINCREMENT, returnDate TEXT, products TEXT, restockOrderId INTEGER )';
     return db.run(sql);
 }
 
@@ -18,7 +18,7 @@ exports.newTableProductsRET = () => {
 
 exports.storeReturnOrder = (data) => {
     const sql = 'INSERT INTO returnOrders (id, returnDate, restockOrderID) VALUES(?, ?, ?)';
-    return db.run(sql, [this.lastID, data.returnDate, data.restockOrderID]);
+    return db.run(sql, [this.lastID, data.returnDate, data.restockOrderId]);
 }
 
 exports.storeProductRET = (data, RETid) => {
@@ -29,7 +29,7 @@ exports.storeProductRET = (data, RETid) => {
 }
 
 exports.getListProductRET = (id) => {
-    const sql = 'SELECT RETid , SKUId  , description , price , RFID , RFID FROM productsRET WHERE RETid = ?';
+    const sql = 'SELECT SKUId  , description , price , RFID , RFID FROM productsRET WHERE RETid = ?';
     return db.all(sql, [id]);
 }
 

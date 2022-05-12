@@ -7,7 +7,7 @@ const db = require('./DAO');
 
 // function for Internal Order
 exports.newTableInternalOrder = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS internalOrders(id integer PRIMARY KEY AUTOINCREMENT, issueDate STRING, state TEXT, products TEXT, customerId INTEGER )';
+    const sql = 'CREATE TABLE IF NOT EXISTS internalOrders(id integer PRIMARY KEY AUTOINCREMENT, issueDate TEXT, state TEXT, products TEXT, customerId INTEGER )';
     return db.run(sql);
 }
 

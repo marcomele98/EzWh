@@ -27,18 +27,27 @@ class SkuManagement {
     async getSkuById(req, res) {
         const id = req.params.id;
 
-        if (id === undefined || id === '' || id == 0) {
+        if (id === undefined || id === '' || id == 0 || isNaN(id)) {
             return res.status(422).json({ error: 'Invalid id' });
         }
         try {
             const sku = await db.getSkuById(id);
-            const testDescriptors = await dbTest.getTestListBySKU(id);
-            sku.testDescriptors = testDescriptors.map(value => value.id);
             if (sku === undefined) {
                 return res.status(404).end();
-            } else if (sku.length !== 0) {
-                return res.status(200).json(sku);
             }
+            const testDescriptors = await dbTest.getTestListBySKU(id);
+            sku.testDescriptors = testDescriptors.map(value => value.id);
+            return res.status(200).json(
+                {
+                    description: sku.description,
+                    weight: sku.weight,
+                    volume: sku.volume,
+                    notes: sku.notes,
+                    position: sku.position,
+                    availableQuantity: sku.availableQuantity,
+                    price: sku.price,
+                    testDescriptors: sku.testDescriptors
+                });
         } catch (err) {
             return res.status(500).end();
         }
@@ -49,7 +58,7 @@ class SkuManagement {
             return res.status(422).json({ error: `Empty body request` });
         }
         let sku = req.body;
-        if (sku.description === '' || sku.price <= 0  || sku.price == undefined || sku.weight <= 0 || sku.volume <= 0 ||
+        if (sku.description === '' || sku.price <= 0 || sku.price == undefined || sku.weight <= 0 || sku.volume <= 0 ||
             sku.notes === '' || sku.availableQuantity <= 0 || sku.description === undefined ||
             isNaN(sku.description) !== true || isNaN(sku.notes) !== true || sku.price == undefined ||
             sku.weight === undefined || sku.weight === '' || sku.volume == undefined ||
@@ -73,22 +82,22 @@ class SkuManagement {
         const oldSku = await db.getSkuById(id);
 
         //Checks to get the old value when a field is undefined
-        if (data.newDescription == undefined){
+        if (data.newDescription == undefined) {
             data.newDescription = oldSku.description;
         }
-        if(data.newVolume == undefined){
-            data.newVolume =oldSku.volume;
+        if (data.newVolume == undefined) {
+            data.newVolume = oldSku.volume;
         }
-        if(data.newWeight == undefined){
+        if (data.newWeight == undefined) {
             data.newWeight = oldSku.weight;
         }
-        if(data.newNotes == undefined){
+        if (data.newNotes == undefined) {
             data.newNotes = oldSku.notes;
         }
-        if(data.newAvailableQuantity == undefined){
+        if (data.newAvailableQuantity == undefined) {
             data.newAvailableQuantity = oldSku.availableQuantity;
         }
-        if(data.newPrice == undefined){
+        if (data.newPrice == undefined) {
             data.newPrice = oldSku.price;
         }
 
@@ -122,32 +131,39 @@ class SkuManagement {
     async updateSkuPosition(req, res) {
         const id = req.params.id;
         const position = req.body.position;
-        if (id == undefined || id == '' || id == 0 || position == undefined || position == 0 || position == '') {
+        if (id == undefined || id == '' || id == 0 || isNaN(id) || position == undefined || position == 0 || position == '' || isNaN(position)) {
             return res.status(422).json({ error: 'Invalid id ' });
         }
         const sku = await db.getSkuById(id);
+        const pos = await dbPos.getPositionByID(position);
+        if (sku == undefined || pos == undefined) {
+            return res.status(404).end();
+        }
+        const oldPos = await dbPos.getPositionByID(sku.position)
+
         const newWeight = sku.weight * sku.availableQuantity;
         const newVolume = sku.volume * sku.availableQuantity;
-        const pos = await dbPos.getPositionByID(position);
-        if (pos.maxWeight < newWeight || pos.maxVolume < newVolume) {
-            return res.status(422).end();
-        }
-        if (sku !== undefined || pos !== undefined) {
-            try {
-                await db.setPosition(id, position);
-                await dbPos.updateInfoBySKU(position, newWeight, newVolume);
-                res.status(200).end();
-            } catch (err) {
-                res.status(503).end();
+
+//        if (pos.maxWeight < newWeight || pos.maxVolume < newVolume) {
+//            return res.status(422).end();
+//        }
+        try {
+            await db.setPosition(id, position);
+            if (oldPos !== undefined) {
+                oldPos.occupiedWeight -= newWeight;
+                oldPos.occupiedVolume -= newVolume;
+                await dbPos.updateInfoBySKU(sku.position, oldPos.occupiedWeight, oldPos.occupiedVolume);
             }
-        } else {
-            res.status(404).end()
+            await dbPos.updateInfoBySKU(position, newWeight, newVolume);
+            res.status(200).end();
+        } catch (err) {
+            res.status(503).end();
         }
     }
 
     deleteSkuById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || id == 0) {
+        if (id == undefined || id == '' || id == 0 || isNaN(id)) {
             res.status(422).end();
         }
         try {

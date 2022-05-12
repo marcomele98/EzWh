@@ -4,6 +4,7 @@ const db = require('../database/skuItemDAO');
 const dayjs = require('dayjs')
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat);
+
 class SkuItemManagement {
     constructor() { }
 
@@ -89,8 +90,9 @@ class SkuItemManagement {
             data.newDateOfStock = oldSkuItem.DateOfStock;
         }
 
-        if (data.length == 0 || data.newRFID.length !== 32 || data.newRFID === '' ||  data.newAvailable === '' || 
-       data.newDateOfStock === '' || !dayjs(data.newDateOfStock, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid())  {
+        if ( rfid.length !== 32 || rfid == '' || isNaN(rfid) || data.length == 0 || data.newRFID.length !== 32 || data.newRFID === '' ||  
+            data.newAvailable === '' || isNaN(data.newRFID) || data.newDateOfStock === '' || 
+            !dayjs(data.newDateOfStock, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid())  {
             return res.status(422).end();
         }
         if (data.newAvailable !== 1 && data.newAvailable !==0){
@@ -111,7 +113,7 @@ class SkuItemManagement {
 
     async deleteSkuItemById(req, res) {
         const id = req.params.rfid;
-        if (id == undefined || id == '' || id == 0) {
+        if (id == undefined || id == '' || id == 0 || isNaN(id) || id.length != 32) {
             res.status(422).end();
         }
         const skuItem = await db.getSkuItemByRfid(id);

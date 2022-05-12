@@ -2,8 +2,11 @@
 
 const dayjs = require('dayjs')
 const db = require('../database/test-resultDAO');
+var customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat);
 const dbTestDescriptor = require('../database/test-descriptorDAO');
 const dbSKUItem = require('../database/skuItemDAO');
+
 
 class TestResultManagement {
 
@@ -36,7 +39,7 @@ class TestResultManagement {
     }
 
     isNotValidDate = (Date) => {
-        return dayjs(Date, 'YYYY-MM-DD', true).isValid() !== true;
+        return !dayjs(Date, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()
     }
 
     async getTestResultsListByRfid(req, res) {
@@ -69,10 +72,10 @@ class TestResultManagement {
         }
         try {
             const skuItem = await dbSKUItem.getSkuItemByRfid(rfid);
-            if (this.noContent(skuItem)) {
+            const result = await db.getTestResultByIds(id, rfid);
+            if (this.noContent(skuItem) || this.noContent(result)) {
                 return res.status(404).end();
             }
-            const result = await db.getTestResultByIds(id, rfid);
             result.Result = result.Result ? true : false;
             res.status(200).json(result);
         } catch {
@@ -125,7 +128,7 @@ class TestResultManagement {
             if (this.noContent(testDescriptor) || this.noContent(testResult) || this.noContent(skuItem)) {
                 return res.status(404).end();
             }
-            data.newResult = data.newResul ? 1: 0;
+            data.newResult = data.newResult ? 1: 0;
             await db.modifyTestResultByIds(id, data, rfid);
             res.status(200).end();
         } catch {

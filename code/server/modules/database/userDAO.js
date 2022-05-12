@@ -4,7 +4,7 @@ const db = require('./DAO');
 
 
 exports.newTableUser = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, email STRING, name STRING, surname STRING, password STRING, type STRING )';
+    const sql = 'CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, name TEXT, surname TEXT, password TEXT, type TEXT )';
     return db.run(sql);
 }
 

@@ -12,29 +12,33 @@ dayjs.extend(customParseFormat);
 class RestockOrderManagement {
 
     constructor() { }
+
     async createNewRestockOrder(req, res) {
         let restockOrder = req.body;
-        if (restockOrder === undefined || 
-            restockOrder.issueDate === undefined || 
-            restockOrder.products === undefined || 
-            restockOrder.supplierId === undefined || 
-            restockOrder == '' || 
-            restockOrder.issueDate === '' || 
-            restockOrder.products === '' || 
-            restockOrder.supplierId === "" || 
-            restockOrder.supplierId == 0 || 
-            isNaN(restockOrder.supplierId) || 
-            !dayjs(restockOrder.issueDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm'], true).isValid()) {
+        if (restockOrder === undefined ||
+            restockOrder.issueDate === undefined ||
+            restockOrder.products === undefined ||
+            restockOrder.supplierId === undefined ||
+            restockOrder == '' ||
+            restockOrder.issueDate === '' ||
+            restockOrder.products === '' ||
+            restockOrder.supplierId === "" ||
+            restockOrder.supplierId == 0 ||
+            isNaN(restockOrder.supplierId) ||
+            !dayjs(restockOrder.issueDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()) {
             return res.status(422).end();
         }
         for (var i = 0; i < restockOrder.products.length; i++) {
-            const sku = dbSKU.getSkuById(restockOrder.products[i].SKUId);
+            const sku = await dbSKU.getSkuById(restockOrder.products[i].SKUId);
+            if (sku == undefined) {
+                return res.status(404).end();
+            }
             if (
-                restockOrder.products[i].SKUId == undefined || restockOrder.products[i].SKUId <= 0 || restockOrder.products[i].SKUId == '' || isNaN(restockOrder.products[i].SKUId) || 
+                restockOrder.products[i].SKUId == undefined || restockOrder.products[i].SKUId <= 0 || restockOrder.products[i].SKUId == '' || isNaN(restockOrder.products[i].SKUId) ||
                 !isNaN(restockOrder.products[i].description) || restockOrder.products[i].description == undefined || restockOrder.products[i].description == '' || restockOrder.products[i].price <= 0 ||
-                restockOrder.products[i].price == undefined || restockOrder.products[i].price == '' || isNaN(restockOrder.products[i].price) || restockOrder.products[i].qty == undefined || 
+                restockOrder.products[i].price == undefined || restockOrder.products[i].price == '' || isNaN(restockOrder.products[i].price) || restockOrder.products[i].qty == undefined ||
                 restockOrder.products[i].qty <= 0 || restockOrder.products[i].qty == '' || isNaN(restockOrder.products[i].qty) || restockOrder.products[i].qty > sku.qty
-                ) {
+            ) {
                 return res.status(422).end();
             }
         }
@@ -57,17 +61,34 @@ class RestockOrderManagement {
                 listRestockOrders[i].products = products;
 
                 if (listRestockOrders[i].state == 'ISSUED') {
-                    listRestockOrders[i].transportNote = '';
-                    listRestockOrders[i].SKUItems = '';
-                }
-                else if (listRestockOrders[i].state == 'DELIVERY') {
-                    listRestockOrders[i].SKUItems = '';
-                }
-                else{
-                    const SKUItems = await db.getListSKURE(listRestockOrders[i].id);
-                    listRestockOrders[i].SKUItems = SKUItems;
+                    listRestockOrders[i] = {
+                        "id": listRestockOrders[i].id,
+                        "issueDate": listRestockOrders[i].issueDate,
+                        "state": listRestockOrders[i].state,
+                        "products": products,
+                        "supplierId": listRestockOrders[i].supplierId,
+                        "skuItems": []
+                    }
                 }
 
+                const trasp = await db.getTransportNote(listRestockOrders[i].id)
+
+                if (listRestockOrders[i].state == 'DELIVERY') {
+                    listRestockOrders[i] = {
+                        "id": listRestockOrders[i].id,
+                        "issueDate": listRestockOrders[i].issueDate,
+                        "state": listRestockOrders[i].state,
+                        "products": products,
+                        "supplierId": listRestockOrders[i].supplierId,
+                        "transportNote": trasp,
+                        "skuItems": []
+                    }
+                }
+                else {
+                    const SKUItems = await db.getListSKURE(listRestockOrders[i].id);
+                    listRestockOrders[i].SKUItems = SKUItems;
+                    listRestockOrders[i].transportNote = trasp;
+                }
             }
             res.status(200).json(listRestockOrders);
         } catch (err) {
@@ -80,9 +101,14 @@ class RestockOrderManagement {
             const listRestockOrders = await db.getListIssuedRestockOrders();
             for (var i = 0; i < listRestockOrders.length; i++) {
                 const products = await db.getListProducts(listRestockOrders[i].id);
-                listRestockOrders[i].products = products;
-                listRestockOrders[i].transportNote = '';
-                listRestockOrders[i].SKUItems = '';
+                listRestockOrders[i] = {
+                    "id": listRestockOrders[i].id,
+                    "issueDate": listRestockOrders[i].issueDate,
+                    "state": listRestockOrders[i].state,
+                    "products": products,
+                    "supplierId": listRestockOrders[i].supplierId,
+                    "skuItems": []
+                }
             }
             res.status(200).json(listRestockOrders);
         } catch (err) {
@@ -107,7 +133,7 @@ class RestockOrderManagement {
             } else if (restockOrder.state == 'DELIVERY') {
                 restockOrder.SKUItems = '';
             }
-            else{
+            else {
                 const SKUItems = await db.getListSKURE(restockOrder.id);
                 restockOrder.SKUItems = SKUItems;
             }
@@ -122,24 +148,21 @@ class RestockOrderManagement {
 
     async getListSKUItemsToReturn(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || isNaN(id)) {
+        if (id == undefined || id == '' || isNaN(id) || id <= 0) {
             return res.status(422).end();
         }
         try {
             const restockOrder = await db.getRestockOrderById(id);
-            if (restockOrder.state != 'COMPLETEDRETURN') {
-                return res.status(422).end();
-            }
-            if (restockOrder == undefined) {
+            if (restockOrder == undefined || restockOrder.state != 'COMPLETEDRETURN') {
                 return res.status(404).end();
             }
             const SKUItems = await db.getListSKURE(id);
             var count = 0;
             const SKUItemsReturn = [];
-            
+
             console.log(SKUItems.length);
             for (var i = 0; i < SKUItems.length; i++) {
-                const SKUcheck = await dbRES.getPassByIds(SKUItems[i].id,SKUItems[i].RFID);
+                const SKUcheck = await dbRES.getPassByIds(SKUItems[i].id, SKUItems[i].RFID);
                 if (SKUcheck === undefined) {
                     SKUItemsReturn[count] = SKUItems[i];
                     count++;
@@ -160,33 +183,8 @@ class RestockOrderManagement {
         const RE = await db.getRestockOrderById(id);
         if (RE != undefined) {
             try {
-                /*if (data.newState === 'COMPLETED') {
-                    for (var i = 0; i < data.products.length; i++) {
-                        if (data.products[i].SKUId == undefined || data.products[i].SKUId <= 0 || data.products[i].SKUId == '' || isNaN(data.products[i].SKUId)
-                            || data.products[i].RFID == undefined || data.products[i].RFID == '' || data.products[i].RFID.length != 32 || isNaN(data.products[i].RFID)) {
-                            return res.status(422).end();
-                        }
-                        await dbSKUitem.setAvailable(data.products[i].RFID, 0);
-                    }
-                    const prod = db.getListProducts(id);
-
-                    for (var i = 0; i < prod.length; i++) {
-
-                        const sku = dbSKU.getSkuById(prod[i].SKUId);
-                        const newAvailableQuantity = sku.availableQuantity + prod[i].qty;
-                        await dbSKU.updateQuantity(prod[i].SKUId, newAvailableQuantity);
-                        const position = sku.position;
-
-                        if (position !== undefined || position !== 0 || !isNaN(position)) {
-                            const newWeight = updatedSKU.weight * newAvailableQuantity;
-                            const newVolume = updatedSKU.volume * newAvailableQuantity;
-                            await dbPos.updateInfoBySKU(position, newWeight, newVolume);
-                        }
-
-                    }
-                }*/
-                const restockOrder = await db.modifyStateRestockOrderById(data, id);
-                return res.status(200).json(restockOrder);
+                await db.modifyStateRestockOrderById(data, id);
+                return res.status(200).end();
             } catch (err) {
                 res.status(503).end();
             }
@@ -202,9 +200,8 @@ class RestockOrderManagement {
             return res.status(422).end();
         }
         const RE = await db.getRestockOrderById(id);
-        console.log(RE);
         if (RE != undefined) {
-            if(RE.state != 'DELIVERED'){
+            if (RE.state != 'DELIVERED') {
                 return res.status(422).end();
             }
             try {
@@ -228,9 +225,9 @@ class RestockOrderManagement {
         const RE = await db.getRestockOrderById(id);
         if (RE != undefined) {
             try {
-                if(!dayjs(data.transportNote.deliveryDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm'], true).isValid() ||
+                if (!dayjs(data.transportNote.deliveryDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid() ||
                     dayjs(RE.issueDate).isAfter(data.transportNote.deliveryDate)
-                    || RE.state != 'DELIVERY'){
+                    || RE.state != 'DELIVERY') {
                     return res.status(422).end();
                 }
                 const transportNote = await db.storeTransportNote(data, id);
@@ -245,7 +242,7 @@ class RestockOrderManagement {
 
     async deleteRestockOrderById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || isNaN(id)) {
+        if (id == undefined || id == '' || isNaN(id) || id <= 0) {
             return res.status(422).end();
         }
         try {
@@ -255,9 +252,6 @@ class RestockOrderManagement {
             res.status(500).end();
         }
     }
-
-
-
 }
 
 module.exports = RestockOrderManagement;

@@ -5,7 +5,7 @@ const db = require('./DAO');
 /*SKUITEM ( RFID; SKUID; AVAILABLE, CURRENTPOSITION, DATEOFSTOCK, TESTRESULTLIST*/
 
 exports.newTableSkuItem = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS skuItem (RFID TEXT PRIMARY KEY, SKUId INTEGER, Available INTEGER,  DateOfStock STRING)';
+    const sql = 'CREATE TABLE IF NOT EXISTS skuItem (RFID TEXT PRIMARY KEY, SKUId INTEGER, Available INTEGER,  DateOfStock TEXT)';
     return db.run(sql);
 }
 exports.dropTable = () => {

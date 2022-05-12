@@ -13,9 +13,8 @@ class ReturnOrderManagement {
         let returnOrder = req.body;
         console.log(returnOrder);
         if (returnOrder === undefined || returnOrder.returnDate === undefined || returnOrder.products === undefined || returnOrder.restockOrderId === undefined
-            || returnOrder == '' || returnOrder.returnDate === '' || returnOrder.products === '' || returnOrder.restockOrderId === "" || returnOrder.restockOrderId == 0
-            || isNaN(returnOrder.restockOrderId) || !dayjs(returnOrder.returnDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm'], true).isValid()) {
-            
+            || returnOrder == '' || returnOrder.returnDate === '' || returnOrder.products === '' || returnOrder.restockOrderId === "" || returnOrder.restockOrderId == 0|| isNaN(returnOrder.restockOrderId) || 
+             !dayjs(returnOrder.returnDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()) {
                 return res.status(422).end();
         }
         try {
@@ -45,7 +44,7 @@ class ReturnOrderManagement {
 
     async getReturnOrderById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || isNaN(id)) {
+        if (id == undefined || id == '' || isNaN(id) || id <= 0) {
             return res.status(422).end();
         }
         try {
