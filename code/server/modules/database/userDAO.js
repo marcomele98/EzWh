@@ -18,6 +18,11 @@ exports.getUserByUsername = (username) => {
     return db.get(sql, [username]);
 }
 
+exports.getUserByUsernameAndPass = (username, password) => {
+    const sql = 'SELECT * FROM users WHERE email = ? AND password = ?';
+    return db.get(sql, [username, password]);
+}
+
 exports.getListUsers = () => {
     const sql = 'SELECT id, name, surname, email, type FROM users WHERE type!="manager"';
     return db.all(sql, []);

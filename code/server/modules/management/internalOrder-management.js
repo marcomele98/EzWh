@@ -2,10 +2,11 @@
 const dayjs = require('dayjs')
 const db = require('../database/internalOrderDAO');
 const dbSKU = require('../database/skuDAO');
-const dbSKUitem = require('../database/skuItemDAO')
-const dbPos = require('../database/positionDAO')
 
 const possibleType = ['ISSUED', 'ACCEPTED', 'REFUSED', 'CANCELED', 'COMPLETED'];
+
+var customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat);
 
 class InternalOrderManagement {
 
@@ -15,19 +16,21 @@ class InternalOrderManagement {
         let internalOrder = req.body;
         if (internalOrder === undefined || internalOrder.issueDate === undefined || internalOrder.products === undefined || internalOrder.customerId === undefined
             || internalOrder == '' || internalOrder.issueDate === '' || internalOrder.products === '' || internalOrder.customerId === "" || internalOrder.customerId <= 0
-            || isNaN(internalOrder.customerId) || dayjs(internalOrder.issueDate, 'YYYY-MM-DD HH:mm', true).isValid() !== true) {
+            || isNaN(internalOrder.customerId) ||  !dayjs(internalOrder.issueDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()) {
             return res.status(422).end();
         }
         for (var i = 0; i < internalOrder.products.length; i++) {
-            const sku = getSkuById(internalOrder.products[i].SKUId);
-            if (internalOrder.products[i].SKUId == undefined || internalOrder.products[i].SKUId <= 0 || internalOrder.products[i].SKUId == '' || isNaN(internalOrder.products.SKUId)
+            const sku = await dbSKU.getSkuById(internalOrder.products[i].SKUId);
+            if(sku == undefined) {
+                return res.status(404).end();
+            }
+            if (internalOrder.products[i].SKUId == undefined || internalOrder.products[i].SKUId <= 0 || internalOrder.products[i].SKUId == '' || isNaN(internalOrder.products[i].SKUId)
                 || !isNaN(internalOrder.products[i].description) || internalOrder.products[i].description == undefined || internalOrder.products[i].description == '' || internalOrder.products[i].price <= 0 ||
-                internalOrder.products[i].price == undefined || internalOrder.products[i].price == '' || isNaN(internalOrder.products.price) ||
+                internalOrder.products[i].price == undefined || internalOrder.products[i].price == '' || isNaN(internalOrder.products[i].price) ||
                 internalOrder.products[i].qty == undefined || internalOrder.products[i].qty <= 0 || internalOrder.products[i].qty == '' || isNaN(internalOrder.products[i].qty)
-                || internalOrder.products[i].qty > sku.qty) {
+                ) {
                 return res.status(422).end();
             }
-
         }
         try {
             await db.storeInternalOrder(internalOrder);
@@ -121,22 +124,6 @@ class InternalOrderManagement {
                         if (data.products[i].SKUId == undefined || data.products[i].SKUId <= 0 || data.products[i].SKUId == '' || isNaN(data.products.SKUId)
                             || data.products[i].RFID == undefined || data.products[i].RFID == '' || data.products[i].RFID.length != 32 || isNaN(data.products[i].RFID)) {
                             return res.status(422).end();
-                        }
-                        await dbSKUitem.setAvailable(data.products[i].RFID, 0);
-                    }
-                    const prod = db.getListProducts(id);
-
-                    for (var i = 0; i < prod.length; i++) {
-
-                        const sku = dbSKU.getSkuById(prod[i].SKUId);
-                        const newAvailableQuantity = sku.availableQuantity - prod[i].qty;
-                        await dbSKU.updateQuantity(prod[i].SKUId, newAvailableQuantity);
-                        const position = sku.position;
-
-                        if (position !== undefined || position !== 0 || !isNaN(position)) {
-                            const newWeight = updatedSKU.weight * newAvailableQuantity
-                            const newVolume = updatedSKU.volume * newAvailableQuantity
-                            await dbPos.updateInfoBySKU(position, newWeight, newVolume);
                         }
                     }
                     await db.storeSkuIO(data.products, id);

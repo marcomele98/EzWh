@@ -1,6 +1,8 @@
 "use strict"
 
+
 const db = require('../database/userDAO');
+let userinfo = {}
 
 const possibleType = ['customer', 'qualityEmployee', 'clerk', 'deliveryEmployee', 'supplier']
 
@@ -14,8 +16,8 @@ class UserManagement {
         if (user == '' || user == undefined || user.username == undefined || user.username === ''
             || user.name == '' || user.name == undefined || user.surname == ''
             || user.surname == undefined || user.password == '' || user.password == undefined
-            || user.type == '' || user.type == undefined || user.type == 'manager' || user.type == 'administrator'
-            || this.ValidateEmail(user.username) != true) {
+            || user.type == '' || user.type == undefined  || this.CheckPossibleType(user.type) != true
+            || this.ValidateEmail(user.username) != true ) {
             return res.status(422).end();
         }
         try {
@@ -53,7 +55,7 @@ class UserManagement {
         const username = req.params.username;
         const type = req.params.type;
         if (username == undefined || username == '' || type == undefined || type == '' ||
-            type == 'manager' || type == 'administrator') {
+            this.CheckPossibleType(type) != true ) {
             return res.status(422).end();
         }
         try {
@@ -68,21 +70,39 @@ class UserManagement {
         const username = req.params.username;
         const data = req.body;
         const user = await db.getUserByUsername(username);
-        if ( data.oldType == undefined || data.oldType == '' || data.newType == undefined || data.newType == '' 
-            || username == undefined || username == '' || this.CheckPossibleType(data.oldType) != true 
-            || this.CheckPossibleType(data.newType) != true || this.CheckPossibleType(user.type) != true 
+        if (data.oldType == undefined || data.oldType == '' || data.newType == undefined || data.newType == ''
+            || username == undefined || username == '' || this.CheckPossibleType(data.oldType) != true
+            || this.CheckPossibleType(data.newType) != true || this.CheckPossibleType(user.type) != true
             || this.ValidateEmail(username) != true) {
             return res.status(422).end();
-        } 
+        }
         try {
-            if( user == undefined || user.email != username || user.type != data.oldType ){
+            if (user == undefined || user.email != username || user.type != data.oldType) {
                 return res.status(404).end();
             } else {
                 await db.modifyRightsByUsername(data, username);
                 res.status(200).end();
             }
-        } catch(err) {
+        } catch (err) {
             res.status(503).end();
+        }
+    }
+
+    async login(req, res) {
+        const data = req.body;
+        if (data == undefined || data == '' || data.username == undefined || data.password == undefined
+            || this.ValidateEmail(data.username) != true || data.password == '') {
+            return res.status(422).end();
+        }
+        try {
+            const user = await db.getUserByUsernameAndPass(data.username, data.password);
+            if(user == undefined) {
+                return res.status(401).end();
+            }
+            userinfo = {id: user.id, username: user.email, name: user.name, surname: user.surname, type: user.type}
+            return res.status(200).json({id: user.id, username: user.username, name: user.name})
+        } catch(err){
+            res.status(500).end();
         }
     }
 

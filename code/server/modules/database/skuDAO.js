@@ -23,7 +23,7 @@ exports.addSku = (data) => {
 }
 
 exports.updateSkuInfo = (id, data) => {
-    const sql = 'UPDATE sku SET description = ?, weight = ?, volume = ?, notes = ?, availableQuantity = ?, price = ?,  WHERE id = ?';
+    const sql = 'UPDATE sku SET description = ?, weight = ?, volume = ?, notes = ?, availableQuantity = ?, price = ?  WHERE id = ?';
     return db.run(sql, [data.newDescription, data.newWeight, data.newVolume, data.newNotes, data.newAvailableQuantity, data.newPrice, id]);
 }
 

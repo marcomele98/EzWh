@@ -44,7 +44,7 @@ app.get('/api/hello', (req, res) => {
 
 /* ------------------- USER ------------------- */
 app.get('/api/userinfo', (req, res) => {
-  return res.status(200).json({"id":"1", "username":"manager1@ezwh.com", "name":"Jmes", "surname":"Bond", "type":"manager"});
+  return res.status(200).json(user.userinfo);
 });
 
 // internal order api
@@ -61,27 +61,27 @@ app.post('/api/newUser', async (req, res) => {
 });
 
 app.post('/api/managerSessions', async (req, res) => {
-  return res.status(200).json({"id":"1", "username":"manager1@ezwh.com", "name":"James"});
+  return user.login(req, res);
 });
 
 app.post('/api/customerSessions', async (req, res) => {
-  return res.status(200).end();
+  return user.login(req, res);
 });
 
 app.post('/api/supplierSessions', async (req, res) => {
-  return res.status(200).end();
+  return user.login(req, res);
 });
 
 app.post('/api/clerkSessions', async (req, res) => {
-  return res.status(200).end();
+  return user.login(req, res);
 });
 
 app.post('/api/qualityEmployeeSessions', async (req, res) => {
-  return res.status(200).end();
+  return user.login(req, res);
 });
 
 app.post('/api/deliveryEmployeeSessions', async (req, res) => {
-  return res.status(200).end();
+  return user.login(req, res);
 });
 
 app.post('/api/logout', async (req, res) => {

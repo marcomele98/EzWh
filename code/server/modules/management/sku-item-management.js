@@ -62,7 +62,7 @@ class SkuItemManagement {
         if (skuItem.RFID.length !== 32 || skuItem.RFID === '' || skuItem.RFID == 0 || skuItem.RFID == undefined || isNaN(skuItem.RFID) ||
             skuItem.SKUId=== '' || skuItem.SKUId == undefined || skuItem.SKUId == 0 || isNaN(skuItem.SKUId) ||  
             skuItem.DateOfStock == undefined || skuItem.DateOfStock == '' ||
-             !dayjs(skuItem.DateOfStock, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm'], true).isValid()){ 
+             !dayjs(skuItem.DateOfStock, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()){ 
             return res.status(422).json({ error: `Invalid skuItem data` });
         }
         try {
@@ -90,7 +90,7 @@ class SkuItemManagement {
         }
 
         if (data.length == 0 || data.newRFID.length !== 32 || data.newRFID === '' ||  data.newAvailable === '' || 
-       data.newDateOfStock === '' || !dayjs(data.newDateOfStock, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm'], true).isValid())  {
+       data.newDateOfStock === '' || !dayjs(data.newDateOfStock, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid())  {
             return res.status(422).end();
         }
         if (data.newAvailable !== 1 && data.newAvailable !==0){
