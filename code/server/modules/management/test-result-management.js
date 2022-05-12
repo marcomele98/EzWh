@@ -4,6 +4,7 @@ const dayjs = require('dayjs')
 const db = require('../database/test-resultDAO');
 const dbTestDescriptor = require('../database/test-descriptorDAO');
 const dbSKUItem = require('../database/skuItemDAO');
+const dbSKUREItem = require('../database/restockOrderDAO');
 
 class TestResultManagement {
 
@@ -89,8 +90,9 @@ class TestResultManagement {
         }
         try {
             const skuItem = await dbSKUItem.getSkuItemByRfid(data.rfid);
+            const skuRE = await dbSKUItem.getSkuItemByRfid(data.rfid);
             const testDescriptor = await dbTestDescriptor.getTestDescriptorByID(data.idTestDescriptor);
-            if (this.noContent(testDescriptor) || this.noContent(skuItem)) {
+            if (this.noContent(testDescriptor) || this.noContent(skuItem) || this.noContent(skuRE)) {
                 return res.status(404).end();
             }
 

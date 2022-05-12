@@ -7,7 +7,7 @@ const db = require('./DAO');
 
 // function for Restock Order
 exports.newTableRestockOrder = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS restockOrders(id integer PRIMARY KEY AUTOINCREMENT, issueDate STRING, state TEXT, transportNote STRING, products STRING, supplierId STRING, SKUReturn STRING )';
+    const sql = 'CREATE TABLE IF NOT EXISTS restockOrders(id integer PRIMARY KEY AUTOINCREMENT, issueDate STRING, state TEXT, transportNote STRING, products STRING, supplierId STRING, SKUItems STRING )';
     return db.run(sql);
 }
 
@@ -16,8 +16,8 @@ exports.newTableProductsRE = () => {
     return db.run(sql);
 }
 
-exports.newTableSkuRET = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS skuRET (REid INTEGER, SKUId INTEGER, RFID TEXT PRIMARY KEY)';
+exports.newTableSkuRE = () => {
+    const sql = 'CREATE TABLE IF NOT EXISTS skuRE (REid INTEGER, SKUId INTEGER, RFID TEXT PRIMARY KEY)';
     return db.run(sql);
 }
 
@@ -38,16 +38,16 @@ exports.storeProducts = (data, REid) => {
     }
 }
 
-exports.storeSkuRET = (data, REid) => {
-    const sql1 = 'INSERT OR IGNORE INTO skuRET (REid, SKUId, RFID) VALUES(?, ?, ?)'
-    for (var i = 0; i < data.length; i++) {
-        db.run(sql1, [REid, data[i].SkuID, data[i].RFID]);
+exports.storeSkuRE = (data, REid) => {
+    const sql1 = 'INSERT INTO skuRE (REid, SKUId, RFID) VALUES(?, ?, ?)';
+    for (var i = 0; i < data.skuItems.length; i++) {
+        db.run(sql1, [REid, data.skuItems[i].SKUId, data.skuItems[i].rfid]);
     }
 }
 
 exports.storeTransportNote = (data, REid) => {
     const sql1 = 'INSERT INTO transportRE (REid, deliveryDate) VALUES(?, ?)';
-    return db.run(sql1, [REid, data.deliveryDate]);
+    return db.run(sql1, [REid, data.transportNote.deliveryDate]);
 }
 
 exports.getListProducts = (id) => {
@@ -55,8 +55,8 @@ exports.getListProducts = (id) => {
     return db.all(sql, [id]);
 }
 
-exports.getListSKURET = (id) => {
-    const sql = 'SELECT SKUId, RFID FROM skuRET WHERE REid = ?';
+exports.getListSKURE = (id) => {
+    const sql = 'SELECT SKUId, RFID FROM skuRE WHERE REid = ?';
     return db.all(sql, [id]);
 }
 
@@ -82,13 +82,13 @@ exports.getListIssuedRestockOrders = () => {
 
 exports.getRestockOrderById = (id) => {
     const prod = this.getListProducts(id);
-    const ret = this.getListSKURET(id);
+    const ret = this.getListSKURE(id);
     const trans = this.getTransportNote(id);
     const sql = 'SELECT * FROM restockOrders WHERE id = ?';
     const RE = db.get(sql, [id]);
     RE.products = prod;
     RE.transportNote = trans;
-    RE.SKUReturn = ret;
+    RE.SKUItems = ret;
     return RE;
 }
 
@@ -102,7 +102,7 @@ exports.deleteRestockOrderById = (id) => {
     db.run(sql, [id]);
     const sql1 = 'DELETE FROM productsRE WHERE REid = ?';
     db.run(sql1, [id]);
-    const sql3 = 'DELETE FROM skuRET WHERE REid = ?';
+    const sql3 = 'DELETE FROM skuRE WHERE REid = ?';
     db.run(sql3, [id]);
     const sql4 = 'DELETE FROM transportRE WHERE REid = ?';
     db.run(sql4, [id]);
@@ -114,8 +114,9 @@ exports.dropTable = () =>{
 }
 
 
+
 this.newTableRestockOrder();
 
 this.newTableProductsRE();
-this.newTableSkuRET();
+this.newTableSkuRE();
 this.newTableTransportNoteRE();

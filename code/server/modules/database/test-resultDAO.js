@@ -19,6 +19,11 @@ exports.getTestResultByIds = (id, rfid) => {
     return db.get(query, [rfid, id]);
 }
 
+exports.getPassByIds = (id, rfid) => {
+    const query = 'SELECT rfid FROM TESTRESULTS WHERE rfid = ? AND Result = 1';
+    return db.get(query, [rfid, id]);
+}
+
 exports.createTestResultByRfid = (id, data) => {
     const query = 'INSERT INTO TESTRESULTS(id, idTestDescriptor, Date, Result, rfid) VALUES (?, ?, ?, ?, ?)';
     return db.run(query, [id, data.idTestDescriptor, data.Date, data.Result, data.rfid])

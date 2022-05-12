@@ -7,29 +7,29 @@ const db = require('./DAO');
 
 // function for Return Order
 exports.newTableReturnOrder = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS returnOrders(id integer PRIMARY KEY AUTOINCREMENT, issueDate STRING, restockOrderID INTEGER, SKUReturn STRING )';
+    const sql = 'CREATE TABLE IF NOT EXISTS returnOrders(id integer PRIMARY KEY AUTOINCREMENT, returnDate STRING, restockOrderID INTEGER, SKUReturn STRING )';
     return db.run(sql);
 }
 
-exports.newTableSkuRET = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS skuRET (RETid INTEGER, SKUId INTEGER, RFID TEXT PRIMARY KEY)';
+exports.newTableProductsRET = () => {
+    const sql = 'CREATE TABLE IF NOT EXISTS productsRET(RETid INTEGER, SKUId INTEGER , description TEXT, price float, RFID TEXT, PRIMARY KEY("RETid","RFID"))';   
     return db.run(sql);
 }
 
 exports.storeReturnOrder = (data) => {
-    const sql = 'INSERT INTO returnOrders (id, issueDate, restockOrderID) VALUES(?, ?, ?)';
-    return db.run(sql, [this.lastID, data.issueDate, data.restockOrderID]);
+    const sql = 'INSERT INTO returnOrders (id, returnDate, restockOrderID) VALUES(?, ?, ?)';
+    return db.run(sql, [this.lastID, data.returnDate, data.restockOrderID]);
 }
 
-exports.storeSkuRET = (data, RETid) => {
-    const sql1 = 'INSERT OR IGNORE INTO skuRET (RETid, SKUId, RFID) VALUES(?, ?, ?)'
+exports.storeProductRET = (data, RETid) => {
+    const sql1 = 'INSERT INTO productsRET(RETid , SKUId , description , price , RFID ) VALUES(?, ?, ?, ?, ?)'
     for (var i = 0; i < data.length; i++) {
-        db.run(sql1, [RETid, data[i].SkuID, data[i].RFID]);
+        db.run(sql1, [RETid, data[i].SKUId, data[i].description, data[i].price, data[i].RFID]);
     }
 }
 
-exports.getListSKURET = (id) => {
-    const sql = 'SELECT SKUId, RFID FROM skuRET WHERE RETid = ?';
+exports.getListProductRET = (id) => {
+    const sql = 'SELECT RETid , SKUId  , description , price , RFID , RFID FROM productsRET WHERE RETid = ?';
     return db.all(sql, [id]);
 }
 
@@ -44,19 +44,24 @@ exports.getListReturnOrders = () => {
 }
 
 exports.getReturnOrderById = (id) => {
-    const ret = this.getListSKURET(id);
+    const ret = this.getListProductRET(id);
     const sql = 'SELECT * FROM returnOrders WHERE id = ?';
     const RET = db.get(sql, [id]);
-    RET.SKUReturn = ret;
+    RET.products = ret;
     return RET;
 }
 
 exports.deleteReturnOrderById = (id) => {
     const sql = 'DELETE FROM returnOrders WHERE id = ?';
     db.run(sql, [id]);
-    const sql3 = 'DELETE FROM skuRET WHERE RETid = ?';
+    const sql3 = 'DELETE FROM productsRET WHERE RETid = ?';
     db.run(sql3, [id]);
 };
 
+exports.dropTable = () =>{
+    const sql = 'DROP TABLE returnOrders'
+    return db.run(sql);
+}
+
 this.newTableReturnOrder();
-this.newTableSkuRET();
+this.newTableProductsRET();
