@@ -7,7 +7,7 @@ const db = require('./DAO');
 
 // function for Item
 exports.newTableItem = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS items(id INTEGER PRIMARY KEY, description TEXT, price FLOAT, SKUId INTEGER, supplierId INTEGER )';
+    const sql = 'CREATE TABLE IF NOT EXISTS items(id INTEGER PRIMARY KEY, description TEXT, price FLOAT, SKUId INTEGER, supplierId INTEGER, PRIMARY KEY("id", "supplierId"))';
     return db.run(sql);
 }
 
@@ -41,5 +41,11 @@ exports.deleteItemById = (id) => {
     const sql = 'DELETE FROM items WHERE id = ?';
     return db.run(sql, [id]);
 }
+
+exports.deleteTableContent = () => {
+    const query = 'DELETE FROM items';
+    return db.run(query, []);
+}
+
 
 this.newTableItem();
