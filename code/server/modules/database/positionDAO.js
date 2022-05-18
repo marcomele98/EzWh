@@ -9,11 +9,6 @@ exports.newTablePositions = () => {
     return db.run(query, []);
 }
 
-exports.dropPositions = () => {
-    const query = 'DROP TABLE POSITIONS';
-    return db.run(query, []);
-}
-
 // this fn returns the list of all positions in the database
 exports.getListAllPositionsWH = () => {
     const query = 'SELECT * FROM POSITIONS';
@@ -52,6 +47,12 @@ exports. modifyPositionID = (oldId, newId, aisle, row, col) => {
 exports.deletePositionWHByID = (id) => {
     const query = 'DELETE FROM POSITIONS WHERE positionID = ?';
     return db.run(query, [id]);
+}
+
+// useful for testing
+exports.deleteTableContent = () => {
+    const query = 'DELETE FROM POSITIONS';
+    return db.run(query, []);
 }
 
 this.newTablePositions();

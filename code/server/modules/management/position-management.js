@@ -121,6 +121,16 @@ class PositionManagement {
             res.status(503).end();
         }
     }
+
+    // useful for testing
+    async deleteTableContent(req, res) {
+        try{
+            await db.deleteTableContet();
+            res.status(200).end();
+        }catch{
+            res.status(500).end();
+        }
+    }
 }
 
 module.exports = PositionManagement;
