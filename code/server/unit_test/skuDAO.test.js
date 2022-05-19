@@ -16,16 +16,6 @@ describe('testSkuDAO', () => {
         "price": 20.30,
     }
 
-    const newData = {
-        "newDescription" : "test for updating",
-        "newWeight": 10,
-        "newVolume": 10,
-        "newNotes" : "test new values",
-        "newAvailableQuantity" : 10,
-        "newPrice" : 2.00,
-    }
-
-    
     test('empty dao', async () => {
         var res = await skuDAO.getSkuList();
         expect(res.length).toStrictEqual(0);
@@ -37,6 +27,7 @@ describe('testSkuDAO', () => {
     testUpdateQuantity(data);
     testDeleteSku(data.id);
 });
+
 
 function testNewSku(data) {
     test('create new sku', async () => {
@@ -51,7 +42,16 @@ function testNewSku(data) {
         expect(result.notes).toStrictEqual(data.notes);
         expect(result.availableQuantity).toStrictEqual(data.availableQuantity);
         expect(result.price).toStrictEqual(data.price);
-    })
+    });
+
+    test('create new sku - duplicate', async () => {
+        await skuDAO.addSku(data);
+        try {
+            await skuDAO.addSku(data);
+        } catch (e) {
+            expect(e).toEqual('SQLITE_CONSTRAINT: UNIQUE constraint failed: sku.id');
+        }
+    });
 }
 
 function testDeleteSku(id){ 
