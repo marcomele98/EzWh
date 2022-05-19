@@ -48,13 +48,17 @@ class ReturnOrderManagement {
             return res.status(422).end();
         }
         try {
-            const returnOrder = await db.getReturnOrderById(id);
+            var returnOrder = await db.getReturnOrderById(id);
             if (returnOrder == undefined) {
                 return res.status(404).end();
             }
-
             const products = await db.getListProductRET(id);
             returnOrder.products = products;
+            returnOrder = {
+                "returnDate" : returnOrder.returnDate,
+                "products" : products,
+                "restockOrderId" : returnOrder.restockOrderId
+            }
             
             return res.status(200).json(returnOrder);
         } catch (err) {

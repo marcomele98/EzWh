@@ -17,7 +17,7 @@ exports.newTableProductsRE = () => {
 }
 
 exports.newTableSkuRE = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS skuRE (REid INTEGER, SKUId INTEGER, RFID TEXT PRIMARY KEY)';
+    const sql = 'CREATE TABLE IF NOT EXISTS skuRE (REid INTEGER, SKUId INTEGER, rfid TEXT PRIMARY KEY)';
     return db.run(sql);
 }
 
@@ -39,7 +39,7 @@ exports.storeProducts = (data, REid) => {
 }
 
 exports.storeSkuRE = (data, REid) => {
-    const sql1 = 'INSERT INTO skuRE (REid, SKUId, RFID) VALUES(?, ?, ?)';
+    const sql1 = 'INSERT INTO skuRE (REid, SKUId, rfid) VALUES(?, ?, ?)';
     for (var i = 0; i < data.skuItems.length; i++) {
         db.run(sql1, [REid, data.skuItems[i].SKUId, data.skuItems[i].rfid]);
     }
@@ -56,7 +56,7 @@ exports.getListProducts = (id) => {
 }
 
 exports.getListSKURE = (id) => {
-    const sql = 'SELECT SKUId, RFID FROM skuRE WHERE REid = ?';
+    const sql = 'SELECT SKUId, rfid FROM skuRE WHERE REid = ?';
     return db.all(sql, [id]);
 }
 

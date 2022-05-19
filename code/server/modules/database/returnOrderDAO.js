@@ -17,7 +17,7 @@ exports.newTableProductsRET = () => {
 }
 
 exports.storeReturnOrder = (data) => {
-    const sql = 'INSERT INTO returnOrders (id, returnDate, restockOrderID) VALUES(?, ?, ?)';
+    const sql = 'INSERT INTO returnOrders (id, returnDate, restockOrderId) VALUES(?, ?, ?)';
     return db.run(sql, [this.lastID, data.returnDate, data.restockOrderId]);
 }
 
