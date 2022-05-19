@@ -19,7 +19,9 @@ describe('testSkuDAO', () => {
     testNewSkuItem(data);
     testUpdateSkuItem(data);
     testSetAvailalbe(data);
+    testGetSkuItemsBySkuId(data);
     testDeleteSkuItem(data.RFID);
+
 });
 
 
@@ -83,3 +85,17 @@ function testSetAvailalbe(data) {
     })
 }
 
+function testGetSkuItemsBySkuId(data){
+    test('test get skuItems by SKUId', async() => {
+        await skuItemDAO.storeSkuItem(data);
+        await skuItemDAO.setAvailable(data.RFID, 1);
+        let resBySku = await skuItemDAO.getSkuItemBySkuId(data.SKUId);
+        for (let i = 0; i < resBySku.length; i++) {
+            expect(resBySku[i].SKUId).toStrictEqual(data.SKUId);
+        }
+        for (let j = 0; j < resBySku.length; j++) {
+            let check = await skuItemDAO.getSkuItemByRfid(resBySku[j].RFID);
+            expect(check.Available).toStrictEqual(1);
+        }
+    })
+}
