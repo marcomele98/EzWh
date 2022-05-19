@@ -113,6 +113,11 @@ exports.dropTable = () =>{
     return db.run(sql);
 }
 
+exports.deleteTableContent = () => {
+    const query = 'DELETE FROM restockOrders';
+    return db.run(query, []);
+}
+
 
 
 this.newTableRestockOrder();
