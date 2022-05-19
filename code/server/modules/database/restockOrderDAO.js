@@ -12,7 +12,7 @@ exports.newTableRestockOrder = () => {
 }
 
 exports.newTableProductsRE = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS productsRE(REid INTEGER, SKUId INTEGER , description TEXT, price float, quantity INTEGER, PRIMARY KEY("REid","SKUId"))';
+    const sql = 'CREATE TABLE IF NOT EXISTS productsRE(REid INTEGER, SKUId INTEGER , description TEXT, price float, qty INTEGER, PRIMARY KEY("REid","SKUId"))';
     return db.run(sql);
 }
 
@@ -32,7 +32,7 @@ exports.storeRestockOrder = (data) => {
 }
 
 exports.storeProducts = (data, REid) => {
-    const sql1 = 'INSERT INTO productsRE (REid, SKUId, description, price, quantity) VALUES(?, ?, ?, ?, ?)'
+    const sql1 = 'INSERT INTO productsRE (REid, SKUId, description, price, qty) VALUES(?, ?, ?, ?, ?)'
     for (var i = 0; i < data.length; i++) {
         db.run(sql1, [REid, data[i].SKUId, data[i].description, data[i].price, data[i].qty]);
     }
@@ -51,7 +51,7 @@ exports.storeTransportNote = (data, REid) => {
 }
 
 exports.getListProducts = (id) => {
-    const sql = 'SELECT SKUId, description, price, quantity FROM productsRE WHERE REid = ?';
+    const sql = 'SELECT SKUId, description, price, qty FROM productsRE WHERE REid = ?';
     return db.all(sql, [id]);
 }
 

@@ -12,7 +12,7 @@ exports.newTableInternalOrder = () => {
 }
 
 exports.newTableProducts = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS products(IOId INTEGER, SKUId INTEGER , description TEXT, price float, quantity INTEGER, PRIMARY KEY("IOId","SKUId"))';
+    const sql = 'CREATE TABLE IF NOT EXISTS products(IOId INTEGER, SKUId INTEGER , description TEXT, price float, qty INTEGER, PRIMARY KEY("IOId","SKUId"))';
     return db.run(sql);
 }
 
@@ -27,7 +27,7 @@ exports.storeInternalOrder = (data) => {
 }
 
 exports.storeProducts = (data, IOid) => {
-    const sql1 = 'INSERT INTO Products (IOId, SKUId, description, price, quantity) VALUES(?, ?, ?, ?, ?)'
+    const sql1 = 'INSERT INTO Products (IOId, SKUId, description, price, qty) VALUES(?, ?, ?, ?, ?)'
     for (var i = 0; i < data.length; i++) {
         db.run(sql1, [IOid, data[i].SKUId, data[i].description, data[i].price, data[i].qty])
     }
@@ -41,7 +41,7 @@ exports.storeSkuIO = (data, IOid) => {
 }
 
 exports.getListProducts = (id) => {
-    const sql = 'SELECT SKUId, description, price, quantity FROM products WHERE IOid = ?';
+    const sql = 'SELECT SKUId, description, price, qty FROM products WHERE IOid = ?';
     return db.all(sql, [id]);
 }
 
@@ -71,11 +71,8 @@ exports.getListAcceptedInternalOrders = () => {
 }
 
 exports.getInternalOrderById = (id) => {
-    const prod = this.getListProducts(id)
     const sql = 'SELECT * FROM internalOrders WHERE id = ?';
-    const IO = db.get(sql, [id]);
-    IO.products = prod;
-    return IO;
+    return db.get(sql, [id]);
 }
 
 exports.modifyStateInternalOrderById = (data, id) => {
@@ -91,6 +88,15 @@ exports.deleteInternalOrderById = (id) => {
     const sql2 = 'DELETE FROM skuIO WHERE IOid = ?';
     db.run(sql2, [id]);
 };
+
+exports.deleteTableContent = () => {
+    const query1 = 'DELETE FROM internalOrders';
+    db.run(query1, []);
+    const query2 = 'DELETE FROM products';
+    db.run(query2, []);
+    const query3 = 'DELETE FROM skuIO';
+    return db.run(query3, []);
+}
 
 
 this.newTableInternalOrder();
