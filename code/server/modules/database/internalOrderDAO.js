@@ -95,7 +95,9 @@ exports.deleteTableContent = () => {
     const query2 = 'DELETE FROM products';
     db.run(query2, []);
     const query3 = 'DELETE FROM skuIO';
-    return db.run(query3, []);
+    db.run(query3, []);
+    const query4 = 'UPDATE sqlite_sequence SET seq=0 WHERE name=?';
+    return db.run(query4, ['internalOrders']);
 }
 
 

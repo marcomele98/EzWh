@@ -13,9 +13,9 @@ exports.createNewUser = (data) => {
     return db.run(sql, [this.lastID, data.username, data.name, data.surname, data.password, data.type]);
 }
 
-exports.getUserByUsername = (username) => {
-    const sql = 'SELECT * FROM users WHERE email = ?';
-    return db.get(sql, [username]);
+exports.getUserByUsernameAndType = (username, type) => {
+    const sql = 'SELECT * FROM users WHERE email = ? AND type=?';
+    return db.get(sql, [username, type]);
 }
 
 exports.getUserByUsernameAndPass = (username, password) => {
@@ -43,5 +43,11 @@ exports.deleteUserByUsernameAndType = (username, type) => {
     return db.run(sql, [username, type]);
 }
 
+exports.deleteTableContent = () => {
+    const query = 'DELETE FROM users WHERE id>6';
+    db.run(query, []);
+    const query2 = 'UPDATE sqlite_sequence SET seq=6 WHERE name=?';
+    return db.run(query2, ['users']);
+}
 
 this.newTableUser();

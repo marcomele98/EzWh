@@ -1,6 +1,6 @@
 const ioDAO = require('../modules/database/internalOrderDAO');
 
-describe('testDao', () => {
+describe('testIoDao', () => {
     beforeEach(async () => {
         await ioDAO.deleteTableContent();
     });
