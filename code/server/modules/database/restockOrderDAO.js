@@ -108,14 +108,15 @@ exports.deleteRestockOrderById = (id) => {
     db.run(sql4, [id]);
 };
 
-exports.dropTable = () =>{
-    const sql = 'DROP TABLE restockOrders'
-    return db.run(sql);
-}
-
 exports.deleteTableContent = () => {
     const query = 'DELETE FROM restockOrders';
-    return db.run(query, []);
+    db.run(query, []);
+    const query2 = 'UPDATE sqlite_sequence SET seq=0 WHERE name=?';
+    db.run(query2, ['restockOrders']);
+    const query1 = 'DELETE FROM productsRE';
+    db.run(query1, []);
+    const query3 = 'DELETE FROM skuRE';
+    return db.run(query3, []);
 }
 
 
