@@ -24,25 +24,25 @@ function testNewReturnOrder(data) {
     test('create new return order', async () => {
         await returnOrderDAO.storeReturnOrder(data);
         const RET = await returnOrderDAO.getLastId();
-        returnOrderDAO.storeProductRET(data.products, RET["MAX(id)"]);
+        await returnOrderDAO.storeProductRET(data.products, RET["MAX(id)"]);
         
         var res = await returnOrderDAO.getListReturnOrders();
         expect(res.length).toStrictEqual(1);
-        
-        res = await returnOrderDAO.getReturnOrderById(data.id);
-        resprod = await returnOrderDAO.getListProductRET(data.id);
 
-        expect(res.returnDate).toStrictEqual(data.returnDate);
-        expect(res.restockOrderId).toStrictEqual(data.restockOrderId);
-        expect(resprod.products).toStrictEqual(data.products);
+        var retorder = await returnOrderDAO.getReturnOrderById(RET["MAX(id)"]);
+        var resprod = await returnOrderDAO.getListProductRET(RET["MAX(id)"]);
+
+        expect(retorder.returnDate).toStrictEqual(data.returnDate);
+        expect(retorder.restockOrderId).toStrictEqual(data.restockOrderId);
+        expect(resprod).toEqual(data.products);
 
         try{
-            await returnOrderDAO.storeRestockOrder(data);
+            await returnOrderDAO.storeReturnOrder(data);
         }catch(e){
             expect(e).toEqual('SQLITE_CONSTRAINT: UNIQUE constraint failed: returnOrders.id');
         }
 
-        await returnOrderDAO.deleteRestockOrderById(data.id);
-        await returnOrderDAO.storeRestockOrder(data);
+        await returnOrderDAO.deleteReturnOrderById(RET["MAX(id)"]);
+        await returnOrderDAO.storeReturnOrder(data);
     });
 }

@@ -58,9 +58,13 @@ exports.deleteReturnOrderById = (id) => {
     db.run(sql3, [id]);
 };
 
-exports.dropTable = () =>{
-    const sql = 'DROP TABLE returnOrders'
-    return db.run(sql);
+exports.deleteTableContent = () => {
+    const query = 'DELETE FROM returnOrders';
+    db.run(query, []);
+    const query2 = 'UPDATE sqlite_sequence SET seq=0 WHERE name=?';
+    db.run(query2, ['returnOrders']);
+    const query1 = 'DELETE FROM productsRET';
+    return db.run(query1, []);
 }
 
 this.newTableReturnOrder();
