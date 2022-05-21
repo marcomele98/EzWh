@@ -225,6 +225,11 @@ app.delete('/api/position/:positionID', async (req, res) => {
   return position.deletePositionWHByID(req, res);
 });
 
+// need for testing
+app.delete('/api/position', async (req, res) => {
+  return position.deleteTableContent(req, res);
+});
+
 
 
 /*------------------- TEST DESCRIPTORS ------------------- */
