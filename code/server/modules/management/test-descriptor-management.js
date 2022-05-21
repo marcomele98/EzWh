@@ -43,7 +43,7 @@ class TestDescriptorManagement {
         try {
             const sku = await dbSKU.getSkuById(data.idSKU);
             if(this.noContent(sku)){
-                res.status(404).end();
+                return res.status(404).end();
             }
 
             let lastID = await db.getLastID();
@@ -54,18 +54,18 @@ class TestDescriptorManagement {
                 lastID['last'] += 1;
             }
             await db.createTestDescriptor(lastID['last'], data);
-            res.status(201).end();
+            return res.status(201).end();
         } catch (err) {
-            res.status(503).end();
+            return res.status(503).end();
         }
     }
 
     async getListTestDescriptors(req, res) {
         try{
             const list = await db.getListTestDescriptors();
-            res.status(200).json(list);
+            return res.status(200).json(list);
         }catch{
-            res.status(500).end();
+            return res.status(500).end();
         }
     }
 
@@ -84,7 +84,7 @@ class TestDescriptorManagement {
                 return res.status(200).json(testDescriptor);
             }
         }catch{
-            res.status(503).end();
+            return res.status(503).end();
         }
     }
 
@@ -102,12 +102,12 @@ class TestDescriptorManagement {
             if(
                 this.noContent(sku) ||
                 this.noContent(testDescriptor)){
-                res.status(404).end();
+                return res.status(404).end();
             }
             await db.modifyTestDescriptorByID(id, data);
-            res.status(200).end();
+            return res.status(200).end();
         } catch (err) {
-            res.status(503).end();
+            return res.status(503).end();
         }
     }
 
@@ -119,9 +119,19 @@ class TestDescriptorManagement {
         try {
             await dbTestResult.deleteTestResultsByIdTestDescriptor(id);
             await db.deleteTestDescriptorByID(id);
-            res.status(204).end();
+            return res.status(204).end();
         } catch (err) {
-            res.status(503).end();
+            return res.status(503).end();
+        }
+    }
+
+    // useful for testing
+    async deleteTableContent(req, res) {
+        try{
+            await db.deleteTableContet();
+            return res.status(200).end();
+        }catch{
+            return res.status(500).end();
         }
     }
 }
