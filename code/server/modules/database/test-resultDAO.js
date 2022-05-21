@@ -20,7 +20,7 @@ exports.getTestResultByIds = (id, rfid) => {
 }
 
 exports.getPassByIds = (id, rfid) => {
-    const query = 'SELECT rfid FROM TESTRESULTS WHERE rfid = ? AND Result = 1';
+    const query = 'SELECT rfid FROM TESTRESULTS WHERE rfid = ? AND Result = 1 AND id = ?';
     return db.get(query, [rfid, id]);
 }
 
@@ -42,6 +42,11 @@ exports.deleteTestResultByIds = (id, rfid) => {
 exports.deleteTestResultsByIdTestDescriptor = (idTestDescriptor) => {
     const query = 'DELETE FROM TESTRESULTS WHERE idTestDescriptor = ?';
     return db.run(query, [idTestDescriptor]);
+}
+
+exports.deleteTableContent= () => {
+    const query = 'DELETE FROM TESTRESULTS';
+    return db.run(query, []);
 }
 
 exports.newTableTestResults = () => {
