@@ -21,7 +21,7 @@ class UserManagement {
             return res.status(422).end();
         }
         try {
-            const usr = await db.getUserByUsername(user.username);
+            const usr = await db.getUserByUsernameAndType(user.username, user.type);
             if (usr != undefined && usr.email == user.username && usr.type == user.type) {
                 return res.status(409).end();
             } else {
@@ -69,13 +69,13 @@ class UserManagement {
     async modifyRightsByUsername(req, res) {
         const username = req.params.username;
         const data = req.body;
-        const user = await db.getUserByUsername(username);
         if (data.oldType == undefined || data.oldType == '' || data.newType == undefined || data.newType == ''
             || username == undefined || username == '' || this.CheckPossibleType(data.oldType) != true
             || this.CheckPossibleType(data.newType) != true || this.CheckPossibleType(user.type) != true
             || this.ValidateEmail(username) != true) {
             return res.status(422).end();
         }
+        const user = await db.getUserByUsernameAndType(username, data.oldType);
         try {
             if (user == undefined || user.email != username || user.type != data.oldType) {
                 return res.status(404).end();

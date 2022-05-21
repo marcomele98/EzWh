@@ -12,12 +12,12 @@ exports.newTableRestockOrder = () => {
 }
 
 exports.newTableProductsRE = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS productsRE(REid INTEGER, SKUId INTEGER , description TEXT, price float, quantity INTEGER, PRIMARY KEY("REid","SKUId"))';
+    const sql = 'CREATE TABLE IF NOT EXISTS productsRE(REid INTEGER, SKUId INTEGER , description TEXT, price float, qty INTEGER, PRIMARY KEY("REid","SKUId"))';
     return db.run(sql);
 }
 
 exports.newTableSkuRE = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS skuRE (REid INTEGER, SKUId INTEGER, RFID TEXT PRIMARY KEY)';
+    const sql = 'CREATE TABLE IF NOT EXISTS skuRE (REid INTEGER, SKUId INTEGER, rfid TEXT PRIMARY KEY)';
     return db.run(sql);
 }
 
@@ -32,14 +32,14 @@ exports.storeRestockOrder = (data) => {
 }
 
 exports.storeProducts = (data, REid) => {
-    const sql1 = 'INSERT INTO productsRE (REid, SKUId, description, price, quantity) VALUES(?, ?, ?, ?, ?)'
+    const sql1 = 'INSERT INTO productsRE (REid, SKUId, description, price, qty) VALUES(?, ?, ?, ?, ?)'
     for (var i = 0; i < data.length; i++) {
         db.run(sql1, [REid, data[i].SKUId, data[i].description, data[i].price, data[i].qty]);
     }
 }
 
 exports.storeSkuRE = (data, REid) => {
-    const sql1 = 'INSERT INTO skuRE (REid, SKUId, RFID) VALUES(?, ?, ?)';
+    const sql1 = 'INSERT INTO skuRE (REid, SKUId, rfid) VALUES(?, ?, ?)';
     for (var i = 0; i < data.skuItems.length; i++) {
         db.run(sql1, [REid, data.skuItems[i].SKUId, data.skuItems[i].rfid]);
     }
@@ -51,12 +51,12 @@ exports.storeTransportNote = (data, REid) => {
 }
 
 exports.getListProducts = (id) => {
-    const sql = 'SELECT SKUId, description, price, quantity FROM productsRE WHERE REid = ?';
+    const sql = 'SELECT SKUId, description, price, qty FROM productsRE WHERE REid = ?';
     return db.all(sql, [id]);
 }
 
 exports.getListSKURE = (id) => {
-    const sql = 'SELECT SKUId, RFID FROM skuRE WHERE REid = ?';
+    const sql = 'SELECT SKUId, rfid FROM skuRE WHERE REid = ?';
     return db.all(sql, [id]);
 }
 
@@ -108,9 +108,15 @@ exports.deleteRestockOrderById = (id) => {
     db.run(sql4, [id]);
 };
 
-exports.dropTable = () =>{
-    const sql = 'DROP TABLE restockOrders'
-    return db.run(sql);
+exports.deleteTableContent = () => {
+    const query = 'DELETE FROM restockOrders';
+    db.run(query, []);
+    const query2 = 'UPDATE sqlite_sequence SET seq=0 WHERE name=?';
+    db.run(query2, ['restockOrders']);
+    const query1 = 'DELETE FROM productsRE';
+    db.run(query1, []);
+    const query3 = 'DELETE FROM skuRE';
+    return db.run(query3, []);
 }
 
 

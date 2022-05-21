@@ -20,10 +20,10 @@ class InternalOrderManagement {
             return res.status(422).end();
         }
         for (var i = 0; i < internalOrder.products.length; i++) {
-            const sku = await dbSKU.getSkuById(internalOrder.products[i].SKUId);
-            if(sku == undefined) {
-                return res.status(404).end();
-            }
+            // const sku = await dbSKU.getSkuById(internalOrder.products[i].SKUId);
+            // if(sku == undefined) {
+            //     return res.status(404).end();
+            // }
             if (internalOrder.products[i].SKUId == undefined || internalOrder.products[i].SKUId <= 0 || internalOrder.products[i].SKUId == '' || isNaN(internalOrder.products[i].SKUId)
                 || !isNaN(internalOrder.products[i].description) || internalOrder.products[i].description == undefined || internalOrder.products[i].description == '' || internalOrder.products[i].price <= 0 ||
                 internalOrder.products[i].price == undefined || internalOrder.products[i].price == '' || isNaN(internalOrder.products[i].price) ||

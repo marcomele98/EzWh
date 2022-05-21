@@ -29,15 +29,15 @@ class RestockOrderManagement {
             return res.status(422).end();
         }
         for (var i = 0; i < restockOrder.products.length; i++) {
-            const sku = await dbSKU.getSkuById(restockOrder.products[i].SKUId);
-            if (sku == undefined) {
-                return res.status(404).end();
-            }
+            // const sku = await dbSKU.getSkuById(restockOrder.products[i].SKUId);
+            // if (sku == undefined) {
+            //     return res.status(404).end();
+            // }
             if (
                 restockOrder.products[i].SKUId == undefined || restockOrder.products[i].SKUId <= 0 || restockOrder.products[i].SKUId == '' || isNaN(restockOrder.products[i].SKUId) ||
                 !isNaN(restockOrder.products[i].description) || restockOrder.products[i].description == undefined || restockOrder.products[i].description == '' || restockOrder.products[i].price <= 0 ||
                 restockOrder.products[i].price == undefined || restockOrder.products[i].price == '' || isNaN(restockOrder.products[i].price) || restockOrder.products[i].qty == undefined ||
-                restockOrder.products[i].qty <= 0 || restockOrder.products[i].qty == '' || isNaN(restockOrder.products[i].qty) || restockOrder.products[i].qty > sku.qty
+                restockOrder.products[i].qty <= 0 || restockOrder.products[i].qty == '' || isNaN(restockOrder.products[i].qty)
             ) {
                 return res.status(422).end();
             }
@@ -86,7 +86,8 @@ class RestockOrderManagement {
                 }
                 else {
                     const SKUItems = await db.getListSKURE(listRestockOrders[i].id);
-                    listRestockOrders[i].SKUItems = SKUItems;
+                    
+                    listRestockOrders[i].skuItems = SKUItems;
                     listRestockOrders[i].transportNote = trasp;
                 }
             }
@@ -122,24 +123,38 @@ class RestockOrderManagement {
             return res.status(422).end();
         }
         try {
-            const restockOrder = await db.getRestockOrderById(id);
+            var restockOrder = await db.getRestockOrderById(id);
+            const products = await db.getListProducts(id);
             if (restockOrder == undefined) {
                 return res.status(404).end();
             }
             if (restockOrder.state == 'ISSUED') {
-                restockOrder.SKUItems = '';
-                restockOrder.transportNote = '';
+                restockOrder = {
+                    "issueDate": restockOrder.issueDate,
+                    "state": restockOrder.state,
+                    "products": products,
+                    "supplierId": restockOrder.supplierId,
+                    "skuItems": []
+                }
 
             } else if (restockOrder.state == 'DELIVERY') {
-                restockOrder.SKUItems = '';
+                const trasp = await db.getTransportNote(listRestockOrders[i].id)
+                restockOrder = {
+                    "issueDate": restockOrder.issueDate,
+                    "state": restockOrder.state,
+                    "products": products,
+                    "supplierId": restockOrder.supplierId,
+                    "transportNote": trasp,
+                    "skuItems": []
+                }
             }
             else {
                 const SKUItems = await db.getListSKURE(restockOrder.id);
-                restockOrder.SKUItems = SKUItems;
+                const trasp = await db.getTransportNote(restockOrder.id)
+                restockOrder.products = products;
+                restockOrder.transportNote = trasp;
+                restockOrder.skuItems = SKUItems;
             }
-            const products = await db.getListProducts(id);
-            restockOrder.products = products;
-
             return res.status(200).json(restockOrder);
         } catch (err) {
             res.status(500).end();
@@ -162,7 +177,7 @@ class RestockOrderManagement {
 
             console.log(SKUItems.length);
             for (var i = 0; i < SKUItems.length; i++) {
-                const SKUcheck = await dbRES.getPassByIds(SKUItems[i].id, SKUItems[i].RFID);
+                const SKUcheck = await dbRES.getPassByIds(SKUItems[i].id, SKUItems[i].rfid);
                 if (SKUcheck === undefined) {
                     SKUItemsReturn[count] = SKUItems[i];
                     count++;

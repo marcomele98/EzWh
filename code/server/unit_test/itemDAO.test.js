@@ -1,6 +1,6 @@
 const itemDAO = require('../modules/database/itemDAO');
 
-describe('testDao', () => {
+describe('testItemDao', () => {
     beforeEach(async () => {
         await itemDAO.deleteTableContent();
     });

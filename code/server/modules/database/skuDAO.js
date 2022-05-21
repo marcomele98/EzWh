@@ -42,9 +42,9 @@ exports.updateQuantity = (id, quantity) => {
     const sql = 'UPDATE sku SET availableQuantity = ? WHERE id = ?'
     return db.run(sql, [quantity, id]);
 }
-exports.dropTable = () => {
-    const sql = 'DROP TABLE sku'
+
+exports.deleteTableContent = () => {
+    const sql = 'DELETE FROM sku'
     return db.run(sql);
 }
-
 this.newTableSku();

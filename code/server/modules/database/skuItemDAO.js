@@ -8,10 +8,7 @@ exports.newTableSkuItem = () => {
     const sql = 'CREATE TABLE IF NOT EXISTS skuItem (RFID TEXT PRIMARY KEY, SKUId INTEGER, Available INTEGER,  DateOfStock TEXT)';
     return db.run(sql);
 }
-exports.dropTable = () => {
-    const sql = 'DROP TABLE skuItem'
-    return db.run(sql);
-}
+
 exports.storeSkuItem = (data) => {
     const sql = 'INSERT INTO skuItem (RFID, SKUId, Available, DateOfStock) VALUES ( ?, ?, 0, ?)';
     return db.run(sql, [data.RFID, data.SKUId, data.DateOfStock]);
@@ -45,6 +42,10 @@ exports.deleteSkuItemByRfid = (rfid) => {
 exports.setAvailable = (rfid, available) => {
     const sql = 'UPDATE skuItem SET available = ? WHERE RFID = ?';
     return db.run(sql, [available, rfid]);
+}
+exports.deleteTableContent = () => {
+    const sql = 'DELETE FROM skuItem'
+    return db.run(sql);
 }
 
 this.newTableSkuItem();
