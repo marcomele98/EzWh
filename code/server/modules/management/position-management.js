@@ -27,7 +27,7 @@ class PositionManagement {
     }
 
     isNotValidPositionID = (positionID) => {
-        return positionID === undefined || positionID === null || positionID.length !== 12;
+        return (positionID === undefined || positionID === null || positionID.length !== 12);
     }
 
     isNotValidWeight_Volume = (val) => {
@@ -116,19 +116,9 @@ class PositionManagement {
         }
         try {
             await db.deletePositionWHByID(id);
-            res.status(204).end();
+            return res.status(204).end();
         } catch (err) {
-            res.status(503).end();
-        }
-    }
-
-    // useful for testing
-    async deleteTableContent(req, res) {
-        try{
-            await db.deleteTableContet();
-            res.status(200).end();
-        }catch{
-            res.status(500).end();
+            return res.status(503).end();
         }
     }
 }

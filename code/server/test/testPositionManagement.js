@@ -5,6 +5,8 @@ chai.should();
 
 const app = require('../server');
 var agent = chai.request.agent(app);
+const positionDAO = require('../modules/database/positionDAO');
+const { expect } = require('chai');
 
 describe('position apis', () => {
 
@@ -32,149 +34,113 @@ describe('position apis', () => {
         "occupiedVolume":150
     };
 
-    // beforeEach(async () => {
-    //     await agent.delete('/api/position');
-    // })
-    // // Check db is empty
-    // checkPositions(200, 0);
-    // // Add a new position. Since data is correct, it should be done without err
-    // newPosition(201, pos1);
-    // // Retreive the position. It should be able to get the position inserted before
-    // getPositions(200, pos1);
-    // // Delete the position -- try with a wrong id first
-    // deletePosition(422, '80023454341');
-    // // Try to modify an existing position -- try to modify a position that does not exist yet
-    // modifyPosition(404, '600235543419', {});
-    // // Try to modify an existing position -- try to insert wrong data
-    // modifyPosition(422, '800234543412', {
-    //     "newAisleID": "8012",
-    //     "newRow": "3154",
-    //     "newCol": "3412",
-    //     "newMaxWeight": 1000,
-    //     "newMaxVolume": 1000,
-    //     "newOccupiedWeight": 300,
-    //     "newOccupiedVolume":-1
-    // });
-    // // Modify a position -- modify aisleID, check whether position ID updates correctly
-    // modifyPosition(422, '800234543412', {
-    //     "newAisleID": "5555",
-    //     "newRow": "3454",
-    //     "newCol": "3412",
-    //     "newMaxWeight": 1000,
-    //     "newMaxVolume": 1000,
-    //     "newOccupiedWeight": 300,
-    //     "newOccupiedVolume": 3
-    // });
-    // // Take the position to check whether the change has been done correctly
-    // getPositions(200, {
-    //     "positionID": "555534543412"
-    // });
-    // // Try to insert a new position with wrong data
-    // newPosition(422, pos2);
-    // // Try to insert a new position with correct data
-    // newPosition(201, {
-    //     "positionID":"112234543412",
-    //     "aisleID": "1122",
-    //     "row": "3454",
-    //     "col": "3412",
-    //     "maxWeight": 3000,
-    //     "maxVolume": 1000,
-    //     "occupiedWeight": 300,
-    //     "occupiedVolume":150
-    // })
-    // // Control if insertion has been successful
-    // checkPositions(200, 2)
-    // // Delete the position -- use correct id
-    // deletePosition(204, '555534543412');
-    // // Control if deletion has been successful
-    // checkPositions(200, 1);
-    // // Try to change ID of position
-    // changePositionID(404, '555534543412', '555534543412');
-    // changePositionID(422, '112234543412' ,'555534543412sdsdsds');
-    // changePositionID(200, '112234543412', '555534543412');
-    // // Verify if also aisle, row, col have changed
-    // checkFields(200, {
-    //     "aisleID": "5555",
-    //     "row": "3454",
-    //     "col": "3412"
-    // })
+    beforeEach(async () => {
+        await positionDAO.deleteTableContent();
+    })
+
+    // insert correct data
+    newPosition(pos1);
+    // try to insert incorrect data
+    newPosition_incorrectData(pos2);
+    // try to modify a position that does not exists
+    modifyPosition_wrongData(800234543419, {
+        "newAisleID": "8002",
+        "newRow": "3454",
+        "newCol": "3412",
+        "newMaxWeight": 1200,
+        "newMaxVolume": 600,
+        "newOccupiedWeight": 200,
+        "newOccupiedVolume":100
+    }, 404);
+    // try to modify a position with wrong data
+    modifyPosition_wrongData(800234543412, {
+        "newAisleID": "8002",
+        "newRow": "3454",
+        "newCol": "3412",
+        "newMaxWeight": 1200,
+        "newMaxVolume": 600,
+        "newOccupiedWeight": 200,
+        "newOccupiedVolume":-1
+    }, 422);
+    // modify a position
+    modifyPosition(pos1, {
+        "newAisleID": "1002",
+        "newRow": "3454",
+        "newCol": "3412",
+        "newMaxWeight": 1200,
+        "newMaxVolume": 600,
+        "newOccupiedWeight": 200,
+        "newOccupiedVolume":100
+    }, '100234543412');
+    changeId(pos1, {
+        "newPositionID": "873234543412"
+    }, '8732', '3454', '3412');
+    // try to delete a position
+    deletePosition(pos1, '1004543412', 422, 1);
+    deletePosition(pos1, '800234543412', 204, 0);
 });
 
-function newPosition(expectedHTTPStatus, data) {
-    it('adding a new position', function (done) {
-        agent.post('/api/position')
-            .send(data)
-            .then(function (res) {
-                res.should.have.status(expectedHTTPStatus);
-            });
-            done();
+function newPosition(data) {
+    it('adding a new position', async function () {
+        let s = await agent.post('/api/position').send(data);
+        s.status.should.equal(201);
+        let res = await agent.get('/api/positions');
+        res.status.should.equal(200);
+        res.body[0].positionID.should.equal(data.positionID);
+        res.body[0].occupiedVolume.should.equal(0);
+        res.body[0].occupiedWeight.should.equal(0);
     });
 }
 
 
-function getPositions(expectedHTTPStatus, data) {
-    it('getting position data from the system', function (done) {
-        agent.get('/api/positions')
-                .then(function (res) {
-                res.should.have.status(expectedHTTPStatus);
-                res.body[0]['positionId'].should.equal(data['positionId']);
-                done();
-            });
+function newPosition_incorrectData(data) {
+    it('adding a new position with wrong data', async function () {
+        let s = await agent.post('/api/position').send(data);
+        s.status.should.equal(422);
+        let res = await agent.get('/api/positions');
+        res.status.should.equal(200);
+        res.body.length.should.equal(0);
     });
 }
 
-function checkFields(expectedHTTPStatus, fields){
-    it('verify position attrs', function(done){
-        agent.get('/api/positions')
-        .then(function (res){
-            res.should.have.status(expectedHTTPStatus);
-            res.body['0']['aisleID'].should.equal(fields['aisleID']);
-            res.body['0']['row'].should.equal(fields['row']);
-            res.body['0']['col'].should.equal(fields['col']);
-            done();
-        })
+function modifyPosition_wrongData(positionID, newData, expectedHTTPStatus) {
+    it('try to modify a position', async function () {
+        let s = await agent.put('/api/position/'+positionID).send(newData);
+        s.status.should.equal(expectedHTTPStatus);
     });
 }
 
-function checkPositions(expectedHTTPStatus, bodyLength) {
-    it('checking if db has n tuples', function (done) {
-        agent.get('/api/positions')
-                .then(function (res) {
-                res.should.have.status(expectedHTTPStatus);
-                res.body.length.should.equal(bodyLength);
-                done();
-            });
+function modifyPosition(data, newData, newId) {
+    it('try to modify a position', async function () {
+        await agent.post('/api/position').send(data);
+        let s = await agent.put('/api/position/'+data.positionID).send(newData);
+        s.status.should.equal(200);
+        let res = await agent.get('/api/positions');
+        res.status.should.equal(200);
+        res.body[0].positionID.should.equal(newId);
     });
 }
 
-function deletePosition(expectedHTTPStatus, id){
-    it('deleting position data', function (done) {
-        agent.delete('/api/position/' + id)
-        .then(function (res) {
-            res.should.have.status(expectedHTTPStatus);
-            done();
-        })
+function changeId(data, newData, newAisle, newRow, newCol) {
+    it('try to modify a position id', async function () {
+        await agent.post('/api/position').send(data);
+        let s = await agent.put('/api/position/'+data.positionID+'/changeID').send(newData);
+        s.status.should.equal(200);
+        let res = await agent.get('/api/positions');
+        res.body[0].aisleID.should.equal(newAisle);
+        res.body[0].row.should.equal(newRow);
+        res.body[0].col.should.equal(newCol);
     });
 }
 
-function modifyPosition(expectedHTTPStatus, id, newData){
-    it('updating position data', function (done){
-        agent.put('/api/position/' + id)
-        .send(newData)
-        .then(function (res){
-            res.should.have.status(expectedHTTPStatus);
-            done();
-        })
-    });
-}
-
-function changePositionID(expectedHTTPStatus, id, newID){
-    it('updating position id', function (done){
-        agent.put('/api/position/' + id+ '/changeID')
-        .send(newID)
-        .then(function (res){
-            res.should.have.status(expectedHTTPStatus);
-            done();
-        })
+function deletePosition(data, id, expectedHTTPStatus, expectedBodyLen) {
+    it('try to delete a position', async function () {
+        await agent.post('/api/position').send(data);
+        let res = await agent.get('/api/positions');
+        res.body.length.should.equal(1);
+        let s = await agent.delete('/api/position/'+id);
+        s.status.should.equal(expectedHTTPStatus);
+        let res_postd = await agent.get('/api/positions');
+        res_postd.body.length.should.equal(expectedBodyLen);
     });
 }

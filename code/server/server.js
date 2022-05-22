@@ -234,13 +234,6 @@ app.delete('/api/position/:positionID', async (req, res) => {
   return position.deletePositionWHByID(req, res);
 });
 
-// need for testing
-app.delete('/api/position', async (req, res) => {
-  return position.deleteTableContent(req, res);
-});
-
-
-
 /*------------------- TEST DESCRIPTORS ------------------- */
 app.post('/api/testDescriptor', async (req, res) => {
   return testDescriptor.createTestDescriptor(req, res);

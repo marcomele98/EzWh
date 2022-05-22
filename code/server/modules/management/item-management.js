@@ -58,33 +58,36 @@ class ItemManagement {
     async modifyItemById(req, res) {
         const id = req.params.id;
         const data = req.body;
-        const item = await db.getItemById(id);
+
+        if (id == undefined || id == '' || isNaN(id) || id <= 0 || data == undefined || data == '' || data == null) {
+                return res.status(422).end();
+        }
+
+        const it = await db.getItemById(id);
+
+        if (it == undefined) {
+            res.status(404).end();
+        }
 
         if (data.newDescription == undefined) {
-            data.newDescription = item.description;
+            data.newDescription = it.description;
         }
-        if (data.newPrice == undefined) {
-            data.newPrice = item.price;
+
+        if (data.newPrice == undefined || data.newPrice == null) {
+            data.newPrice = it.price;
         }
-        if (data.length == 0 || data == undefined || data.newDescription == undefined || data.newDescription == ''
-            || !isNaN(data.newDescription) || data.newPrice <= 0 || isNaN(data.newPrice) || data.newPrice == undefined || data.newPrice == '') {
-            return res.status(422).end();
-        }
-        if (item !== undefined) {
-            try {
-                await db.modifyItemById(id, data);
-                res.status(200).end();
-            } catch (err) {
-                res.status(503).end();
-            }
-        } else {
-            res.status(404).end();
+
+        try {
+            await db.modifyItemById(id, data);
+            res.status(200).end();
+        } catch (err) {
+            res.status(503).end();
         }
     }
 
     async deleteItemById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || id == 0 || isNaN(id)) {
+        if (id == undefined || id == '' || id == 0 || isNaN(id) || id <= 0) {
             return res.status(422).end();
         }
         const item = await db.getItemById(id);

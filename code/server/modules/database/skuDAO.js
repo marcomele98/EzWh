@@ -45,6 +45,8 @@ exports.updateQuantity = (id, quantity) => {
 
 exports.deleteTableContent = () => {
     const sql = 'DELETE FROM sku'
-    return db.run(sql);
+    db.run(sql);
+    const query4 = 'UPDATE sqlite_sequence SET seq=0 WHERE name=?';
+    db.run(query4, ['sku']);
 }
 this.newTableSku();
