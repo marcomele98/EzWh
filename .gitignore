@@ -4,3 +4,4 @@ code/server/node_modules/
 code/client/node_modules/
 
 code/server/modules/DAO.js
+code/server/.nyc_output

@@ -255,11 +255,6 @@ app.delete('/api/testDescriptor/:id', async (req, res) => {
   return testDescriptor.deleteTestDescriptorByID(req, res);
 });
 
-// need for testing
-app.delete('/api/testDescriptor', async (req, res) => {
-  return testDescriptor.deleteTableContent(req, res);
-});
-
 /*------------------- TEST RESULTS ------------------- */
 app.get('/api/skuitems/:rfid/testResults', async (req, res) => {
   return testResult.getTestResultsListByRfid(req, res);

@@ -2,7 +2,7 @@
 
 const db = require('../database/test-descriptorDAO');
 const dbSKU = require('../database/skuDAO');
-const dbTestResult = require('../database/test-resultDAO');
+// const dbTestResult = require('../database/test-resultDAO');
 
 class TestDescriptorManagement {
 
@@ -21,7 +21,7 @@ class TestDescriptorManagement {
     }
 
     isNotValidIdSKU = (idSKU) => {
-        idSKU === undefined || isNaN(idSKU) || idSKU === null
+        return idSKU === undefined || isNaN(idSKU) || idSKU === null;
     }
 
     isNotValidID = (id) => {
@@ -48,7 +48,7 @@ class TestDescriptorManagement {
 
             let lastID = await db.getLastID();
             if (lastID['last'] === null){
-                lastID['last'] = 0;
+                lastID['last'] = 1;
             }
             else{
                 lastID['last'] += 1;
@@ -117,7 +117,7 @@ class TestDescriptorManagement {
             return res.status(422).end();
         }
         try {
-            await dbTestResult.deleteTestResultsByIdTestDescriptor(id);
+            // await dbTestResult.deleteTestResultsByIdTestDescriptor(id);
             await db.deleteTestDescriptorByID(id);
             return res.status(204).end();
         } catch (err) {
@@ -125,15 +125,15 @@ class TestDescriptorManagement {
         }
     }
 
-    // useful for testing
-    async deleteTableContent(req, res) {
-        try{
-            await db.deleteTableContet();
-            return res.status(200).end();
-        }catch{
-            return res.status(500).end();
-        }
-    }
+    // // useful for testing
+    // async deleteTableContent(req, res) {
+    //     try{
+    //         await db.deleteTableContet();
+    //         return res.status(200).end();
+    //     }catch{
+    //         return res.status(500).end();
+    //     }
+    // }
 }
 
 module.exports = TestDescriptorManagement;
