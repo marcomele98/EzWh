@@ -47,20 +47,23 @@ class TestResultManagement {
         if (this.isNotValidRFID(rfid)) {
             return res.status(422).end();
         }
-        try {
+        try{
             const skuItem = await dbSKUItem.getSkuItemByRfid(rfid);
             if (this.noContent(skuItem)) {
                 return res.status(404).end();
             }
-            const listResults = await db.getTestResultsListByRfid(rfid);
-            res.status(200).json(listResults.map(e => ({
+            let listResults = await db.getTestResultsListByRfid(rfid);
+            listResults = listResults
+            .map(e => ({
                 id: e.id,
                 idTestDescriptor: e.idTestDescriptor,
                 Date: e.Date,
                 Result: e.Result ? true : false
-            })));
+            }));
+
+            return res.status(200).json(listResults);
         } catch {
-            res.status(500).end();
+            return res.status(500).end();
         }
     }
 
@@ -77,9 +80,9 @@ class TestResultManagement {
                 return res.status(404).end();
             }
             result.Result = result.Result ? true : false;
-            res.status(200).json(result);
+            return res.status(200).json(result);
         } catch {
-            res.status(500).end();
+            return res.status(500).end();
         }
     }
 
@@ -106,9 +109,9 @@ class TestResultManagement {
             }
 
             await db.createTestResultByRfid(lastID['last'], data);
-            res.status(201).end();
+            return res.status(201).end();
         } catch {
-            res.status(503).end();
+            return res.status(503).end();
         }
     }
 
@@ -130,9 +133,9 @@ class TestResultManagement {
             }
             data.newResult = data.newResult ? 1: 0;
             await db.modifyTestResultByIds(id, data, rfid);
-            res.status(200).end();
+            return res.status(200).end();
         } catch {
-            res.status(503).end();
+            return res.status(503).end();
         }
     }
 
@@ -144,9 +147,9 @@ class TestResultManagement {
         }
         try {
             await db.deleteTestResultByIds(id, rfid);
-            res.status(204).end();
+            return res.status(204).end();
         } catch {
-            res.status(503).end();
+            return res.status(503).end();
         }
     }
 

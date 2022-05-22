@@ -207,6 +207,12 @@ app.put('/api/skuitems/:rfid', async (req, res) => {
 app.delete('/api/skuitems/:rfid', async (req, res) => {
   return skuItem.deleteSkuItemById(req, res);
 })
+
+// need for testing
+app.delete('/api/skuitems/', async (req, res) => {
+  return skuItem.deleteTableContent(req, res);
+})
+
 /* ------------------- POSITION ------------------- */
 app.get('/api/positions', async (req, res) => {
   return position.getListAllPositionsWH(req, res);
@@ -282,7 +288,10 @@ app.delete('/api/skuitems/:rfid/testResult/:id', async (req, res) => {
   return testResult.deleteTestResultByIds(req, res);
 });
 
-
+// need for testing
+app.delete('/api/skuitems/testResult', async (req, res) => {
+  return testResult.deleteTableContent(req, res);
+});
 
 
 /*------------------- RESTOCK ORDER ------------------- */
