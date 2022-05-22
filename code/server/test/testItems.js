@@ -127,11 +127,11 @@ function newItemWrong(expectedHTTPStatus, id, description, price, SKUId, supplie
             });
         let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
         let item2 = { id: 1, description: 'a new item', price: 10.99, SKUId: 2, supplierId: 1 }
-        agent.post('/api/item') //we are not sending any data
+        agent.post('/api/item') 
             .send(item)
             .then(function (res) {
                 res.should.have.status(201);
-                agent.post('/api/item') //we are not sending any data
+                agent.post('/api/item') 
                     .send(item2)
                     .then(function (res2) {
                         res2.should.have.status(expectedHTTPStatus);

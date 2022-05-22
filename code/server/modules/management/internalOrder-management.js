@@ -54,10 +54,10 @@ class InternalOrderManagement {
                         for (var b = 0; b < products.length; b++) {
                             if (skuItems[e].SKUId == products[b].SKUId) {
                                 skuItems[e] = {
-                                    SKUId: skuItems[e].SKUId,
-                                    description: products[b].description,
-                                    price: products[b].price,
-                                    RFID: skuItems[e].RFID
+                                    "SKUId": skuItems[e].SKUId,
+                                    "description": products[b].description,
+                                    "price": products[b].price,
+                                    "RFID": skuItems[e].RFID
                                 }
                             }
                         }
@@ -83,7 +83,7 @@ class InternalOrderManagement {
             }
             res.status(200).json(listInternalOrders);
         } catch (err) {
-            res.status(404).end();
+            res.status(500).end();
         }
     }
 
@@ -96,7 +96,7 @@ class InternalOrderManagement {
             }
             res.status(200).json(listInternalOrders);
         } catch (err) {
-            res.status(404).end();
+            res.status(500).end();
         }
     }
 
@@ -153,7 +153,7 @@ class InternalOrderManagement {
                             return res.status(422).end();
                         }
                     }
-                    db.storeSkuIO(data.products, id);
+                    await db.storeSkuIO(data.products, id);
                 }
 
                 await db.modifyStateInternalOrderById(data, id);
