@@ -32,7 +32,7 @@ exports.getSkuBySupplier = (skuId, supplierId) => {
 }
 
 exports.modifyItemById = (id, data) => {
-    const updateQuery = 'UPDATE items SET description = ?, price = ? WHERE id = ?';
+    const updateQuery = 'UPDATE items SET description=?, price=? WHERE id=?';
     return db.run(updateQuery, [data.newDescription, data.newPrice, id]);
 }
 
