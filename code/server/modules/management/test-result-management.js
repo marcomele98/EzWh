@@ -102,7 +102,7 @@ class TestResultManagement {
 
             let lastID = await db.getLastID();
             if (lastID['last'] === null) {
-                lastID['last'] = 0;
+                lastID['last'] = 1;
             }
             else {
                 lastID['last'] += 1;
