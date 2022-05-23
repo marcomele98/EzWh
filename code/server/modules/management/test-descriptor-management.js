@@ -124,16 +124,6 @@ class TestDescriptorManagement {
             return res.status(503).end();
         }
     }
-
-    // // useful for testing
-    // async deleteTableContent(req, res) {
-    //     try{
-    //         await db.deleteTableContet();
-    //         return res.status(200).end();
-    //     }catch{
-    //         return res.status(500).end();
-    //     }
-    // }
 }
 
 module.exports = TestDescriptorManagement;

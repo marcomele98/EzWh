@@ -179,10 +179,6 @@ app.delete('/api/skus/:id', async (req, res) => {
   return sku.deleteSkuById(req, res);
 });
 
-app.delete('/api/skus', async (req, res) => {
-  return sku.deleteTableContent(req, res);
-});
-
 /* --------------------SKU ITEM ------------------- */
 app.get('/api/skuitems', async (req, res) => {
   return skuItem.getSkuItemList(req, res);
@@ -206,11 +202,6 @@ app.put('/api/skuitems/:rfid', async (req, res) => {
 
 app.delete('/api/skuitems/:rfid', async (req, res) => {
   return skuItem.deleteSkuItemById(req, res);
-})
-
-// need for testing
-app.delete('/api/skuitems/', async (req, res) => {
-  return skuItem.deleteTableContent(req, res);
 })
 
 /* ------------------- POSITION ------------------- */
@@ -275,12 +266,6 @@ app.put('/api/skuitems/:rfid/testResult/:id', async (req, res) => {
 app.delete('/api/skuitems/:rfid/testResult/:id', async (req, res) => {
   return testResult.deleteTestResultByIds(req, res);
 });
-
-// need for testing
-app.delete('/api/skuitems/testResult', async (req, res) => {
-  return testResult.deleteTableContent(req, res);
-});
-
 
 /*------------------- RESTOCK ORDER ------------------- */
 app.get('/api/restockOrders', async (req, res) => {

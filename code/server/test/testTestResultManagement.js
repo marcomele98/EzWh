@@ -95,6 +95,138 @@ describe('testResults apis', () => {
         "Date":"2021/11/28",
         "Result": true
     });
+
+    // try to modify a test result -- should work
+    modifyTestResult({
+        "rfid":"12345678901234567890123456789015",
+        "idTestDescriptor":1,
+        "Date":"2021/11/28",
+        "Result": true
+    }, {
+        "newIdTestDescriptor":1,
+        "newDate":"2019/11/28",
+        "newResult": false
+    }, 200, {
+        "id":1,
+        "idTestDescriptor":1,
+        "Date":"2019/11/28",
+        "Result":false
+    }, '12345678901234567890123456789015', 1);
+    // try to modify a test result -- rfid is nan
+    modifyTestResult({
+        "rfid":"12345678901234567890123456789015",
+        "idTestDescriptor":1,
+        "Date":"2021/11/28",
+        "Result": true
+    }, {
+        "newIdTestDescriptor":1,
+        "newDate":"2019/11/28",
+        "newResult": false
+    }, 422, {
+        "id":1,
+        "idTestDescriptor":1,
+        "Date":"2019/11/28",
+        "Result":false
+    }, '123456789a1234567890123456789015', 1);
+    // try to modify a test result -- Result is not a boolean
+    modifyTestResult({
+        "rfid":"12345678901234567890123456789015",
+        "idTestDescriptor":1,
+        "Date":"2021/11/28",
+        "Result": true
+    }, {
+        "newIdTestDescriptor":1,
+        "newDate":"2019/11/28",
+        "newResult": 54
+    }, 422, {
+        "id":1,
+        "idTestDescriptor":1,
+        "Date":"2019/11/28",
+        "Result":false
+    }, '12345678901234567890123456789015', 1);
+    // try to modify a test result -- idtestdescriptor 100 does not exists
+    modifyTestResult({
+        "rfid":"12345678901234567890123456789015",
+        "idTestDescriptor":1,
+        "Date":"2021/11/28",
+        "Result": true
+    }, {
+        "newIdTestDescriptor":100,
+        "newDate":"2019/11/28",
+        "newResult": false
+    }, 404, {
+        "id":1,
+        "idTestDescriptor":1,
+        "Date":"2019/11/28",
+        "Result":false
+    }, '12345678901234567890123456789015', 1);
+    // try to modify a test result -- id 13 does not exists
+    modifyTestResult({
+        "rfid":"12345678901234567890123456789015",
+        "idTestDescriptor":1,
+        "Date":"2021/11/28",
+        "Result": true
+    }, {
+        "newIdTestDescriptor":1,
+        "newDate":"2019/11/28",
+        "newResult": false
+    }, 404, {
+        "id":1,
+        "idTestDescriptor":1,
+        "Date":"2019/11/28",
+        "Result":false
+    }, '12345678901234567890123456789015', 13);
+    // try to modify a test result -- rfid does not exists
+    modifyTestResult({
+        "rfid":"12345678901234567890123456789015",
+        "idTestDescriptor":1,
+        "Date":"2021/11/28",
+        "Result": true
+    }, {
+        "newIdTestDescriptor":1,
+        "newDate":"2019/11/28",
+        "newResult": false
+    }, 404, {
+        "id":1,
+        "idTestDescriptor":1,
+        "Date":"2019/11/28",
+        "Result":false
+    }, '12345678901234567890123456781015', 1);
+
+    // try to delete a test result -- should work
+    deleteTestResult({
+        "rfid":"12345678901234567890123456789015",
+        "idTestDescriptor":1,
+        "Date":"2021/11/28",
+        "Result": true
+    }, 204, 0, '12345678901234567890123456789015', 1);
+    // try to delete a test result -- invalid rfid
+    deleteTestResult({
+        "rfid":"12345678901234567890123456789015",
+        "idTestDescriptor":1,
+        "Date":"2021/11/28",
+        "Result": true
+    }, 422, 1, '1234567890123456789013456789015', 1);
+    // try to delete a test result -- invalid id
+    deleteTestResult({
+        "rfid":"12345678901234567890123456789015",
+        "idTestDescriptor":1,
+        "Date":"2021/11/28",
+        "Result": true
+    }, 422, 1, '12345678901234567890123456789015', 'as4');
+
+    // add two test results
+    twoTestResult({
+        "rfid":"12345678901234567890123456789015",
+        "idTestDescriptor":1,
+        "Date":"2021/11/28",
+        "Result": true
+    }, {
+        "rfid":"12345678901234567890123456789015",
+        "idTestDescriptor":1,
+        "Date":"2020/11/28",
+        "Result": false
+    }, '12345678901234567890123456789015');
 });
 
 function getTestResult(rfid, data, expectedHTTPStatus) {
@@ -109,7 +241,7 @@ function getTestResult(rfid, data, expectedHTTPStatus) {
 }
 
 function newTestResult(data, expectedHTTPStatus, expectedData) {
-    it('try adding a new test descriptor', async function () {
+    it('try adding a new test result', async function () {
         let s = await agent.post('/api/skuitems/testResult').send(data);
         s.status.should.equal(expectedHTTPStatus);
         if(expectedHTTPStatus === 201){
@@ -118,6 +250,43 @@ function newTestResult(data, expectedHTTPStatus, expectedData) {
             res.body.idTestDescriptor.should.equal(expectedData.idTestDescriptor);
             res.body.Date.should.equal(expectedData.Date);
             res.body.Result.should.equal(expectedData.Result);
+        }
+    });
+}
+
+function twoTestResult(data1, data2, rfid){
+    it('try adding a new test result', async function () {
+        await agent.post('/api/skuitems/testResult').send(data1);
+        await agent.post('/api/skuitems/testResult').send(data2);
+        let values = await agent.get('/api/skuitems/'+rfid+'/testResults');
+        values.body[0].id.should.equal(1);
+        values.body[1].id.should.equal(2);
+    });
+} 
+
+function modifyTestResult(data, newData,expectedHTTPStatus, expectedData, rfid, id) {
+    it('try to modify a test result', async function () {
+        await agent.post('/api/skuitems/testResult').send(data);
+        let moddifyAct = await agent.put('/api/skuitems/'+ rfid+'/testResult/'+id).send(newData);
+        moddifyAct.status.should.equal(expectedHTTPStatus);
+        if(expectedHTTPStatus === 200){
+            let res = await agent.get('/api/skuitems/'+rfid+'/testResults/'+id);
+            res.body.id.should.equal(expectedData.id);
+            res.body.idTestDescriptor.should.equal(expectedData.idTestDescriptor);
+            res.body.Date.should.equal(expectedData.Date);
+            res.body.Result.should.equal(expectedData.Result);
+        }
+    });
+}
+
+function deleteTestResult(data, expectedHTTPStatus, expectedBodyLen, rfid, id) {
+    it('try to delete a test result', async function () {
+        await agent.post('/api/skuitems/testResult').send(data);
+        let res = await agent.delete('/api/skuitems/'+rfid+'/testResult/'+id);
+        res.status.should.equal(expectedHTTPStatus);
+        if (expectedHTTPStatus === 204){
+            let values = await agent.get('/api/skuitems/'+rfid+'/testResults');
+            values.body.length.should.equal(expectedBodyLen); 
         }
     });
 }
