@@ -9,6 +9,7 @@ const dbRES = require('../database/test-resultDAO');
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat);
 
+
 class RestockOrderManagement {
 
     constructor() { }
@@ -24,6 +25,7 @@ class RestockOrderManagement {
             restockOrder.products === '' ||
             restockOrder.supplierId === "" ||
             restockOrder.supplierId == 0 ||
+            restockOrder.supplierId <= 0 ||
             isNaN(restockOrder.supplierId) ||
             !dayjs(restockOrder.issueDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()) {
             return res.status(422).end();
@@ -192,7 +194,7 @@ class RestockOrderManagement {
     async modifyStateRestockOrderById(req, res) {
         const id = req.params.id;
         const data = req.body;
-        if (id == undefined || id == '' || isNaN(id)) {
+        if (id == undefined || id == '' || isNaN(id) || !['ISSUED', 'DELIVERY', 'DELIVERED', 'TESTED', 'COMPLETEDRETURN', 'COMPLETED'].includes(data.newState)) {
             return res.status(422).end();
         }
         const RE = await db.getRestockOrderById(id);
@@ -214,6 +216,16 @@ class RestockOrderManagement {
         if (id == undefined || id == '' || isNaN(id)) {
             return res.status(422).end();
         }
+
+        for (var i = 0; i < data.skuItems.length; i++) {
+            if (data.skuItems[i].SKUId == undefined || data.skuItems[i].SKUId <= 0 
+                || data.skuItems[i].SKUId == '' || isNaN(data.skuItems[i].SKUId)
+                || data.skuItems[i].rfid == undefined || data.skuItems[i].rfid == '' || data.skuItems[i].rfid <= 0 
+                || data.skuItems[i].rfid.length != 32 || isNaN(data.skuItems[i].rfid)) {
+                return res.status(422).end();
+            }
+        }
+
         const RE = await db.getRestockOrderById(id);
         if (RE != undefined) {
             if (RE.state != 'DELIVERED') {
@@ -261,6 +273,9 @@ class RestockOrderManagement {
             return res.status(422).end();
         }
         try {
+            if(await db.getRestockOrderById(id) === undefined){
+                res.status(404).end();
+            }
             db.deleteRestockOrderById(id);
             res.status(204).end();
         } catch (err) {
