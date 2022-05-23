@@ -174,15 +174,6 @@ class SkuManagement {
             res.status(500).end();
         }
     }
-
-    async deleteTableContent(req, res) {
-        try{
-            await db.deleteTableContet();
-            res.status(200).end();
-        }catch{
-            res.status(500).end();
-        }
-    }
 }
 
 
