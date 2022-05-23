@@ -55,7 +55,7 @@ class UserManagement {
         const username = req.params.username;
         const type = req.params.type;
         if (username == undefined || username == '' || type == undefined || type == '' ||
-            this.CheckPossibleType(type) != true ) {
+            this.CheckPossibleType(type) != true || this.ValidateEmail(username) != true) {
             return res.status(422).end();
         }
         try {
@@ -71,8 +71,7 @@ class UserManagement {
         const data = req.body;
         if (data.oldType == undefined || data.oldType == '' || data.newType == undefined || data.newType == ''
             || username == undefined || username == '' || this.CheckPossibleType(data.oldType) != true
-            || this.CheckPossibleType(data.newType) != true || this.CheckPossibleType(user.type) != true
-            || this.ValidateEmail(username) != true) {
+            || this.CheckPossibleType(data.newType) != true || this.ValidateEmail(username) != true) {
             return res.status(422).end();
         }
         const user = await db.getUserByUsernameAndType(username, data.oldType);
@@ -96,12 +95,18 @@ class UserManagement {
         }
         try {
             const user = await db.getUserByUsernameAndPass(data.username, data.password);
-            if(user == undefined) {
-                return res.status(401).end();
-            }
             userinfo = {id: user.id, username: user.email, name: user.name, surname: user.surname, type: user.type}
             return res.status(200).json({id: user.id, username: user.username, name: user.name})
         } catch(err){
+            res.status(500).end();
+        }
+    }
+
+    async logout(req, res) {
+        try {
+            userinfo = null;
+            res.status(200).end();
+        } catch(err) {
             res.status(500).end();
         }
     }

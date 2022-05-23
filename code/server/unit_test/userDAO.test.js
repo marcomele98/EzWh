@@ -20,10 +20,10 @@ describe('testUserDao', () => {
     });
 
     testNewUser(data);
-    testDeleteUser(data);
     testGetUserByUserAndPass(data);
     testGetSuppliers();
     testModifyUser(data);
+    testDeleteUser(data);
 
 });
 
