@@ -112,14 +112,14 @@ Version:
 
 ### Code coverage report
 
-    Coverage for positionDAO :
-    ![positionDAO_coverage](./coverageScreens/positionDAO.test.png)
+Coverage for positionDAO :
+![positionDAO_coverage](./coverageScreens/positionDAO.test.png)
 
-    Coverage for test-descriptorDAO :
-    ![test-descriptorDAO_coverage](./coverageScreens/test-descriptorDAO.test.png)
+Coverage for test-descriptorDAO :
+![test-descriptorDAO_coverage](./coverageScreens/test-descriptorDAO.test.png)
 
-    Coverage for test-resultDAO :
-    ![test-resultDAO_coverage](./coverageScreens/test-resultDAO.test.jpeg)
+Coverage for test-resultDAO :
+![test-resultDAO_coverage](./coverageScreens/test-resultDAO.test.jpeg)
 
 
 ### Loop coverage analysis
