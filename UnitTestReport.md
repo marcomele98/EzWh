@@ -112,6 +112,28 @@ Version:
 | not exists | V | try to insert a new restock order | create new restock order |
 | exists | I | try to insert a new restock order and than a new one with same id | create new restock order |
 
+### **Class *returnOrderDAO* - method *storeReturnOrder***
+
+**Criteria for method *storeReturnOrder*:**
+	
+
+ - ID already existing or not in DB
+
+**Predicates for method *storeReturnOrder*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| ID | ID already exists |
+|| ID does not exists yet |
+
+**Combination of predicates**:
+
+
+| ID | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+| not exists | V | try to insert a new return order | create new return order |
+| exists | I | try to insert a new return order and than a new one with same id | create new return order |
+
 ### **Class *itemDAO* - method *storeItem***
 
 **Criteria for method *storeItem*:**
