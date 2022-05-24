@@ -116,13 +116,8 @@ Report also for each of the scenarios the (one or more) API Mocha tests that cov
 
 # Coverage of Non Functional Requirements
 
-
-<Report in the following table the coverage of the Non Functional Requirements of the application - only those that can be tested with automated testing frameworks.>
-
-
-### 
-
 | Non Functional Requirement | Test name |
+| ---- | ---- |
 | NFR4 | try to modify a position with wrong data |
 |  | try to modify a position |
 |  | try to modify a position id |
