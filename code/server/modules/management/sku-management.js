@@ -14,8 +14,11 @@ class SkuManagement {
         try {
             const skuList = await db.getSkuList();
             for (var i = 0; i < skuList.length; i++) {
+                
                 const testDescriptors = await dbTest.getTestListBySKU(skuList[i].id);
+                if(testDescriptors !== undefined){
                 skuList[i].testDescriptors = testDescriptors.map(value => value.id);
+                } else break;
             }
             res.status(200).json(skuList);
         }
