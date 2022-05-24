@@ -250,6 +250,7 @@ class RestockOrderManagement {
                 res.status(503).end();
             }
         } else {
+            console.log('eskere1');
             return res.status(404).end();
         }
     }
@@ -274,6 +275,7 @@ class RestockOrderManagement {
                 res.status(503).end();
             }
         } else {
+            console.log('eskere');
             return res.status(404).end();
         }
     }

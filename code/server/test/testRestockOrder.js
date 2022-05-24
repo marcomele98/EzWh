@@ -207,7 +207,6 @@ function modifyRestockOrderSkuItems(expectedHTTPStatus, input, mod, id) {
                 agent.put('/api/restockOrder/' + id)
                     .send({"newState":"DELIVERED"})
                     .then(function (ren) {
-                        if (ren.status == 200) {
                         agent.put('/api/restockOrder/' + id + '/skuItems')
                             .send(mod)
                             .then(function (re) {
@@ -221,11 +220,6 @@ function modifyRestockOrderSkuItems(expectedHTTPStatus, input, mod, id) {
                                 }
                                 done();
                             });
-                        }
-                        else{
-                            ren.should.have.status(expectedHTTPStatus);
-                            done();
-                        }
                     });
             });
     });
@@ -240,7 +234,6 @@ function modifyRestockOrderTransportNote(expectedHTTPStatus, input, mod, id) {
                 agent.put('/api/restockOrder/' + id)
                     .send({"newState":"DELIVERY"})
                     .then(function (ren) {
-                        if (ren.status == 200) {
                         agent.put('/api/restockOrder/' + id + '/transportNote')
                             .send(mod)
                             .then(function (re) {
@@ -254,11 +247,6 @@ function modifyRestockOrderTransportNote(expectedHTTPStatus, input, mod, id) {
                                 }
                                 done();
                             });
-                        }
-                        else{
-                            ren.should.have.status(expectedHTTPStatus);
-                            done();
-                        }
                     });
             });
     });
