@@ -90,8 +90,27 @@ Version:
 | not exists | V | try to insert a new test result | create new test descriptor |
 | exists | I | try to insert a new test result and than a new one with same id | create new test result |
 
+### **Class *restockOrderDAO* - method *storeRestockOrder***
+
+**Criteria for method *createTestDescriptor*:**
+	
+
+ - ID already existing or not in DB
+
+**Predicates for method *createTestDescriptor*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| ID | ID already exists |
+|| ID does not exists yet |
+
+**Combination of predicates**:
 
 
+| ID | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+| not exists | V | try to insert a new restock order | create new restock order |
+| exists | I | try to insert a new restock order and than a new one with same id | create new restock order |
 
 
 # White Box Unit Tests
@@ -109,6 +128,12 @@ Version:
 |test-resultDAO|empty db|
 |test-resultDAO|create new test result|
 |test-resultDAO|modify a test result|
+|restockOrderDAO|empty db|
+|restockOrderDAO|create new restock order|
+|restockOrderDAO|modify restock order|
+|returnOrderDAO|empty db|
+|returnOrderDAO|create new return order|
+|returnOrderDAO|modify return order|
 
 ### Code coverage report
 
@@ -119,7 +144,13 @@ Coverage for test-descriptorDAO :
 ![test-descriptorDAO_coverage](./coverageScreens/test-descriptorDAO.test.png)
 
 Coverage for test-resultDAO :
-![test-resultDAO_coverage](./coverageScreens/test-resultDAO.test.jpeg)
+![test-resultDAO_coverage](./coverageScreens/test-resultDAO.test.png)
+
+Coverage for restockOrderDAO :
+![restockOrderDAO_coverage](./coverageScreens/restockOrderDAO.test.PNG)
+
+Coverage for returnOrderDAO :
+![returnOrderDAO_coverage](./coverageScreens/returnOrderDAO.test.PNG)
 
 
 ### Loop coverage analysis
