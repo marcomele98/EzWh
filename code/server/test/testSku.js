@@ -58,8 +58,8 @@ describe('test sku APIs', () => {
     deleteSku(204, sku, 1);
     addNewSku(201, 1, "prova", 10, 10, "test", 20, 4.99); //correct data
     addNewSku(422, 2, 1241, 10, 10, "test", 20, 4.99); //wrong description
-    updatePositionOfSku(200, sku, pos, "800234543412");
-    //updatePositionOfSku(404, sku, pos,"700234543412" ); //no position existing
+    updatePositionOfSku(200, sku, pos, "800234543412", 1);
+    updatePositionOfSku(404, sku, pos,"800234543412", 2 ); //no sku existing
     updateSku(200, sku, newSku, 1);
     getSku(200, 1, "prova", 10, 10, "test", 20, 4.99, 1);
     getSku(404, 2, " prova 2", 5, 5, "prova 404", 4, 10.99, 4);
@@ -99,7 +99,7 @@ function addNewSku(expectedHTTPStatus, id, description, weight, volume, notes, a
     )
 };
 
-function updatePositionOfSku(expectedHTTPStatus, sku, pos, position) {
+function updatePositionOfSku(expectedHTTPStatus, sku, pos, position, id) {
     it('modify position of a sku', function (done) {
         let posToSet = { position: position };
         let SKU = { id: sku.id, description: sku.description, weight: sku.weight, volume: sku.volume, notes: sku.notes, availableQuantity: sku.availableQuantity, price: sku.price }
@@ -107,10 +107,10 @@ function updatePositionOfSku(expectedHTTPStatus, sku, pos, position) {
             res.should.have.status(201);
             agent.post('/api/sku').send(SKU).then(function (res1) {
                 res1.should.have.status(201);
-                agent.put('/api/sku/' + sku.id + '/position').send(posToSet).then(function (res2) {
+                agent.put('/api/sku/' + id + '/position').send(posToSet).then(function (res2) {
                     res2.should.have.status(expectedHTTPStatus);
                     if (res2.status == 200) {
-                        agent.get('/api/skus/' + sku.id).then(function (r) {
+                        agent.get('/api/skus/' + id).then(function (r) {
                             r.should.have.status(200);
                             r.body.position.should.equal(pos.positionID);
                         });

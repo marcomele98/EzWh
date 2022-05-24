@@ -25,10 +25,10 @@ Version:
      
 # Integration approach
 
-    <Write here the integration sequence you adopted, in general terms (top down, bottom up, mixed) and as sequence
-    (ex: step1: class A, step 2: class A+B, step 3: class A+B+C, etc)> 
-    <Some steps may  correspond to unit testing (ex step1 in ex above), presented in other document UnitTestReport.md>
-    <One step will  correspond to API testing>
+    Our team decided to deploy a bottom-up approach. We considered first the lower level classes, those in /modules/database, which 
+    iteract with the database through the general DAO class. Thus we moved to API testing since, according to our design choiches, 
+    the classes in /modules/managemnt implement all the application logic and the server only calls the methods they expose.
+    We decided to follow this approach, avoiding moking modules, mostly for timing issues.
     
 
 
@@ -37,26 +37,38 @@ Version:
    <define below a table for each integration step. For each integration step report the group of classes under test, and the names of
      Jest test cases applied to them, and the mock ups used, if any> Jest test cases should be here code/server/unit_test
 
-## Step 1
-| Classes  | mock up used |Jest test cases |
-|--|--|--|
-||||
+## Step 1: Testing DAO
+| Classes |Jest test cases |
+|--|--|
+|positionDAO|empty db|
+|positionDAO|create new position|
+|positionDAO|modify position id|
+|test-descriptorDAO|empty db|
+|test-descriptorDAO|create new test descriptor|
+|test-descriptorDAO|Modify a test descriptor|
+|test-resultDAO|empty db|
+|test-resultDAO|create new test result|
+|test-resultDAO|modify a test result|
 
 
-## Step 2
-| Classes  | mock up used |Jest test cases |
-|--|--|--|
-||||
-
-
-## Step n 
-
-   
-| Classes  | mock up used |Jest test cases |
-|--|--|--|
-||||
-
-
+## Step 2: API testing
+| Classes | Mocha test cases |
+|--|--|
+| position-managemnt | adding a new position |
+| position-managemnt | adding a new position with wrong data |
+| position-managemnt | try to modify a position |
+| position-managemnt | try to modify a position with wrong data |
+| position-managemnt | try to modify a position id |
+| position-managemnt | try to delete a position |
+| test-descriptor-management | try adding a new test descriptor |
+| test-descriptor-management | try to modify a test descriptor |
+| test-descriptor-management | try deleting a test descriptor |
+| test-descriptor-management | get a test descriptor |
+| test-result-management | get a test result |
+| test-result-management | try adding a new test result |
+| test-result-management | try adding two test result |
+| test-result-management | try to modify a test result |
+| test-result-management | try to delete a test result |
 
 
 # API testing - Scenarios
@@ -84,28 +96,35 @@ Version:
 Report also for each of the scenarios the (one or more) API Mocha tests that cover it. >  Mocha test cases should be here code/server/test
 
 
-
-
 | Scenario ID | Functional Requirements covered | Mocha  Test(s) | 
 | ----------- | ------------------------------- | ----------- | 
-|  ..         | FRx                             |             |             
-|  ..         | FRy                             |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
+| 2-1 | FR3.3.1 | adding a new position |
+|  |  | adding a new position with wrong data |
+| 2-3 2-4 | FR3.1.1 - FR3.1.4 | try to modify a position |
+|  |  | try to modify a position with wrong data |             
+| 2-2 | FR3.1.1 | try to modify a position id |             
+| 2-5 | FR3.1.2 | try to delete a position |             
+| 12-1 | FR3.2.1 | try adding a new test descriptor |  
+| 12-2 | FR3.2.2 | try to modify a test descriptor | 
+| 12-3 | FR3.2.3 | try deleting a test descriptor | 
+|  | FR5.8.2 | try adding a new test result | 
+|  |  | try adding two test result | 
+|  |  | try to modify a test result | 
+|  |  | try to delete a test result |      
 
 
 
 # Coverage of Non Functional Requirements
 
-
-<Report in the following table the coverage of the Non Functional Requirements of the application - only those that can be tested with automated testing frameworks.>
-
-
-### 
-
 | Non Functional Requirement | Test name |
-| -------------------------- | --------- |
-|                            |           |
-
+| ---- | ---- |
+| NFR4 | try to modify a position with wrong data |
+|  | try to modify a position |
+|  | try to modify a position id |
+| NFR6 | get a test result |
+|  | try adding a new test result |
+|  | try to modify a test result |
+|  | try to delete a test result |
+| NFR9 | try adding a new test result |
+|  | try to modify a test result |
+|  | try to delete a test result |
