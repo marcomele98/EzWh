@@ -1,9 +1,9 @@
 'use strict'
 
 const db = require('../database/skuItemDAO');
+const SKUdb = require('../database/skuDAO');
 const dayjs = require('dayjs')
-var customParseFormat = require('dayjs/plugin/customParseFormat')
-dayjs.extend(customParseFormat);
+
 
 class SkuItemManagement {
     constructor() { }
@@ -20,17 +20,16 @@ class SkuItemManagement {
 
     async getSkuItemBySkuId(req, res) {
         const skuId = req.params.id;
-        if (skuId === undefined || skuId === '' || skuId == 0 || isNaN(skuId)) {
+        if (skuId == null || skuId === undefined || skuId === '' || skuId < 0 || isNaN(skuId)) {
             return res.status(422).json({ error: 'Invalid SkuID' });
         }
-        const id = parseInt(skuId, 10);
+        const sku = await SKUdb.getSkuById(skuId);
+        if (sku == undefined) {
+            return res.status(404).end();
+        }
         try {
-            const skuItem = await db.getSkuItemBySkuId(id);
-            if (skuItem === undefined) {
-                return res.status(404).end();
-            } else {
-                return res.status(200).json(skuItem);
-            }
+            const skuItem = await db.getSkuItemBySkuId(skuId);
+            return res.status(200).json(skuItem);
         } catch (err) {
             return res.status(500).end();
         }
@@ -39,8 +38,8 @@ class SkuItemManagement {
 
     async getSkuItemByRfid(req, res) {
         const rfid = req.params.rfid;
-    if (rfid == undefined || rfid == '' || rfid == 0 || rfid.length !== 32 || isNaN(rfid)) {
-            return res.status(422).json({ error: 'Invalid id' });
+        if (rfid == undefined || rfid == '' || rfid == 0 || rfid.length !== 32 || isNaN(rfid)) {
+            return res.status(422).end();
         }
         try {
             const skuItem = await db.getSkuItemByRfid(rfid);
@@ -56,20 +55,20 @@ class SkuItemManagement {
     }
 
     async addSkuItem(req, res) {
-        if (Object.keys(req.body).length === 0) {
-            return res.status(404).json({ error: `Empty body request` });
-        }
         let skuItem = req.body;
+
         if (skuItem.RFID.length !== 32 || skuItem.RFID === '' || skuItem.RFID == 0 || skuItem.RFID == undefined || isNaN(skuItem.RFID) ||
-            skuItem.SKUId=== '' || skuItem.SKUId == undefined || skuItem.SKUId == 0 || isNaN(skuItem.SKUId) ||  
+            skuItem.SKUId === '' || skuItem.SKUId == undefined || skuItem.SKUId < 0 || isNaN(skuItem.SKUId) ||
             skuItem.DateOfStock == undefined || skuItem.DateOfStock == '' ||
-             !dayjs(skuItem.DateOfStock, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()){ 
+            !dayjs(skuItem.DateOfStock).isValid()) {
             return res.status(422).json({ error: `Invalid skuItem data` });
         }
+        const sku = await SKUdb.getSkuById(skuItem.SKUId);
+        if (sku == undefined) {
+            return res.status(404).end();
+        }
         try {
-      
             await db.storeSkuItem(skuItem);
-            //db.dropTable();
             return res.status(201).end();
         } catch (err) {
             res.status(503).end();
@@ -79,36 +78,42 @@ class SkuItemManagement {
     async editInfoSkuItem(req, res) {
         const rfid = req.params.rfid;
         const data = req.body;
+
+        if (rfid.length !== 32 || rfid == '' || isNaN(rfid)) {
+            return res.status(422).end();
+        }
+
         const oldSkuItem = await db.getSkuItemByRfid(rfid);
-        if(data.newRFID == undefined){
+
+        if (oldSkuItem == undefined) {
+            res.status(404).end()
+        }
+        if (data.newRFID == undefined) {
             data.newRFID = oldSkuItem.RFID;
         }
-        if(data.newAvailable == undefined){
+        if (data.newAvailable == undefined) {
             data.newAvailable = oldSkuItem.Available;
         }
-        if(data.newDateOfStock == undefined){
+        if (data.newDateOfStock == undefined) {
             data.newDateOfStock = oldSkuItem.DateOfStock;
         }
 
-        if ( rfid.length !== 32 || rfid == '' || isNaN(rfid) || data.length == 0 || data.newRFID.length !== 32 || data.newRFID === '' ||  
-            data.newAvailable === '' || isNaN(data.newRFID) || data.newDateOfStock === '' || 
-            !dayjs(data.newDateOfStock, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid())  {
+        if ( data.length == 0 || data.newRFID.length !== 32 || data.newRFID === '' ||
+            data.newAvailable === '' || isNaN(data.newRFID) || data.newDateOfStock === '' ||
+            !dayjs(data.newDateOfStock).isValid()) {
             return res.status(422).end();
         }
-        if (data.newAvailable !== 1 && data.newAvailable !==0){
-            return res.status(422).end();        
+        if (data.newAvailable !== 1 && data.newAvailable !== 0) {
+            return res.status(422).end();
         }
-        
-        if (oldSkuItem !== undefined) {
-            try {
-                await db.editInfoSkuItem(rfid, data);
-                res.status(200).end();
-            } catch (err) {
-                res.status(503).end();
-            }
-        } else {
-            res.status(404).end()
+
+        try {
+            await db.editInfoSkuItem(rfid, data);
+            res.status(200).end();
+        } catch (err) {
+            res.status(503).end();
         }
+
     }
 
     async deleteSkuItemById(req, res) {
@@ -116,12 +121,8 @@ class SkuItemManagement {
         if (id == undefined || id == '' || id == 0 || isNaN(id) || id.length != 32) {
             res.status(422).end();
         }
-        const skuItem = await db.getSkuItemByRfid(id);
-        if(skuItem === undefined){
-            res.status(404).end();
-        }
         try {
-            db.deleteSkuItemByRfid(id);
+            await db.deleteSkuItemByRfid(id);
             res.status(204).end();
         } catch (err) {
             res.status(500).end();

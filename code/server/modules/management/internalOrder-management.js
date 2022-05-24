@@ -5,8 +5,6 @@ const db = require('../database/internalOrderDAO');
 
 const possibleType = ['ISSUED', 'ACCEPTED', 'REFUSED', 'CANCELED', 'COMPLETED'];
 
-var customParseFormat = require('dayjs/plugin/customParseFormat')
-dayjs.extend(customParseFormat);
 
 class InternalOrderManagement {
 
@@ -14,20 +12,17 @@ class InternalOrderManagement {
 
     async createNewInternalOrder(req, res) {
         let internalOrder = req.body;
-        if (internalOrder === undefined || internalOrder.issueDate === undefined || internalOrder.products === undefined || internalOrder.customerId === undefined
-            || internalOrder == '' || internalOrder.issueDate === '' || internalOrder.products === '' || internalOrder.customerId === "" || internalOrder.customerId <= 0
-            || isNaN(internalOrder.customerId) || !dayjs(internalOrder.issueDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()) {
+        if (internalOrder === undefined || internalOrder.issueDate == undefined || internalOrder.products == undefined || internalOrder.customerId == undefined
+            || internalOrder == '' || internalOrder.issueDate == '' || internalOrder.products == '' || internalOrder.customerId < 0
+            || isNaN(internalOrder.customerId) || !dayjs(internalOrder.issueDate).isValid()) {
             return res.status(422).end();
         }
         for (var i = 0; i < internalOrder.products.length; i++) {
-            // const sku = await dbSKU.getSkuById(internalOrder.products[i].SKUId);
-            // if(sku == undefined) {
-            //     return res.status(404).end();
-            // }
-            if (internalOrder.products[i].SKUId == undefined || internalOrder.products[i].SKUId <= 0 || internalOrder.products[i].SKUId == '' || isNaN(internalOrder.products[i].SKUId)
-                || !isNaN(internalOrder.products[i].description) || internalOrder.products[i].description == undefined || internalOrder.products[i].description == '' || internalOrder.products[i].price <= 0 ||
-                internalOrder.products[i].price == undefined || internalOrder.products[i].price == '' || isNaN(internalOrder.products[i].price) ||
-                internalOrder.products[i].qty == undefined || internalOrder.products[i].qty <= 0 || internalOrder.products[i].qty == '' || isNaN(internalOrder.products[i].qty)
+            if (internalOrder.products[i].SKUId == undefined  || isNaN(internalOrder.products[i].SKUId) || internalOrder.products[i].SKUId < 0
+                || !isNaN(internalOrder.products[i].description) || internalOrder.products[i].description == undefined 
+                || internalOrder.products[i].description == '' || internalOrder.products[i].price < 0 ||
+                internalOrder.products[i].price == undefined  || isNaN(internalOrder.products[i].price) ||
+                internalOrder.products[i].qty == undefined || internalOrder.products[i].qty <= 0 || isNaN(internalOrder.products[i].qty)
             ) {
                 return res.status(422).end();
             }
@@ -102,7 +97,7 @@ class InternalOrderManagement {
 
     async getInternalOrderById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || isNaN(id) || id <= 0) {
+        if (id == undefined || isNaN(id) || id < 0) {
             return res.status(422).end();
         }
         try {
@@ -139,7 +134,7 @@ class InternalOrderManagement {
     async modifyInternalOrderById(req, res) {
         const id = req.params.id;
         const data = req.body;
-        if (id == undefined || id == '' || isNaN(id) || id <= 0 || !possibleType.includes(data.newState)) {
+        if (id == undefined || isNaN(id) || id < 0 || !possibleType.includes(data.newState)) {
             return res.status(422).end();
         }
         const IO = await db.getInternalOrderById(id);
@@ -148,7 +143,7 @@ class InternalOrderManagement {
             try {
                 if (data.newState === 'COMPLETED') {
                     for (var i = 0; i < data.products.length; i++) {
-                        if (data.products[i].SkuID == undefined || data.products[i].SkuID <= 0 || data.products[i].SkuID == '' || isNaN(data.products[i].SkuID)
+                        if (data.products[i].SkuID == undefined || data.products[i].SkuID < 0  || isNaN(data.products[i].SkuID)
                             || data.products[i].RFID == undefined || data.products[i].RFID == '' || data.products[i].RFID.length != 32 || isNaN(data.products[i].RFID)) {
                             return res.status(422).end();
                         }
@@ -169,7 +164,7 @@ class InternalOrderManagement {
 
     async deleteInternalOrderById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || isNaN(id) || id <= 0) {
+        if (id == undefined || isNaN(id) || id < 0) {
             return res.status(422).end();
         }
         const internalOrder = await db.getInternalOrderById(id);

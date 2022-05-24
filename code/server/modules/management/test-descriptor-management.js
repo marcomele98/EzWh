@@ -2,7 +2,7 @@
 
 const db = require('../database/test-descriptorDAO');
 const dbSKU = require('../database/skuDAO');
-// const dbTestResult = require('../database/test-resultDAO');
+
 
 class TestDescriptorManagement {
 

@@ -10,10 +10,17 @@ class ItemManagement {
     async createNewItem(req, res) {
         let item = req.body;
         const skuSupp = await db.getSkuBySupplier(req.body.SKUId, req.body.supplierId);
-        if (skuSupp != undefined || item == '' || item == undefined || item.description == undefined || item.description === '' || !isNaN(item.description)
-            || item.price <= 0 || item.price == undefined || isNaN(item.price) || item.price == '' || item.supplierId <= 0
-            || item.supplierId == undefined || item.supplierId == '' || isNaN(item.supplierId) || item.id <= 0 || item.id == undefined
-            || item.id == '' || isNaN(item.id) || item.SKUId <= 0 || isNaN(item.SKUId) || item.SKUId == '' || item.SKUId == undefined) {
+        // if (  item.description == undefined || item.description == '' || !isNaN(item.description)
+        //     || item.price < 0 || item.price == undefined || isNaN(item.price) || item.price == '' || item.supplierId < 0
+        //     || item.supplierId == undefined || item.supplierId == '' || isNaN(item.supplierId) || item.id < 0 || item.id == undefined
+        //     || item.id == '' || isNaN(item.id) || item.SKUId < 0 || isNaN(item.SKUId) || item.SKUId == '' || item.SKUId == undefined) {
+        //     return res.status(422).end();
+        // }
+        if ( skuSupp != undefined || item.description == undefined || item.description == '' || !isNaN(item.description) 
+        || item.price < 0 || item.price == undefined || isNaN(item.price) 
+        || item.supplierId == undefined || isNaN(item.supplierId) || item.supplierId < 0
+        || item.id == undefined || item.id < 0  || isNaN(item.id)
+        || item.SKUId < 0 || isNaN(item.SKUId) ||  item.SKUId == undefined) {
             return res.status(422).end();
         }
         const sku = await dbSKU.getSkuById(item.SKUId);
@@ -39,7 +46,7 @@ class ItemManagement {
 
     async getItemById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || id == 0 || isNaN(id)) {
+        if (id == undefined || id < 0 || isNaN(id)) {
             return res.status(422).end();
         }
         try {
@@ -59,7 +66,7 @@ class ItemManagement {
         const id = req.params.id;
         const data = req.body;
 
-        if (id == undefined || id == '' || isNaN(id) || id <= 0 || data == undefined || data == '' || data == null) {
+        if (id == undefined || isNaN(id) || id < 0 || data == undefined || data == '' || data == null) {
                 return res.status(422).end();
         }
 
@@ -69,7 +76,7 @@ class ItemManagement {
             res.status(404).end();
         }
 
-        if (data.newDescription == undefined) {
+        if (data.newDescription == undefined || data.newPrice == null) {
             data.newDescription = it.description;
         }
 
@@ -87,12 +94,8 @@ class ItemManagement {
 
     async deleteItemById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || id == 0 || isNaN(id) || id <= 0) {
+        if (id == undefined || isNaN(id) || id < 0) {
             return res.status(422).end();
-        }
-        const item = await db.getItemById(id);
-        if (item === undefined) {
-            return res.status(404).end();
         }
         try {
             await db.deleteItemById(req.params.id);

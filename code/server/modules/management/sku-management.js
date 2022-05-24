@@ -14,11 +14,10 @@ class SkuManagement {
         try {
             const skuList = await db.getSkuList();
             for (var i = 0; i < skuList.length; i++) {
-                
                 const testDescriptors = await dbTest.getTestListBySKU(skuList[i].id);
                 if(testDescriptors !== undefined){
-                skuList[i].testDescriptors = testDescriptors.map(value => value.id);
-                } else break;
+                    skuList[i].testDescriptors = testDescriptors.map(value => value.id);
+                } else break;    
             }
             res.status(200).json(skuList);
         }
@@ -61,18 +60,17 @@ class SkuManagement {
             return res.status(422).json({ error: `Empty body request` });
         }
         let sku = req.body;
-        if (sku.description === '' || sku.price <= 0 || sku.price == undefined || sku.weight <= 0 || sku.volume <= 0 ||
-            sku.notes === '' || sku.availableQuantity <= 0 || sku.description === undefined ||
+        if (sku.description === '' || sku.price < 0 || sku.price == undefined || sku.weight < 0 || sku.volume < 0 ||
+            sku.notes === '' || sku.availableQuantity < 0 || sku.description === undefined ||
             isNaN(sku.description) !== true || isNaN(sku.notes) !== true || sku.price == undefined ||
             sku.weight === undefined || sku.weight === '' || sku.volume == undefined ||
-            sku.notes === undefined || sku.availableQuantity == undefined
-            || isNaN(sku.price) || isNaN(sku.weight) || isNaN(sku.volume) || isNaN(sku.availableQuantity)) {
+            sku.notes === undefined || sku.availableQuantity == undefined 
+            || isNaN(sku.price) || !Number.isInteger(sku.weight) || !Number.isInteger(sku.volume) || !Number.isInteger(sku.availableQuantity)) {
             return res.status(422).json({ error: `Invalid item data` });
         }
         try {
-            db.addSku(sku);
+            await db.addSku(sku);
             return res.status(201).end();
-
         } catch (err) {
             res.status(503).end();
         }
@@ -105,12 +103,12 @@ class SkuManagement {
         }
 
         //Checks on the id
-        if (id == undefined || id == '' || data.length == 0 || isNaN(id) || data.newDescription == ''
-            || isNaN(data.newWeight) || data.newWeight <= 0 || data.newWeight === ''
-            || isNaN(data.newVolume) || data.newVolume <= 0 || data.newVolume === ''
+        if (id == undefined || data.length == 0 || isNaN(id) || data.newDescription == ''
+            || !Number.isInteger(data.newWeight) || data.newWeight < 0 || data.newWeight === ''
+            || !Number.isInteger(data.newVolume) || data.newVolume < 0 || data.newVolume === ''
             || data.newNotes === '' || isNaN(data.newDescription) !== true || isNaN(data.newNotes) !== true ||
-            data.newPrice <= 0 || data.newPrice === '' || isNaN(data.newPrice)
-            || data.newAvailableQuantity <= 0 || data.newAvailableQuantity === '' || isNaN(data.newAvailableQuantity)) {
+            data.newPrice < 0  || isNaN(data.newPrice)
+            || data.newAvailableQuantity < 0  || !Number.isInteger(data.newAvailableQuantity)) {
             return res.status(422).end();
         }
 
@@ -134,14 +132,17 @@ class SkuManagement {
     async updateSkuPosition(req, res) {
         const id = req.params.id;
         const position = req.body.position;
-        if (id == undefined || id == '' || id == 0 || isNaN(id) || position == undefined || position == 0 || position == '' || isNaN(position)) {
+
+        if (id == undefined || id < 0 || isNaN(id) || position == undefined || position < 0 || position == '' || position.length != 12) {
             return res.status(422).json({ error: 'Invalid id ' });
         }
+
         const sku = await db.getSkuById(id);
         const pos = await dbPos.getPositionByID(position);
         if (sku == undefined || pos == undefined) {
             return res.status(404).end();
         }
+
         const oldPos = await dbPos.getPositionByID(sku.position)
 
         const newWeight = sku.weight * sku.availableQuantity;
@@ -166,7 +167,7 @@ class SkuManagement {
 
     deleteSkuById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || id == 0 || isNaN(id)) {
+        if (id == undefined || id == '' || id < 0 || isNaN(id)) {
             res.status(422).end();
         }
         try {

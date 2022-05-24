@@ -2,13 +2,10 @@
 
 const dayjs = require('dayjs');
 const db = require('../database/restockOrderDAO');
-//const dbSKUitem = require('../database/skuItemDAO');
-const dbSKU = require('../database/skuDAO');
 const dbRES = require('../database/test-resultDAO');
-//const dbPos = require('../database/positionDAO');
-var customParseFormat = require('dayjs/plugin/customParseFormat')
-dayjs.extend(customParseFormat);
 
+
+const possibleType = ['ISSUED', 'DELIVERY', 'DELIVERED', 'TESTED', 'COMPLETEDRETURN', 'COMPLETED'];
 
 class RestockOrderManagement {
 
@@ -23,23 +20,17 @@ class RestockOrderManagement {
             restockOrder == '' ||
             restockOrder.issueDate === '' ||
             restockOrder.products === '' ||
-            restockOrder.supplierId === "" ||
-            restockOrder.supplierId == 0 ||
-            restockOrder.supplierId <= 0 ||
+            restockOrder.supplierId < 0 ||
             isNaN(restockOrder.supplierId) ||
-            !dayjs(restockOrder.issueDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()) {
+            !dayjs(restockOrder.issueDate).isValid()) {
             return res.status(422).end();
         }
         for (var i = 0; i < restockOrder.products.length; i++) {
-            // const sku = await dbSKU.getSkuById(restockOrder.products[i].SKUId);
-            // if (sku == undefined) {
-            //     return res.status(404).end();
-            // }
             if (
                 restockOrder.products[i].SKUId == undefined || restockOrder.products[i].SKUId <= 0 || restockOrder.products[i].SKUId == '' || isNaN(restockOrder.products[i].SKUId) ||
-                !isNaN(restockOrder.products[i].description) || restockOrder.products[i].description == undefined || restockOrder.products[i].description == '' || restockOrder.products[i].price <= 0 ||
+                !isNaN(restockOrder.products[i].description) || restockOrder.products[i].description == undefined || restockOrder.products[i].description == '' || restockOrder.products[i].price < 0 ||
                 restockOrder.products[i].price == undefined || restockOrder.products[i].price == '' || isNaN(restockOrder.products[i].price) || restockOrder.products[i].qty == undefined ||
-                restockOrder.products[i].qty <= 0 || restockOrder.products[i].qty == '' || isNaN(restockOrder.products[i].qty)
+                restockOrder.products[i].qty < 0 || isNaN(restockOrder.products[i].qty)
             ) {
                 return res.status(422).end();
             }
@@ -47,7 +38,7 @@ class RestockOrderManagement {
         try {
             await db.storeRestockOrder(restockOrder);
             const RE = await db.getLastId();
-            await db.storeProducts(restockOrder.products, RE["MAX(id)"]);
+            db.storeProducts(restockOrder.products, RE["MAX(id)"]);
             return res.status(201).end();
         }
         catch (err) {
@@ -166,28 +157,18 @@ class RestockOrderManagement {
     async getListSKUItemsToReturn(req, res) {
         const id = req.params.id;
         if (id == undefined || id == '' || isNaN(id) || id <= 0) {
-            
             return res.status(422).end();
         }
         try {
-            
             const restockOrder = await db.getRestockOrderById(id);
-            console.log(restockOrder.id);
-            console.log(restockOrder.state);
-            console.log(await db.getListSKURE(restockOrder.id));
-            console.log(await db.getListSKURE(restockOrder.id));
-            console.log(await db.getListSKURE(restockOrder.id));
-            console.log(await db.getListSKURE(restockOrder.id));
-            console.log(await db.getListSKURE(restockOrder.id));
             if (restockOrder == undefined || restockOrder.state != 'COMPLETEDRETURN') {
                 return res.status(404).end();
             }
-            console.log('hello1');
             const SKUItems = await db.getListSKURE(id);
             var count = 0;
             const SKUItemsReturn = [];
 
-            console.log(SKUItems.length);
+            // console.log(SKUItems.length);
             for (var i = 0; i < SKUItems.length; i++) {
                 const SKUcheck = await dbRES.getPassByIds(SKUItems[i].id, SKUItems[i].rfid);
                 if (SKUcheck === undefined) {
@@ -204,7 +185,7 @@ class RestockOrderManagement {
     async modifyStateRestockOrderById(req, res) {
         const id = req.params.id;
         const data = req.body;
-        if (id == undefined || id == '' || isNaN(id) || !['ISSUED', 'DELIVERY', 'DELIVERED', 'TESTED', 'COMPLETEDRETURN', 'COMPLETED'].includes(data.newState)) {
+        if (data.newState == null || id == undefined || id == '' || isNaN(id)|| id < 0 || !possibleType.includes(data.newState)) {
             return res.status(422).end();
         }
         const RE = await db.getRestockOrderById(id);
@@ -223,35 +204,31 @@ class RestockOrderManagement {
     async addSKUItemsToRestockOrder(req, res) {
         const id = req.params.id;
         const data = req.body;
-        if (id == undefined || id == '' || isNaN(id)) {
+
+        if (data.skuItems == null || id == undefined || id == '' || isNaN(id) || id < 0) {
             return res.status(422).end();
         }
 
-        for (var i = 0; i < data.skuItems.length; i++) {
-            if (data.skuItems[i].SKUId == undefined || data.skuItems[i].SKUId <= 0 
-                || data.skuItems[i].SKUId == '' || isNaN(data.skuItems[i].SKUId)
-                || data.skuItems[i].rfid == undefined || data.skuItems[i].rfid == '' || data.skuItems[i].rfid <= 0 
-                || data.skuItems[i].rfid.length != 32 || isNaN(data.skuItems[i].rfid)) {
-                return res.status(422).end();
-            }
-            
+        const RE = await db.getRestockOrderById(id);
+        if(RE == undefined) {
+            return res.status(404).end();
         }
 
-        const RE = await db.getRestockOrderById(id);
-        if (RE != undefined) {
-            if (RE.state != 'DELIVERED') {
+        for(var i = 0; i < data.skuItems.length; i++){
+            if(data.skuItems[i].rfid.length != 32 || data.skuItems[i].rfid === '' || data.skuItems[i].rfid == undefined || isNaN(data.skuItems[i].rfid)
+             || data.skuItems[i].SKUId == undefined || data.skuItems[i].SKUId == '' || data.skuItems[i].SKUId < 0 || isNaN(data.skuItems[i].SKUId)) {
                 return res.status(422).end();
             }
-            try {
-                console.log(id);
-                await db.storeSkuRE(data, id);
-                return res.status(200).json();
-            } catch (err) {
-                res.status(503).end();
-            }
-        } else {
-            console.log('eskere1');
-            return res.status(404).end();
+        }
+        
+        if (RE.state != 'DELIVERED') {
+            return res.status(422).end();
+        }
+        try {
+            await db.storeSkuRE(data, id);
+            return res.status(200).end();
+        } catch (err) {
+            res.status(503).end();
         }
     }
 
@@ -275,7 +252,6 @@ class RestockOrderManagement {
                 res.status(503).end();
             }
         } else {
-            console.log('eskere');
             return res.status(404).end();
         }
     }
@@ -286,10 +262,7 @@ class RestockOrderManagement {
             return res.status(422).end();
         }
         try {
-            if(await db.getRestockOrderById(id) === undefined){
-                res.status(404).end();
-            }
-            await db.deleteRestockOrderById(id);
+            db.deleteRestockOrderById(id);
             res.status(204).end();
         } catch (err) {
             res.status(500).end();

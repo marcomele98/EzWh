@@ -62,7 +62,6 @@ describe('test skuItem APIs', () => {
     }
 
     sku = {
-        "id": "1",
         "description": "a new sku",
         "weight": 20,
         "volume": 10,
@@ -71,11 +70,6 @@ describe('test skuItem APIs', () => {
         "price": 20.00,
     }
 
-
-
-    deleteSkuItem(204, skuItem, "12345678901234567890123456789015", sku);
-    deleteSkuItem(404, skuItem, "52345678901234567890123456789015", sku);
-    deleteSkuItem(422, skuItem, "124", sku);
     addNewSkuItem(201, skuItem, sku);
     addNewSkuItem(422, skuItemWrong, sku);
     updateSkuItem(200, skuItem2, newSkuItem, "22345678901234567890123456789015", sku);
@@ -88,6 +82,9 @@ describe('test skuItem APIs', () => {
     getSkuItemBySKUID(422, skuItem, skuItem2, "ciao", sku); //validation failed
     getSkuItemBySKUIDwithValue(422, skuItem, newSkuItem, "ciao", sku);
     getSkuItemList(200, skuItem, skuItem2, sku);
+    deleteSkuItem(422, skuItem, "124", sku);
+    deleteSkuItem(204, skuItem, "12345678901234567890123456789015", sku);
+
 });
 
 function deleteSkuItem(expectedHTTPStatus, skuItem, RFID, sku) {
@@ -95,7 +92,6 @@ function deleteSkuItem(expectedHTTPStatus, skuItem, RFID, sku) {
         let SKUItem = { RFID: skuItem.RFID, SKUId: skuItem.SKUId, DateOfStock: skuItem.DateOfStock };
         agent.post('/api/sku').send(sku).then(function (result) {
             result.should.have.status(201);
-
             agent.post('/api/skuitem').send(SKUItem).then(function (res) {
                 res.should.have.status(201);
                 agent.delete('/api/skuitems/' + RFID).then(function (r) {

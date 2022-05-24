@@ -13,7 +13,7 @@
     "mocha": "^9.2.2"
   },
   "scripts": {
-    "apiTest": "nyc ./node_modules/.bin/mocha test --exit",
+    "apiTest": "./node_modules/.bin/mocha test --exit",
     "test": "jest"
   }
 }

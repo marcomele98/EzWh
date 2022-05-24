@@ -63,12 +63,6 @@ exports.deleteTableContent = () => {
     db.run(query, []);
     const query2 = 'UPDATE sqlite_sequence SET seq=0 WHERE name=?';
     db.run(query2, ['returnOrders']);
-
-    const query3 = 'DELETE FROM restockOrders';
-    db.run(query3, []);
-    const query4 = 'UPDATE sqlite_sequence SET seq=0 WHERE name=?';
-    db.run(query4, ['restockOrders']);
-
     const query1 = 'DELETE FROM productsRET';
     return db.run(query1, []);
 }

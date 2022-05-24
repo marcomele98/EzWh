@@ -6,18 +6,16 @@ chai.should();
 const app = require('../server');
 var agent = chai.request.agent(app);
 
-const dayjs = require('dayjs')
-var customParseFormat = require('dayjs/plugin/customParseFormat')
-dayjs.extend(customParseFormat);
-
 const skuDAO = require('../modules/database/skuDAO');
+const positionDAO = require('../modules/database/positionDAO');
 const testDescriptorDAO = require('../modules/database/test-descriptorDAO');
 
 describe('test sku APIs', () => {
-
+  
     beforeEach(async () => {
         await skuDAO.deleteTableContent();
         await skuDAO.resetTable();
+        await positionDAO.deleteTableContent();
         await testDescriptorDAO.deleteTableContent();
     })
 
@@ -38,6 +36,7 @@ describe('test sku APIs', () => {
         "maxVolume": 1000,
 
     }
+
     newSku = {
         "newDescription": "a new sku",
         "newWeight": 20,
@@ -48,41 +47,37 @@ describe('test sku APIs', () => {
     }
 
     sku = {
-        "id": "1",
         "description": "a new sku",
-        "weight": 20,
+        "weight": 10,
         "volume": 10,
         "notes": "first order",
         "availableQuantity": 10,
         "price": 20.00,
     }
 
-
     sku3 = {
-        "id": "3",
         "description": "a new sku 3",
-        "weight": 19,
+        "weight": 12,
         "volume": 14,
         "notes": "third order",
         "availableQuantity": 20,
         "price": 20.00,
     }
-
-    deleteSku(204, sku, 1);
     addNewSku(201, 1, "prova", 10, 10, "test", 20, 4.99); //correct data
     addNewSku(422, 2, 1241, 10, 10, "test", 20, 4.99); //wrong description
+    updatePositionOfSku(404, sku, pos,"800234543412", 2 ); //no sku existing
     updatePositionOfSku(200, sku, pos, "800234543412", 1);
-   // updatePositionOfSku(422, sku, pos, "800234543412", "ciao"); //invalid sku id
     updateSku(200, sku, newSku, 1);
     getSku(200, sku, 1);
     getSku(404, sku, 4);
     getSku(422, sku3, "ciao");
     getSkuList(200, sku);
+    deleteSku(204, sku, 1);
 });
 
 function deleteSku(expectedHTTPStatus, sku, deleteId) {
     it('delete sku', function (done) {
-        let SKU = { id: sku.id, description: sku.description, weight: sku.weight, volume: sku.volume, notes: sku.notes, availableQuantity: sku.availableQuantity, price: sku.price }
+        let SKU = { description: sku.description, weight: sku.weight, volume: sku.volume, notes: sku.notes, price: sku.price, availableQuantity: sku.availableQuantity }
         agent.post('/api/sku').send(SKU).then(async function (res) {
             res.should.have.status(201);
             await agent.delete('/api/skus/' + deleteId).then(function (r) {
@@ -95,7 +90,7 @@ function deleteSku(expectedHTTPStatus, sku, deleteId) {
 
 function addNewSku(expectedHTTPStatus, id, description, weight, volume, notes, availableQuantity, price) {
     it('adding a new sku', function (done) {
-        let sku = { id: id, description: description, weight: weight, volume: volume, notes: notes, availableQuantity: availableQuantity, price: price }
+        let sku = { description: description, weight: weight, volume: volume, notes: notes, price: price, availableQuantity: availableQuantity}
         agent.post('/api/sku').send(sku).then(function (res) {
             res.should.have.status(expectedHTTPStatus);
             if (res = 201) {
@@ -116,15 +111,12 @@ function addNewSku(expectedHTTPStatus, id, description, weight, volume, notes, a
 function updatePositionOfSku(expectedHTTPStatus, sku, pos, position, id) {
     it('modify position of a sku', function (done) {
         let posToSet = { position: position };
-
+        let SKU = { description: sku.description, weight: sku.weight, volume: sku.volume, notes: sku.notes, price: sku.price,  availableQuantity: sku.availableQuantity }
         agent.post('/api/position').send(pos).then(function (res) {
             res.should.have.status(201);
-        
-            agent.post('/api/sku').send(sku).then(function (res1) {
+            agent.post('/api/sku').send(SKU).then(function (res1) {
                 res1.should.have.status(201);
-                
                 agent.put('/api/sku/' + id + '/position').send(posToSet).then(function (res2) {
-              
                     res2.should.have.status(expectedHTTPStatus);
                     if (res2.status == 200) {
                         agent.get('/api/skus/' + id).then(function (r) {
@@ -141,7 +133,7 @@ function updatePositionOfSku(expectedHTTPStatus, sku, pos, position, id) {
 
 function updateSku(expectedHTTPStatus, sku, newSku, skuId) {
     it('update sku info', function (done) {
-        let SKU = { id: sku.id, description: sku.description, weight: sku.weight, volume: sku.volume, notes: sku.notes, availableQuantity: sku.availableQuantity, price: sku.price }
+        let SKU = { description: sku.description, weight: sku.weight, volume: sku.volume, notes: sku.notes, price: sku.price, availableQuantity: sku.availableQuantity }
         agent.post('/api/sku').send(SKU).then(function (res) {
             res.should.have.status(201);
             agent.put('/api/sku/' + skuId).send(newSku).then(function (res1) {
@@ -184,20 +176,21 @@ function getSku(expectedHTTPStatus, sku, selectedId) {
     });
 }
 
+
 function getSkuList(expectedHTTPStatus, sku) {
     it('getting sku list from database', function (done) {
-        let SKU2 = { id: 4, description: "new test for sku", weight: 5, volume: 5, notes: "new sku", availableQuantity: 20, price: 2.99 };
-                agent.post('/api/sku').send(sku).then(function (res) {
-                    res.should.have.status(201);
-
-                    agent.post('/api/sku').send(SKU2).then(function (res2) {
-                        res2.should.have.status(201);
-                        agent.get('/api/skus').then(function (r) {
-                            r.should.have.status(expectedHTTPStatus);
-                            r.body.length.should.equal(2);
-                            done();
-                        });
-                    });
+        let SKU = { id: sku.id, description: sku.description, weight: sku.weight, volume: sku.volume, notes: sku.notes, price: sku.price, availableQuantity: sku.availableQuantity }
+        let SKU2 = { id: 4, description: "new test for sku", weight: 5, volume: 5, notes: "new sku", price: 2.99, availableQuantity: 20 };
+        agent.post('/api/sku').send(SKU).then(function (res) {
+            res.should.have.status(201);
+            agent.post('/api/sku').send(SKU2).then(function (res2) {
+                res2.should.have.status(201);
+                agent.get('/api/skus').then(function (r) {
+                    r.should.have.status(expectedHTTPStatus);
+                    r.body.length.should.equal(2);
+                    done();
                 });
             });
+        });
+    });
 }

@@ -96,7 +96,8 @@ class UserManagement {
         try {
             const user = await db.getUserByUsernameAndPass(data.username, data.password);
             userinfo = {id: user.id, username: user.email, name: user.name, surname: user.surname, type: user.type}
-            return res.status(200).json({id: user.id, username: user.username, name: user.name})
+            const logged = {"id": user.id, "username": user.email, "name": user.name}
+            return res.status(200).json(logged);
         } catch(err){
             res.status(500).end();
         }
