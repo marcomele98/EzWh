@@ -92,7 +92,29 @@ Version:
 
 ### **Class *restockOrderDAO* - method *storeRestockOrder***
 
-**Criteria for method *createTestDescriptor*:**
+**Criteria for method *storeRestockOrder*:**
+	
+
+ - ID already existing or not in DB
+
+**Predicates for method *storeRestockOrder*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| ID | ID already exists |
+|| ID does not exists yet |
+
+**Combination of predicates**:
+
+
+| ID | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+| not exists | V | try to insert a new restock order | create new restock order |
+| exists | I | try to insert a new restock order and than a new one with same id | create new restock order |
+
+### **Class *itemDAO* - method *storeItem***
+
+**Criteria for method *storeItem*:**
 	
 
  - ID already existing or not in DB
@@ -109,8 +131,8 @@ Version:
 
 | ID | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|
-| not exists | V | try to insert a new restock order | create new restock order |
-| exists | I | try to insert a new restock order and than a new one with same id | create new restock order |
+| not exists | V | try to insert a new item | create new item |
+| exists | I | try to insert a new item and than a new one with same id and supplierId | create new item - duplicate |
 
 
 # White Box Unit Tests
@@ -134,6 +156,16 @@ Version:
 |returnOrderDAO|empty db|
 |returnOrderDAO|create new return order|
 |returnOrderDAO|modify return order|
+| itemDAO | create new item |
+| itemDAO | create new item - duplicate |
+| itemDAO | delete item |
+| itemDAO | modify item |
+| itemDAO | get sku by supp |
+| internalOrderDAO | get internal order issued |
+| internalOrderDAO | get internal order accepted |
+| internalOrderDAO | modify internal order accepted |
+| internalOrderDAO | delete internal order |
+| internalOrderDAO | create new Internal Order |
 
 ### Code coverage report
 
@@ -151,6 +183,12 @@ Coverage for restockOrderDAO :
 
 Coverage for returnOrderDAO :
 ![returnOrderDAO_coverage](./coverageScreens/returnOrderDAO.test.PNG)
+
+Coverage for itemDAO :
+![itemDAO_coverage](./coverageScreens/itemDAO.test.PNG)
+
+Coverage for returnOrderDAO :
+![internalOrderDAO_coverage](./coverageScreens/internalOrderDAO.png)
 
 
 ### Loop coverage analysis

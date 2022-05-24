@@ -49,6 +49,12 @@ Version:
 |test-resultDAO|empty db|
 |test-resultDAO|create new test result|
 |test-resultDAO|modify a test result|
+|restockOrderDAO|empty db|
+|restockOrderDAO|create new restock order|
+|restockOrderDAO|modify restock order|
+|returnOrderDAO|empty db|
+|returnOrderDAO|create new return order|
+|returnOrderDAO|modify return order|
 
 
 ## Step 2: API testing
@@ -69,6 +75,19 @@ Version:
 | test-result-management | try adding two test result |
 | test-result-management | try to modify a test result |
 | test-result-management | try to delete a test result |
+| restock-order-management | delete restock order |
+| restock-order-management | adding a new restock order |
+| restock-order-management | modify restock order state |
+| restock-order-management | modify restock order skuitems |
+| restock-order-management | modify restock order transport note |
+| restock-order-management | getting restock orders list |
+| restock-order-management | getting issued restock orders list |
+| restock-order-management | getting restock order by id |
+| restock-order-management | getting restock order return items |
+| return-order-management | delete return order |
+| return-order-management | adding a new return order |
+| return-order-management | getting return orders list |
+| return-order-management | getting return order |
 
 
 # API testing - Scenarios
@@ -116,13 +135,8 @@ Report also for each of the scenarios the (one or more) API Mocha tests that cov
 
 # Coverage of Non Functional Requirements
 
-
-<Report in the following table the coverage of the Non Functional Requirements of the application - only those that can be tested with automated testing frameworks.>
-
-
-### 
-
 | Non Functional Requirement | Test name |
+| ---- | ---- |
 | NFR4 | try to modify a position with wrong data |
 |  | try to modify a position |
 |  | try to modify a position id |
