@@ -30,23 +30,23 @@ describe('test item apis', () => {
     mod1 = { "newDescription": "a new item mod" }
     mod2 = { "newPrice": 12.99 }
 
-    deleteItem(204, 1, 'a new item', 10.99, 1, 1, 1, sku);
-    deleteItem(422, 1, 'a new item', 10.99, 1, 1, -5, sku); // invalid id to delete
-    deleteItem(404, 1, 'a new item', 10.99, 1, 1, 4, sku); // item not found 
     newItem(201, 1, 'a new item', 10.99, 1, 1, sku);
     newItem(422, 2, "a new item 2", 10.99, -5, 1, sku); // invalid SKUId (negative)
     newItem(422, -2, "a new item 3", 10.99, 5, 1, sku); // invalid id (negative)
     newItem(404, 2, "a new item 3", 10.99, 3, 1, sku); // Sku not found (sku with SKUId = 2 not in the database)
     newItemWrong(503, 1, 'a new item', 10.99, 1, 1, sku); // primary key(id, supplierId) alredy exists
-    getItem(200, 1, 'a new item', 10.99, 1, 1, sku);
-    getItemWrongId(422, 1, 'a new item', 10.99, 1, 1, "a", sku); // item id wrong
-    getItemWrongId(404, 1, 'a new item', 10.99, 1, 1, 2, sku); // item not found
+    getItem(200, 1, 'a new item', 10.99, 1, 1, sku, 1);
+    getItem(422, 1, 'a new item', 10.99, 1, 1, sku, "a"); // item id wrong
+    getItem(404, 1, 'a new item', 10.99, 1, 1, sku, 2); // item not found
     getItemList(200, 1, 'a new item', 10.99, 1, 1, sku);
     modifyItem(200, 1, 'a new item', 10.99, 1, 1, mod, 1, sku);
     modifyItem(200, 1, 'a new item', 10.99, 1, 1, mod1, 1, sku); // no newPrice
     modifyItem(200, 1, 'a new item', 10.99, 1, 1, mod2, 1, sku); // no newDescription
-    modifyItemWrong(404, 1, 'a new item', 10.99, 1, 1, mod, 4, sku); //item not found
-    modifyItemWrong(422, 1, 'a new item', 10.99, 1, 1, mod, -4, sku); //invalid id
+    modifyItem(404, 1, 'a new item', 10.99, 1, 1, mod, 4, sku); //item not found
+    modifyItem(422, 1, 'a new item', 10.99, 1, 1, mod, -4, sku); //invalid id
+    deleteItem(422, 1, 'a new item', 10.99, 1, 1, -5, sku); // invalid id to delete
+    deleteItem(404, 1, 'a new item', 10.99, 1, 1, 4, sku); // item not found 
+    deleteItem(204, 1, 'a new item', 10.99, 1, 1, 1, sku);
 });
 
 function deleteItem(expectedHTTPStatus, id, description, price, SKUId, supplierId, deleteId, sku) {
@@ -77,6 +77,7 @@ function deleteItem(expectedHTTPStatus, id, description, price, SKUId, supplierI
 
 function newItem(expectedHTTPStatus, id, description, price, SKUId, supplierId, sku) {
     it('adding a new item', function (done) {
+        let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
         agent.post('/api/sku')
             .send(sku)
             .then(function (res) {
@@ -85,65 +86,59 @@ function newItem(expectedHTTPStatus, id, description, price, SKUId, supplierId, 
                     .send(sku)
                     .then(function (res) {
                         res.should.have.status(201);
+                        agent.post('/api/item')
+                            .send(item)
+                            .then(function (re) {
+                                re.should.have.status(expectedHTTPStatus);
+                                if (re == 201) {
+                                    agent.get('/api/items/' + id)
+                                        .then(function (r) {
+                                            r.should.have.status(expectedHTTPStatus);
+                                            r.body.description.should.equal(description);
+                                            r.body.price.should.equal(price);
+                                            r.body.SKUId.should.equal(SKUId);
+                                            r.body.supplierId.should.equal(supplierId);
+                                        });
+                                }
+                                done();
+                            });
                     });
             });
-        if (description !== '' || isNaN(description)
-            || price > 0 || price !== undefined || !isNaN(price) || price !== '' || supplierId > 0
-            || supplierId !== undefined || supplierId !== '' || !isNaN(supplierId) || id > 0 || id !== undefined
-            || id !== '' || !isNaN(id) || SKUId > 0 || !isNaN(SKUId) || SKUId !== '' || SKUId !== undefined) {
-            let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
-            agent.post('/api/item')
-                .send(item)
-                .then(function (res) {
-                    res.should.have.status(expectedHTTPStatus);
-                    done();
-                });
-        } else if (description == '' || !isNaN(description)
-            || price <= 0 || price == undefined || isNaN(price) || price == '' || supplierId <= 0
-            || supplierId == undefined || supplierId == '' || isNaN(supplierId) || id < 0 || id == undefined
-            || id == '' || isNaN(id) || SKUId <= 0 || isNaN(SKUId) || SKUId == '' || SKUId == undefined) {
-            agent.post('/api/item') 
-                .send(item)
-                .then(function (res) {
-                    res.should.have.status(expectedHTTPStatus);
-                    done();
-                });
-        }
-
     });
 }
 
 function newItemWrong(expectedHTTPStatus, id, description, price, SKUId, supplierId, sku) {
     it('adding a new item wrong', function (done) {
-        agent.post('/api/sku')
-            .send(sku)
-            .then(function (res) {
-                res.should.have.status(201);
-                agent.post('/api/sku')
-                    .send(sku)
-                    .then(function (res) {
-                        res.should.have.status(201);
-                    });
-            });
         let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
         let item2 = { id: 1, description: 'a new item', price: 10.99, SKUId: 2, supplierId: 1 }
-        agent.post('/api/item') 
-            .send(item)
+        agent.post('/api/sku')
+            .send(sku)
             .then(function (res) {
                 res.should.have.status(201);
-                agent.post('/api/item') 
-                    .send(item2)
-                    .then(function (res2) {
-                        res2.should.have.status(expectedHTTPStatus);
-                        done();
+                agent.post('/api/sku')
+                    .send(sku)
+                    .then(function (res) {
+                        res.should.have.status(201);
+                        agent.post('/api/item')
+                            .send(item)
+                            .then(function (res) {
+                                res.should.have.status(201);
+                                agent.post('/api/item')
+                                    .send(item2)
+                                    .then(function (res2) {
+                                        res2.should.have.status(expectedHTTPStatus);
+                                        done();
+                                    });
+                            });
                     });
             });
     });
 }
 
 
-function getItem(expectedHTTPStatus, id, description, price, SKUId, supplierId, sku) {
+function getItem(expectedHTTPStatus, id, description, price, SKUId, supplierId, sku, getId) {
     it('getting item data from the system', function (done) {
+        let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
         agent.post('/api/sku')
             .send(sku)
             .then(function (res) {
@@ -152,54 +147,32 @@ function getItem(expectedHTTPStatus, id, description, price, SKUId, supplierId, 
                     .send(sku)
                     .then(function (res) {
                         res.should.have.status(201);
-                    });
-            });
-        let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
-        agent.post('/api/item')
-            .send(item)
-            .then(function (res) {
-                res.should.have.status(201);
-                agent.get('/api/items/' + id)
-                    .then(function (r) {
-                        r.should.have.status(expectedHTTPStatus);
-                        r.body.description.should.equal(description);
-                        r.body.price.should.equal(price);
-                        r.body.SKUId.should.equal(SKUId);
-                        r.body.supplierId.should.equal(supplierId);
-                        done();
+                        agent.post('/api/item')
+                            .send(item)
+                            .then(function (res) {
+                                res.should.have.status(201);
+                                agent.get('/api/items/' + getId)
+                                    .then(function (r) {
+                                        r.should.have.status(expectedHTTPStatus);
+                                        if (r.status == 200) {
+                                            r.body.description.should.equal(description);
+                                            r.body.price.should.equal(price);
+                                            r.body.SKUId.should.equal(SKUId);
+                                            r.body.supplierId.should.equal(supplierId);
+                                        }
+                                        done();
+                                    });
+                            });
                     });
             });
     });
 }
 
-function getItemWrongId(expectedHTTPStatus, id, description, price, SKUId, supplierId, wrongId, sku) {
-    it('getting item with wrong id from the system', function (done) {
-        agent.post('/api/sku')
-            .send(sku)
-            .then(function (res) {
-                res.should.have.status(201);
-                agent.post('/api/sku')
-                    .send(sku)
-                    .then(function (res) {
-                        res.should.have.status(201);
-                    });
-            });
-        let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
-        agent.post('/api/item')
-            .send(item)
-            .then(function (res) {
-                res.should.have.status(201);
-                agent.get('/api/items/' + wrongId)
-                    .then(function (r) {
-                        r.should.have.status(expectedHTTPStatus);
-                        done();
-                    });
-            });
-    });
-}
 
 function getItemList(expectedHTTPStatus, id, description, price, SKUId, supplierId, sku) {
     it('getting item list from the system', function (done) {
+        let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
+        let item2 = { id: 2, description: 'a new item 2', price: 12.99, SKUId: 2, supplierId: 3 }
         agent.post('/api/sku')
             .send(sku)
             .then(function (res) {
@@ -208,22 +181,21 @@ function getItemList(expectedHTTPStatus, id, description, price, SKUId, supplier
                     .send(sku)
                     .then(function (res) {
                         res.should.have.status(201);
-                    });
-            });
-        let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
-        let item2 = { id: 2, description: 'a new item 2', price: 12.99, SKUId: 2, supplierId: 3 }
-        agent.post('/api/item')
-            .send(item)
-            .then(function (res) {
-                res.should.have.status(201);
-                agent.post('/api/item')
-                    .send(item2)
-                    .then(function (res2) {
-                        res2.should.have.status(201);
-                        agent.get('/api/items')
-                            .then(function (r) {
-                                r.should.have.status(expectedHTTPStatus);
-                                done();
+                        agent.post('/api/item')
+                            .send(item)
+                            .then(function (res) {
+                                res.should.have.status(201);
+                                agent.post('/api/item')
+                                    .send(item2)
+                                    .then(function (res2) {
+                                        res2.should.have.status(201);
+                                        agent.get('/api/items')
+                                            .then(function (r) {
+                                                r.should.have.status(expectedHTTPStatus);
+                                                r.body.length.should.equal(2);
+                                                done();
+                                            });
+                                    });
                             });
                     });
             });
@@ -232,6 +204,7 @@ function getItemList(expectedHTTPStatus, id, description, price, SKUId, supplier
 
 function modifyItem(expectedHTTPStatus, id, description, price, SKUId, supplierId, mod, modifyId, sku) {
     it('modify item data from the system', function (done) {
+        let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
         agent.post('/api/sku')
             .send(sku)
             .then(function (res) {
@@ -240,98 +213,37 @@ function modifyItem(expectedHTTPStatus, id, description, price, SKUId, supplierI
                     .send(sku)
                     .then(function (res) {
                         res.should.have.status(201);
-                    });
-            });
-        let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
-        if (mod.newDescription == undefined) {
-            agent.post('/api/item')
-                .send(item)
-                .then(function (res1) {
-                    res1.should.have.status(201);
-                    agent.put('/api/item/' + modifyId)
-                        .send(mod)
-                        .then(function (res2) {
-                            res2.should.have.status(200);
-                            agent.get('/api/items/' + modifyId)
-                                .then(function (r) {
-                                    r.should.have.status(expectedHTTPStatus);
-                                    r.body.price.should.equal(mod.newPrice);
-                                    r.body.SKUId.should.equal(SKUId);
-                                    r.body.supplierId.should.equal(supplierId);
-                                    done();
-                                });
-                        });
-                });
-
-        }
-        else if (mod.newPrice == undefined) {
-            agent.post('/api/item')
-                .send(item)
-                .then(function (res1) {
-                    res1.should.have.status(201);
-                    agent.put('/api/item/' + modifyId)
-                        .send(mod)
-                        .then(function (res3) {
-                            res3.should.have.status(200);
-                            agent.get('/api/items/' + modifyId)
-                                .then(function (r) {
-                                    r.should.have.status(expectedHTTPStatus);
-                                    r.body.description.should.equal(mod.newDescription);
-                                    r.body.SKUId.should.equal(SKUId);
-                                    r.body.supplierId.should.equal(supplierId);
-                                    done();
-                                });
-                        });
-                });
-        }
-        else {
-            agent.post('/api/item')
-                .send(item)
-                .then(function (res1) {
-                    res1.should.have.status(201);
-                    agent.put('/api/item/' + modifyId)
-                        .send(mod)
-                        .then(function (res2) {
-                            res2.should.have.status(200);
-                            agent.get('/api/items/' + modifyId)
-                                .then(function (r) {
-                                    r.should.have.status(expectedHTTPStatus);
-                                    r.body.description.should.equal(mod.newDescription);
-                                    r.body.price.should.equal(mod.newPrice);
-                                    r.body.SKUId.should.equal(SKUId);
-                                    r.body.supplierId.should.equal(supplierId);
-                                    done();
-                                });
-                        });
-                });
-        }
-    });
-}
-
-
-function modifyItemWrong(expectedHTTPStatus, id, description, price, SKUId, supplierId, mod, modifyId, sku) {
-    it('modify item wrong from the system', function (done) {
-        agent.post('/api/sku')
-            .send(sku)
-            .then(function (res) {
-                res.should.have.status(201);
-                agent.post('/api/sku')
-                    .send(sku)
-                    .then(function (res) {
-                        res.should.have.status(201);
-                    });
-            });
-        let item = { id: id, description: description, price: price, SKUId: SKUId, supplierId: supplierId }
-        agent.post('/api/item')
-            .send(item)
-            .then(function (res) {
-                res.should.have.status(201);
-                agent.put('/api/item/' + modifyId)
-                    .send(mod)
-                    .then(function (res2) {
-                        res2.should.have.status(expectedHTTPStatus);
-                        done();
+                        agent.post('/api/item')
+                            .send(item)
+                            .then(function (res1) {
+                                res1.should.have.status(201);
+                                agent.put('/api/item/' + modifyId)
+                                    .send(mod)
+                                    .then(function (res2) {
+                                        res2.should.have.status(expectedHTTPStatus);
+                                        if (res2.status == 200) {
+                                            agent.get('/api/items/' + modifyId)
+                                                .then(function (r) {
+                                                    r.should.have.status(200);
+                                                    if (mod.newDescription == undefined) {
+                                                        r.body.price.should.equal(mod.newPrice);
+                                                    }
+                                                    else if (mod.newPrice == undefined) {
+                                                        r.body.description.should.equal(mod.newDescription);
+                                                    }
+                                                    else {
+                                                        r.body.description.should.equal(mod.newDescription);
+                                                        r.body.price.should.equal(mod.newPrice);
+                                                    }
+                                                    r.body.SKUId.should.equal(SKUId);
+                                                    r.body.supplierId.should.equal(supplierId);
+                                                });
+                                        }
+                                        done();
+                                    });
+                            });
                     });
             });
     });
 }
+

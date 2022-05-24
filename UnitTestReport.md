@@ -22,75 +22,135 @@ Version:
     class and method name that contains the test case>
     <Jest tests  must be in code/server/unit_test  >
 
- ### **Class *class_name* - method *name***
+    Since the units under test are dummy, i.e. all the logic is in the management classes, tests done on these classes are really simple.
 
+### **Class *positionDAO* - method *createNewPositionWH***
 
-
-**Criteria for method *name*:**
+**Criteria for method *createNewPositionWH*:**
 	
 
- - 
- - 
+ - ID already existing or not in DB
 
-
-
-
-
-**Predicates for method *name*:**
+**Predicates for method *ncreateNewPositionWH*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
-
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
-
-
+| ID | ID already exists |
+|| ID does not exists yet |
 
 **Combination of predicates**:
 
 
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
+| ID | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+| not exists | V | try to insert a new position | create new position |
+| exists | I | try to insert a new position and than a new one with same id | create new position |
+
+### **Class *test-descriptorDAO* - method *createTestDescriptor***
+
+**Criteria for method *createTestDescriptor*:**
+	
+
+ - ID already existing or not in DB
+
+**Predicates for method *createTestDescriptor*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| ID | ID already exists |
+|| ID does not exists yet |
+
+**Combination of predicates**:
 
 
+| ID | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+| not exists | V | try to insert a new test descriptor | create new test descriptor |
+| exists | I | try to insert a new test descriptor and than a new one with same id | create new test descriptor |
+
+### **Class *test-resultDAO* - method *createTestResultByRfid***
+
+**Criteria for method *createTestResultByRfid*:**
+	
+
+ - ID already existing or not in DB
+
+**Predicates for method *createTestResultByRfid*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| ID | ID already exists |
+|| ID does not exists yet |
+
+**Combination of predicates**:
+
+
+| ID | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+| not exists | V | try to insert a new test result | create new test descriptor |
+| exists | I | try to insert a new test result and than a new one with same id | create new test result |
+
+### **Class *restockOrderDAO* - method *storeRestockOrder***
+
+**Criteria for method *createTestDescriptor*:**
+	
+
+ - ID already existing or not in DB
+
+**Predicates for method *createTestDescriptor*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| ID | ID already exists |
+|| ID does not exists yet |
+
+**Combination of predicates**:
+
+
+| ID | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+| not exists | V | try to insert a new restock order | create new restock order |
+| exists | I | try to insert a new restock order and than a new one with same id | create new restock order |
 
 
 # White Box Unit Tests
 
 ### Test cases definition
-    
-    
-    <Report here all the created Jest test cases, and the units/classes under test >
-    <For traceability write the class and method name that contains the test case>
-
 
 | Unit name | Jest test case |
 |--|--|
-|||
-|||
-||||
+|positionDAO|empty db|
+|positionDAO|create new position|
+|positionDAO|modify position id|
+|test-descriptorDAO|empty db|
+|test-descriptorDAO|create new test descriptor|
+|test-descriptorDAO|Modify a test descriptor|
+|test-resultDAO|empty db|
+|test-resultDAO|create new test result|
+|test-resultDAO|modify a test result|
+|restockOrderDAO|empty db|
+|restockOrderDAO|create new restock order|
+|restockOrderDAO|modify restock order|
+|returnOrderDAO|empty db|
+|returnOrderDAO|create new return order|
+|returnOrderDAO|modify return order|
 
 ### Code coverage report
 
-    <Add here the screenshot report of the statement and branch coverage obtained using
-    the coverage tool. >
+Coverage for positionDAO :
+![positionDAO_coverage](./coverageScreens/positionDAO.test.png)
+
+Coverage for test-descriptorDAO :
+![test-descriptorDAO_coverage](./coverageScreens/test-descriptorDAO.test.png)
+
+Coverage for test-resultDAO :
+![test-resultDAO_coverage](./coverageScreens/test-resultDAO.test.png)
+
+Coverage for restockOrderDAO :
+![restockOrderDAO_coverage](./coverageScreens/restockOrderDAO.test.PNG)
+
+Coverage for returnOrderDAO :
+![returnOrderDAO_coverage](./coverageScreens/returnOrderDAO.test.PNG)
 
 
 ### Loop coverage analysis

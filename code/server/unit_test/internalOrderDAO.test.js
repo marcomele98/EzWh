@@ -18,11 +18,11 @@ describe('testIoDao', () => {
     });
 
     testNewIO(data);
-    testDeleteIO(data);
     testModifyIOacc(data);
     testModifyIOcom(data);
     testGetIOissued(data);
     testGetIOaccepted(data);
+    testDeleteIO(data);
 });
 
 function testNewIO(data) {

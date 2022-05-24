@@ -45,7 +45,12 @@ exports.setAvailable = (rfid, available) => {
 }
 exports.deleteTableContent = () => {
     const sql = 'DELETE FROM skuItem'
-    return db.run(sql);
+     db.run(sql);
+}
+
+exports.resetTable = () => {
+    const sql = 'DELETE FROM sqlite_sequence WHERE NAME = skuItem'
+    db.run(sql);
 }
 
 this.newTableSkuItem();

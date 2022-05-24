@@ -9,6 +9,7 @@ const dbRES = require('../database/test-resultDAO');
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat);
 
+
 class RestockOrderManagement {
 
     constructor() { }
@@ -24,6 +25,7 @@ class RestockOrderManagement {
             restockOrder.products === '' ||
             restockOrder.supplierId === "" ||
             restockOrder.supplierId == 0 ||
+            restockOrder.supplierId <= 0 ||
             isNaN(restockOrder.supplierId) ||
             !dayjs(restockOrder.issueDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()) {
             return res.status(422).end();
@@ -45,7 +47,7 @@ class RestockOrderManagement {
         try {
             await db.storeRestockOrder(restockOrder);
             const RE = await db.getLastId();
-            db.storeProducts(restockOrder.products, RE["MAX(id)"]);
+            await db.storeProducts(restockOrder.products, RE["MAX(id)"]);
             return res.status(201).end();
         }
         catch (err) {
@@ -164,13 +166,23 @@ class RestockOrderManagement {
     async getListSKUItemsToReturn(req, res) {
         const id = req.params.id;
         if (id == undefined || id == '' || isNaN(id) || id <= 0) {
+            
             return res.status(422).end();
         }
         try {
+            
             const restockOrder = await db.getRestockOrderById(id);
+            console.log(restockOrder.id);
+            console.log(restockOrder.state);
+            console.log(await db.getListSKURE(restockOrder.id));
+            console.log(await db.getListSKURE(restockOrder.id));
+            console.log(await db.getListSKURE(restockOrder.id));
+            console.log(await db.getListSKURE(restockOrder.id));
+            console.log(await db.getListSKURE(restockOrder.id));
             if (restockOrder == undefined || restockOrder.state != 'COMPLETEDRETURN') {
                 return res.status(404).end();
             }
+            console.log('hello1');
             const SKUItems = await db.getListSKURE(id);
             var count = 0;
             const SKUItemsReturn = [];
@@ -192,7 +204,7 @@ class RestockOrderManagement {
     async modifyStateRestockOrderById(req, res) {
         const id = req.params.id;
         const data = req.body;
-        if (id == undefined || id == '' || isNaN(id)) {
+        if (id == undefined || id == '' || isNaN(id) || !['ISSUED', 'DELIVERY', 'DELIVERED', 'TESTED', 'COMPLETEDRETURN', 'COMPLETED'].includes(data.newState)) {
             return res.status(422).end();
         }
         const RE = await db.getRestockOrderById(id);
@@ -214,19 +226,31 @@ class RestockOrderManagement {
         if (id == undefined || id == '' || isNaN(id)) {
             return res.status(422).end();
         }
+
+        for (var i = 0; i < data.skuItems.length; i++) {
+            if (data.skuItems[i].SKUId == undefined || data.skuItems[i].SKUId <= 0 
+                || data.skuItems[i].SKUId == '' || isNaN(data.skuItems[i].SKUId)
+                || data.skuItems[i].rfid == undefined || data.skuItems[i].rfid == '' || data.skuItems[i].rfid <= 0 
+                || data.skuItems[i].rfid.length != 32 || isNaN(data.skuItems[i].rfid)) {
+                return res.status(422).end();
+            }
+            
+        }
+
         const RE = await db.getRestockOrderById(id);
         if (RE != undefined) {
             if (RE.state != 'DELIVERED') {
                 return res.status(422).end();
             }
             try {
-                db.storeSkuRE(data, id);
-                //dbSKUitem.storeSkuREItem(data,deliveryDate);
+                console.log(id);
+                await db.storeSkuRE(data, id);
                 return res.status(200).json();
             } catch (err) {
                 res.status(503).end();
             }
         } else {
+            console.log('eskere1');
             return res.status(404).end();
         }
     }
@@ -251,6 +275,7 @@ class RestockOrderManagement {
                 res.status(503).end();
             }
         } else {
+            console.log('eskere');
             return res.status(404).end();
         }
     }
@@ -261,7 +286,10 @@ class RestockOrderManagement {
             return res.status(422).end();
         }
         try {
-            db.deleteRestockOrderById(id);
+            if(await db.getRestockOrderById(id) === undefined){
+                res.status(404).end();
+            }
+            await db.deleteRestockOrderById(id);
             res.status(204).end();
         } catch (err) {
             res.status(500).end();

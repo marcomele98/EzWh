@@ -85,7 +85,7 @@ app.post('/api/deliveryEmployeeSessions', async (req, res) => {
 });
 
 app.post('/api/logout', async (req, res) => {
-  return res.status(200).end();
+  return user.logout(req,res);
 });
 
 app.put('/api/users/:username', async (req, res) => {

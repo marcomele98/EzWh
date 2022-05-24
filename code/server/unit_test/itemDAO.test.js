@@ -19,9 +19,9 @@ describe('testItemDao', () => {
     });
 
     testNewItem(data);
-    testDeleteItem(data);
     testModifyItem(data);
     testGetSkuBySupplier(data);
+    testDeleteItem(data);
 });
 
 function testNewItem(data) {

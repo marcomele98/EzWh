@@ -11,11 +11,39 @@ class ReturnOrderManagement {
 
     async createNewReturnOrder(req, res) {
         let returnOrder = req.body;
-        console.log(returnOrder);
-        if (returnOrder === undefined || returnOrder.returnDate === undefined || returnOrder.products === undefined || returnOrder.restockOrderId === undefined
-            || returnOrder == '' || returnOrder.returnDate === '' || returnOrder.products === '' || returnOrder.restockOrderId === "" || returnOrder.restockOrderId == 0|| isNaN(returnOrder.restockOrderId) || 
+        if (returnOrder === undefined || 
+            returnOrder.returnDate === undefined || 
+            returnOrder.products === undefined || 
+            returnOrder.restockOrderId === undefined || 
+            returnOrder == '' || 
+            returnOrder.returnDate === '' || 
+            returnOrder.products === '' || 
+            returnOrder.restockOrderId === "" || 
+            returnOrder.restockOrderId <= 0|| 
+            isNaN(returnOrder.restockOrderId) || 
              !dayjs(returnOrder.returnDate, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()) {
                 return res.status(422).end();
+        }
+        for (var i = 0; i < returnOrder.products.length; i++) {
+            if (
+                returnOrder.products[i].SKUId == undefined || 
+                returnOrder.products[i].SKUId <= 0 || 
+                returnOrder.products[i].SKUId == '' || 
+                isNaN(returnOrder.products[i].SKUId) ||
+                !isNaN(returnOrder.products[i].description) || 
+                returnOrder.products[i].description == undefined || 
+                returnOrder.products[i].description == '' || 
+                returnOrder.products[i].price <= 0 ||
+                returnOrder.products[i].price == undefined || 
+                returnOrder.products[i].price == '' || 
+                isNaN(returnOrder.products[i].price) ||
+                returnOrder.products[i].RFID == undefined ||
+                returnOrder.products[i].RFID <= 0 ||
+                returnOrder.products[i].RFID.length != 32 ||
+                returnOrder.products[i].RFID == '' 
+            ) {
+                return res.status(422).end();
+            }
         }
         try {
             await db.storeReturnOrder(returnOrder);
@@ -45,6 +73,7 @@ class ReturnOrderManagement {
     async getReturnOrderById(req, res) {
         const id = req.params.id;
         if (id == undefined || id == '' || isNaN(id) || id <= 0) {
+            
             return res.status(422).end();
         }
         try {
@@ -68,10 +97,13 @@ class ReturnOrderManagement {
 
     async deleteReturnOrderById(req, res) {
         const id = req.params.id;
-        if (id == undefined || id == '' || isNaN(id)) {
+        if (id == undefined || id == '' || isNaN(id) || id <= 0) {
             return res.status(422).end();
         }
         try {
+            if(await db.getReturnOrderById(id) === undefined){
+                res.status(404).end();
+            }
             db.deleteReturnOrderById(id);
             res.status(204).end();
         } catch (err) {
