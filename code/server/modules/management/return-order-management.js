@@ -2,6 +2,7 @@
 
 const dayjs = require('dayjs');
 const db = require('../database/returnOrderDAO');
+const resDAO = require('../database/restockOrderDAO');
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat);
 
@@ -45,6 +46,12 @@ class ReturnOrderManagement {
                 return res.status(422).end();
             }
         }
+
+        const restockOrder = await resDAO.getRestockOrderById(returnOrder.restockOrderId);
+        if(restockOrder === undefined){
+            return res.status(404).end();
+        }
+
         try {
             await db.storeReturnOrder(returnOrder);
             const RET = await db.getLastId();

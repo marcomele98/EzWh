@@ -92,12 +92,12 @@ Version:
 
 ### **Class *restockOrderDAO* - method *storeRestockOrder***
 
-**Criteria for method *createTestDescriptor*:**
+**Criteria for method *storeRestockOrder*:**
 	
 
  - ID already existing or not in DB
 
-**Predicates for method *createTestDescriptor*:**
+**Predicates for method *storeRestockOrder*:**
 
 | Criteria | Predicate |
 | -------- | --------- |

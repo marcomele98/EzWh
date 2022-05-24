@@ -1,4 +1,5 @@
 const returnOrderDAO = require('../modules/database/returnOrderDAO');
+const restockOrderDAO = require('../modules/database/restockOrderDAO');
 
 describe('testDao', () => {
     beforeEach(async () => {
@@ -12,16 +13,26 @@ describe('testDao', () => {
         "restockOrderId" : 1
     };
 
+    restockOrderinput = {
+        "issueDate":"2021/11/29 09:33",
+        "products": [{"SKUId":12,"description":"a product","price":10.99,"qty":30},
+                    {"SKUId":180,"description":"another product","price":11.99,"qty":20}],
+        "supplierId" : 1
+    };
+
     test('empty db', async () => {
         var res = await returnOrderDAO.getListReturnOrders();
         expect(res.length).toStrictEqual(0);
     });
 
-    testNewReturnOrder(data);
+    testNewReturnOrder(data,restockOrderinput);
 });
 
-function testNewReturnOrder(data) {
+function testNewReturnOrder(data,restockOrderinput) {
     test('create new return order', async () => {
+
+        await restockOrderDAO.storeRestockOrder(restockOrderinput);
+
         await returnOrderDAO.storeReturnOrder(data);
         const RET = await returnOrderDAO.getLastId();
         await returnOrderDAO.storeProductRET(data.products, RET["MAX(id)"]);
