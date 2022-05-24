@@ -70,10 +70,10 @@ describe('test restock order api', () => {
 
     modSkuItems = {
         "skuItems" : [{"SKUId":12,"rfid":"12345678901234567890123456789016"},
-        {"SKUId":12,"rfid":"12345678901234567890123456789017"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789020"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789021"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789022"}]
+        {"SKUId":13,"rfid":"12345678901234567890123456789017"},
+        {"SKUId":14,"rfid":"12345678901234567890123456789020"},
+        {"SKUId":12,"rfid":"12345678901234567890123456789021"},
+        {"SKUId":15,"rfid":"12345678901234567890123456789022"}]
     }
 
     modSkuItems1 = {
@@ -114,14 +114,17 @@ describe('test restock order api', () => {
     modifyRestockOrderState(200, input, modState, 1); // delivered
     modifyRestockOrderState(422, input, modState1, 1); // wrong state
     modifyRestockOrderState(404, input, modState, 2); // restockOrder not found
+    modifyRestockOrderState(422, input, modState, 'a'); // invalid id
 
     modifyRestockOrderSkuItems(200, input, modSkuItems, 1); // added sku items
     modifyRestockOrderSkuItems(422, input, modSkuItems1, 1); // invalid SkuID
     modifyRestockOrderSkuItems(422, input, modSkuItems2, 1); // invalid rfid too long
+    modifyRestockOrderSkuItems(422, input, modSkuItems, 'a'); // invalid id
     modifyRestockOrderSkuItems(404, input, modSkuItems, 2); // restockOrder not found
 
     modifyRestockOrderTransportNote(200, input, modTransportNote, 1); // correct deliveryDate
     modifyRestockOrderTransportNote(422, input, modTransportNote1, 1); // deliveryDate before issueDate
+    modifyRestockOrderTransportNote(422, input, modTransportNote,'a'); // invalid id
     modifyRestockOrderTransportNote(404, input, modTransportNote, 2); // restockOrder not found
 
     getListRestockOrders(200, input); // list restock orders
@@ -130,6 +133,7 @@ describe('test restock order api', () => {
     getRestockOrder(404, input, modState, 2); // restock order not found
     getRestockOrder(422, input, modState, "a"); // invalid id
     getRestockOrderReturnItems(200, input, modSkuItems, 1);
+    getRestockOrderReturnItems(422, input, modSkuItems, 'a'); // invalid id
 
 });
 
@@ -201,9 +205,7 @@ function modifyRestockOrderSkuItems(expectedHTTPStatus, input, mod, id) {
             .then(function (res) {
                 res.should.have.status(201);
                 agent.put('/api/restockOrder/' + id)
-                    .send({
-                        "newState":"DELIVERED"
-                    })
+                    .send({"newState":"DELIVERED"})
                     .then(function (ren) {
                         if (ren.status == 200) {
                         agent.put('/api/restockOrder/' + id + '/skuItems')
@@ -221,7 +223,7 @@ function modifyRestockOrderSkuItems(expectedHTTPStatus, input, mod, id) {
                             });
                         }
                         else{
-                            re.should.have.status(404);
+                            ren.should.have.status(expectedHTTPStatus);
                             done();
                         }
                     });
@@ -230,23 +232,33 @@ function modifyRestockOrderSkuItems(expectedHTTPStatus, input, mod, id) {
 }
 
 function modifyRestockOrderTransportNote(expectedHTTPStatus, input, mod, id) {
-    it('modify restock order skuitems', function (done) {
+    it('modify restock order transport note', function (done) {
         agent.post('/api/restockOrder')
             .send(input)
             .then(function (res) {
                 res.should.have.status(201);
-                agent.put('/api/restockOrder/' + id + '/transportNote')
-                    .send(mod)
-                    .then(function (re) {
-                        re.should.have.status(expectedHTTPStatus)
-                        if (re.status == 200) {
-                            agent.get('/api/restockOrders/' + id)
-                                .then(function (r1) {
-                                    r1.should.have.status(200);
-                                    r1.body.state.should.equal(mod.transportNote);
-                                })
+                agent.put('/api/restockOrder/' + id)
+                    .send({"newState":"DELIVERY"})
+                    .then(function (ren) {
+                        if (ren.status == 200) {
+                        agent.put('/api/restockOrder/' + id + '/transportNote')
+                            .send(mod)
+                            .then(function (re) {
+                                re.should.have.status(expectedHTTPStatus)
+                                if (re.status == 200) {
+                                    agent.get('/api/restockOrders/' + id)
+                                        .then(function (r1) {
+                                            r1.should.have.status(200);
+                                            r1.body.state.should.equal(mod.transportNote);
+                                        });
+                                }
+                                done();
+                            });
                         }
-                        done();
+                        else{
+                            ren.should.have.status(expectedHTTPStatus);
+                            done();
+                        }
                     });
             });
     });
@@ -283,7 +295,7 @@ function getListRestockOrdersIssued(expectedHTTPStatus, input, mod) {
                     .send(input)
                     .then(function (re) {
                         re.should.have.status(201);
-                        agent.put('/api/restockOrder/' + id)
+                        agent.put('/api/restockOrder/1')
                             .send(mod)
                             .then(function (r) {
                                 r.should.have.status(200);
@@ -292,8 +304,8 @@ function getListRestockOrdersIssued(expectedHTTPStatus, input, mod) {
                                         r1.should.have.status(expectedHTTPStatus);
                                         r1.body.length.should.equal(1);
                                         done();
-                                    })
-                            })
+                                    });
+                            });
                     });
             });
     });
@@ -333,18 +345,55 @@ function getRestockOrderReturnItems(expectedHTTPStatus, input, mod, id) {
             .send(input)
             .then(function (res) {
                 res.should.have.status(201);
-                agent.put('/api/restockOrder/' + id + '/skuItems')
-                    .send(mod)
-                    .then(function (re) {
-                        re.should.have.status(expectedHTTPStatus)
-                        if (re.status == 200) {
-                            agent.get('/api/restockOrders/' + id + '/returnItems')
-                                .then(function (r1) {
-                                    r1.should.have.status(200);
-                                    r1.body.state.should.equal(mod.skuItems);
-                                })
+                agent.put('/api/restockOrder/' + id)
+                    .send({"newState":"DELIVERED"})
+                    .then(function (ren) {
+                        if (ren.status == 200) {
+                        agent.put('/api/restockOrder/' + id + '/skuItems')
+                            .send(mod)
+                            .then(function (re2) {
+                                if (re2.status == 200) {
+                                        agent.get('/api/restockOrders/' + id)
+                                                    .then(function (rtest) {
+                                                        console.log('its checking1 enter and its ' + id);
+                                                        console.log(rtest.body.skuItems);
+                                                        rtest.should.have.status(200);
+                                                        
+                                                    })
+                                    agent.put('/api/restockOrder/' + id)
+                                        .send({"newState":"COMPLETEDRETURN"})
+                                        .then(function (re) {
+                                            
+                                            agent.get('/api/restockOrders/' + id)
+                                                    .then(function (rtest) {
+                                                        console.log('its checking2 enter and its ' + id);
+                                                        console.log(rtest.body.skuItems);
+                                                        rtest.should.have.status(200);
+                                                        
+                                                    })
+
+
+                                            if (re.status == 200) {
+                                                console.log('its entering and its ' + id);
+                                                agent.get('/api/restockOrders/' + id + '/returnItems')
+                                                    .then(function (r1) {
+                                                        console.log('its entered');
+                                                        r1.should.have.status(200);
+                                                    })
+                                            }
+                                        done();
+                                    });
+                                }
+                                else{
+                                    re2.should.have.status(expectedHTTPStatus);
+                                    done();
+                                }
+                            });
                         }
-                        done();
+                        else{
+                            ren.should.have.status(expectedHTTPStatus);
+                            done();
+                        }
                     });
             });
     });

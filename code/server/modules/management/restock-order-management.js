@@ -47,7 +47,7 @@ class RestockOrderManagement {
         try {
             await db.storeRestockOrder(restockOrder);
             const RE = await db.getLastId();
-            db.storeProducts(restockOrder.products, RE["MAX(id)"]);
+            await db.storeProducts(restockOrder.products, RE["MAX(id)"]);
             return res.status(201).end();
         }
         catch (err) {
@@ -166,13 +166,23 @@ class RestockOrderManagement {
     async getListSKUItemsToReturn(req, res) {
         const id = req.params.id;
         if (id == undefined || id == '' || isNaN(id) || id <= 0) {
+            
             return res.status(422).end();
         }
         try {
+            
             const restockOrder = await db.getRestockOrderById(id);
+            console.log(restockOrder.id);
+            console.log(restockOrder.state);
+            console.log(await db.getListSKURE(restockOrder.id));
+            console.log(await db.getListSKURE(restockOrder.id));
+            console.log(await db.getListSKURE(restockOrder.id));
+            console.log(await db.getListSKURE(restockOrder.id));
+            console.log(await db.getListSKURE(restockOrder.id));
             if (restockOrder == undefined || restockOrder.state != 'COMPLETEDRETURN') {
                 return res.status(404).end();
             }
+            console.log('hello1');
             const SKUItems = await db.getListSKURE(id);
             var count = 0;
             const SKUItemsReturn = [];
@@ -224,6 +234,7 @@ class RestockOrderManagement {
                 || data.skuItems[i].rfid.length != 32 || isNaN(data.skuItems[i].rfid)) {
                 return res.status(422).end();
             }
+            
         }
 
         const RE = await db.getRestockOrderById(id);
@@ -232,8 +243,8 @@ class RestockOrderManagement {
                 return res.status(422).end();
             }
             try {
-                db.storeSkuRE(data, id);
-                //dbSKUitem.storeSkuREItem(data,deliveryDate);
+                console.log(id);
+                await db.storeSkuRE(data, id);
                 return res.status(200).json();
             } catch (err) {
                 res.status(503).end();
@@ -276,7 +287,7 @@ class RestockOrderManagement {
             if(await db.getRestockOrderById(id) === undefined){
                 res.status(404).end();
             }
-            db.deleteRestockOrderById(id);
+            await db.deleteRestockOrderById(id);
             res.status(204).end();
         } catch (err) {
             res.status(500).end();
