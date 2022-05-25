@@ -415,6 +415,57 @@ Version:
 
 
 
+### **Class *internalOrderDAO* - method *storeInternalOrder***
+
+**Criteria for method *storeInternalOrder*:**
+	
+
+
+**Predicates for method *storeInternalOrder*:**
+
+
+**Combination of predicates**:
+
+### **Class *internalOrderDAO* - method *modifyStateInternalOrderById***
+
+**Criteria for method *modifyStateInternalOrderById*:**
+	
+
+
+**Predicates for method *modifyStateInternalOrderById*:**
+
+
+**Combination of predicates**:
+
+### **Class *internalOrderDAO* - method *getListIssuedInternalOrders***
+
+**Criteria for method *getListIssuedInternalOrders*:**
+	
+
+
+**Predicates for method *getListIssuedInternalOrders*:**
+
+
+**Combination of predicates**:
+
+
+### **Class *internalOrderDAO* - method *getListAcceptedInternalOrders***
+
+**Criteria for method *getListAcceptedInternalOrders*:**
+	
+
+
+**Predicates for method *getListAcceptedInternalOrders*:**
+
+
+**Combination of predicates**:
+
+
+
+
+
+
+
 # White Box Unit Tests
 
 ### Test cases definition
