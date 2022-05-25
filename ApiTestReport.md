@@ -270,6 +270,9 @@ Report also for each of the scenarios the (one or more) API Mocha tests that cov
 |  | try adding a new test result |
 |  | try to modify a test result |
 |  | try to delete a test result |
+|  | try to add a new sku item |
+|  | update sku item info |
 | NFR9 | try adding a new test result |
 |  | try to modify a test result |
 |  | try to delete a test result |
+  
