@@ -60,7 +60,7 @@ describe('test return order api', () => {
     deleteReturnOrder(422, input, -2, restockOrderinput); // invalid id
     
     newReturnOrder(201, input, restockOrderinput); // returnOrder created
-    newReturnOrder(422, badInput1, restockOrderinput); // issue date undefined
+    newReturnOrder(422, badInput1, restockOrderinput); // return date undefined
     newReturnOrder(422, badInput2, restockOrderinput); // restockOrderId negative
     newReturnOrder(404, badInput3, restockOrderinput); // restockOrder not found
     
