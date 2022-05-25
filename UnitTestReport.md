@@ -95,44 +95,117 @@ Version:
 **Criteria for method *storeRestockOrder*:**
 	
 
- - ID already existing or not in DB
+ - All parameters valid
+ - Restock Order not already in DB
 
 **Predicates for method *storeRestockOrder*:**
 
-| Criteria | Predicate              |
-| -------- | ---------------------- |
-| ID       | ID already exists      |
-|          | ID does not exists yet |
+| Criteria | Predicate                    |
+| -------- | ---------------------------- |
+| 1        | Restock Order parameters are valid     |
+|          | Some parameters are not valid |
+| 2        | Products parameters are valid     |
+|          | Some parameters are not valid |
+| 3        | Restock Order is not already present in the Database |
 
 **Combination of predicates**:
+| Criteria 1                | Criteria 2               | Criteria 3               |  Valid / Invalid | Description of the test case                  | Jest test case                                                                                        |
+| ------------------------- | ------------------------ | --------------- | --------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Restock Order parameters are valid      | Products parameters are valid      | Restock Order is not present in DB | V               | A new Restock Order is added to DB    | Empty DB <br>  storeRestockOrder(body) --> storeProducts(body.products,id) <br> res = getRestockOrderById(ID) --> resprod = getListProducts(ID) --> if(parameters.body = restockOrder.body) --> if(body.products = restockOrder.products) --> OK |  |
+| Restock Order parameters are not valid      | Products parameters are valid      | Restock Order is not present in DB | I               | Error occours   | Empty DB <br>    storeRestockOrder(body) --> error |  |
+| Restock Order parameters are valid      | Products parameters are not valid      | Restock Order is not present in DB | I               | Error occours    | Empty DB <br>   storeProducts(body.products,id) --> error |  |
 
 
-| ID         | Valid / Invalid | Description of the test case                                      | Jest test case           |
-| ---------- | --------------- | ----------------------------------------------------------------- | ------------------------ |
-| not exists | V               | try to insert a new restock order                                 | create new restock order |
-| exists     | I               | try to insert a new restock order and than a new one with same id | create new restock order |
+### **Class *restockOrderDAO* - method *modifyStateRestockOrderById***
+
+**Criteria for method *modifyStateRestockOrderById*:**
+	
+
+ - Restock Order must be present in Database
+ - Parameters must be valid
+
+**Predicates for method *modifyStateRestockOrderById*:**
+
+| Criteria | Predicate                    |
+| -------- | ---------------------------- |
+| 1        | Parameters of newState to put are valid   |
+|          | Some parameters to put are not valid |
+| 2        | Restock Order is already present in the Database |
+
+**Combination of predicates**:
+| Criteria 1                | Criteria 2               |  Valid / Invalid | Description of the test case                  | Jest test case                                                                                        |
+| ------------------------- | ------------------------ | --------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Parameters of newState to put are valid      | Restock Order is present in DB | V               | A new Restock Order State is changed in DB    | Empty DB <br>  modifyStateRestockOrderById(body, ID) <br> res = getRestockOrderById(ID) --> if(parameters.body = restockOrder.body) --> OK |  |
+| Parameters of newState to put are valid      | Restock Order is present in DB | I               | Error occours   | Empty DB <br>    modifyStateRestockOrderById(body, ID) --> error |  |
+
+### **Class *restockOrderDAO* - method *storeSkuRE***
+
+**Criteria for method *storeSkuRE*:**
+	
+
+ - Restock Order must be present in Database
+ - Parameters must be valid
+
+**Predicates for method *storeSkuRE*:**
+
+| Criteria | Predicate                    |
+| -------- | ---------------------------- |
+| 1        | Parameters of SKUs to put are valid   |
+|          | Some parameters to put are not valid |
+| 2        | Restock Order is already present in the Database |
+
+**Combination of predicates**:
+| Criteria 1                | Criteria 2               |  Valid / Invalid | Description of the test case                  | Jest test case                                                                                        |
+| ------------------------- | ------------------------ | --------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Parameters of SKUs to put are valid      | Restock Order is present in DB | V               | New SKUItems is added to DB and relate to Restock Order   | Empty DB <br>  storeSkuRE(body, ID) <br> res = getRestockOrderById(ID) --> if(parameters.body = restockOrder.body) --> OK |  |
+| Parameters of SKUs to put are valid      | Restock Order is present in DB | I               | Error occours   | Empty DB <br>    storeSkuRE(body, ID) --> error |  |
+
+### **Class *restockOrderDAO* - method *storeTransportNote***
+
+**Criteria for method *storeTransportNote*:**
+	
+ - Restock Order must be present in Database
+ - Parameters must be valid
+
+**Predicates for method *storeTransportNote*:**
+
+| Criteria | Predicate                    |
+| -------- | ---------------------------- |
+| 1        | Parameters of Transport Note to put are valid   |
+|          | Some parameters to put are not valid |
+| 2        | Restock Order is already present in the Database |
+
+**Combination of predicates**:
+| Criteria 1                | Criteria 2               |  Valid / Invalid | Description of the test case                  | Jest test case                                                                                        |
+| ------------------------- | ------------------------ | --------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Parameters of Transport Note to put are valid      | Restock Order is present in DB | V               | New Transport Note is added to DB and relates to Restock Order    | Empty DB <br>  storeTransportNote(body, ID) <br> res = getRestockOrderById(ID) --> if(parameters.body = restockOrder.body) --> OK |  |
+| Parameters of Transport Note to put are valid      | Restock Order is present in DB | I               | Error occours   | Empty DB <br>    storeTransportNote(body, ID) --> error |  |
 
 ### **Class *returnOrderDAO* - method *storeReturnOrder***
 
 **Criteria for method *storeReturnOrder*:**
 	
 
- - ID already existing or not in DB
+ - All parameters valid
+ - Restock Order not already in DB
 
 **Predicates for method *storeReturnOrder*:**
 
-| Criteria | Predicate              |
-| -------- | ---------------------- |
-| ID       | ID already exists      |
-|          | ID does not exists yet |
+| Criteria | Predicate                    |
+| -------- | ---------------------------- |
+| 1        | Return Order parameters are valid     |
+|          | Some parameters are not valid |
+| 2        | Products parameters are valid     |
+|          | Some parameters are not valid |
+| 3        | Return Order is not already present in the Database |
 
 **Combination of predicates**:
+| Criteria 1                | Criteria 2               | Criteria 3               |  Valid / Invalid | Description of the test case                  | Jest test case                                                                                        |
+| ------------------------- | ------------------------ | --------------- | --------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Return Order parameters are valid      | Products parameters are valid      | Return Order is not present in DB | V               | A new Return Order is added to DB    | Empty DB <br>  storeReturnOrder(body) --> storeProductRET(body.products,id) <br> res = getReturnOrderById(ID) --> resprod = getListProductRET(ID) --> if(parameters.body = returnOrder.body) --> if(body.products = returnOrder.products) --> OK |  |
+| Return Order parameters are not valid      | Products parameters are valid      | Return Order is not present in DB | I               | Error occours   | Empty DB <br>    storeReturnOrder(body) --> error |  |
+| Return Order parameters are valid      | Products parameters are not valid      | Return Order is not present in DB | I               | Error occours    | Empty DB <br>   storeProductRET(body.products,id) --> error |  |
 
-
-| ID         | Valid / Invalid | Description of the test case                                     | Jest test case          |
-| ---------- | --------------- | ---------------------------------------------------------------- | ----------------------- |
-| not exists | V               | try to insert a new return order                                 | create new return order |
-| exists     | I               | try to insert a new return order and than a new one with same id | create new return order |
 
 ### **Class *skuDAO* -method *addSku***
 **Criteria for method *addSku*:**
