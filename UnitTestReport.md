@@ -31,7 +31,7 @@ Version:
 
  - ID already existing or not in DB
 
-**Predicates for method *ncreateNewPositionWH*:**
+**Predicates for method *createNewPositionWH*:**
 
 | Criteria | Predicate              |
 | -------- | ---------------------- |
@@ -371,58 +371,6 @@ Version:
 | not exists | V               | try to insert a new item                                                | create new item             |
 | exists     | I               | try to insert a new item and than a new one with same id and supplierId | create new item - duplicate |
 
-
-### **Class *internalOrderDAO* - method *storeInternalOrder***
-
-**Criteria for method *storeInternalOrder*:**
-	
-
-
-**Predicates for method *storeInternalOrder*:**
-
-
-**Combination of predicates**:
-
-### **Class *internalOrderDAO* - method *modifyStateInternalOrderById***
-
-**Criteria for method *modifyStateInternalOrderById*:**
-	
-
-
-**Predicates for method *modifyStateInternalOrderById*:**
-
-
-**Combination of predicates**:
-
-### **Class *internalOrderDAO* - method *getListIssuedInternalOrders***
-
-**Criteria for method *getListIssuedInternalOrders*:**
-	
-
-
-**Predicates for method *getListIssuedInternalOrders*:**
-
-
-**Combination of predicates**:
-
-
-### **Class *internalOrderDAO* - method *getListAcceptedInternalOrders***
-
-**Criteria for method *getListAcceptedInternalOrders*:**
-	
-
-
-**Predicates for method *getListAcceptedInternalOrders*:**
-
-
-**Combination of predicates**:
-
-
-
-
-
-
-
 # White Box Unit Tests
 
 ### Test cases definition
@@ -465,27 +413,8 @@ Version:
 
 ### Code coverage report
 
-Coverage for positionDAO :
-![positionDAO_coverage](./coverageScreens/positionDAO.test.png)
-
-Coverage for test-descriptorDAO :
-![test-descriptorDAO_coverage](./coverageScreens/test-descriptorDAO.test.png)
-
-Coverage for test-resultDAO :
-![test-resultDAO_coverage](./coverageScreens/test-resultDAO.test.png)
-
-Coverage for restockOrderDAO :
-![restockOrderDAO_coverage](./coverageScreens/restockOrderDAO.test.PNG)
-
-Coverage for returnOrderDAO :
-![returnOrderDAO_coverage](./coverageScreens/returnOrderDAO.test.PNG)
-
-Coverage for itemDAO :
-![itemDAO_coverage](./coverageScreens/itemDAO.test.PNG)
-
-Coverage for returnOrderDAO :
-![internalOrderDAO_coverage](./coverageScreens/internalOrderDAO.png)
-
+Coverage for Unit Tests :
+![DAOclasses_coverage](./coverageScreenUnitTest.png)
 
 ### Loop coverage analysis
 
