@@ -8,7 +8,18 @@ Version:
 
 - [Dependency graph](#dependency graph)
 
-- [Integration approach](#integration)
+- [Integration and API Test Report](#integration-and-api-test-report)
+- [Contents](#contents)
+- [Dependency graph](#dependency-graph)
+- [Integration approach](#integration-approach)
+- [Integration Tests](#integration-tests)
+  - [Step 1: Testing DAO](#step-1-testing-dao)
+  - [Step 2: API testing](#step-2-api-testing)
+- [API testing - Scenarios](#api-testing---scenarios)
+  - [Scenario UCx.y](#scenario-ucxy)
+  - [Scenario UC5.1.2](#scenario-uc512)
+- [Coverage of Scenarios and FR](#coverage-of-scenarios-and-fr)
+- [Coverage of Non Functional Requirements](#coverage-of-non-functional-requirements)
 
 - [Tests](#tests)
 
@@ -66,6 +77,16 @@ Version:
 | internalOrderDAO | modify internal order accepted |
 | internalOrderDAO | delete internal order |
 | internalOrderDAO | create new Internal Order |
+| skuDAO             | addSku                         |
+| skuDAO             | updateSkuByID                  |
+| skuDAO             | deleteSkuByID                  |
+| skuDAO             | setPosition                    |
+| skuItemDAO         | addSkuItem                     |
+| skuItemDAO         | getSkuItemBySkuID              |
+| skuItemDAO         | deleteSkuItemByRFID            |
+| skuItemDAO         | editSkuItemInfo                |
+| skuItemDAO         | getSkuByRFID                   |      
+| skuItemDAO         | setAvailable                   |
 
 ## Step 2: API testing
 | Classes | Mocha test cases |
@@ -111,6 +132,19 @@ Version:
 | item-management | getting item data from the system |
 | item-management | getting item list from the system |
 | item-management | modify item data from the system |
+| sku-management  | delete a sku |
+| sku-management  | add a sku |
+| sku-management  | edit info of a sku|
+| sku-management  | set position of a sku |
+| sku-management  | get a sku by its ID |
+| sku-management  | get sku list |
+| skuItem-management  | delete a sku item |
+| skuItem-management  | add a sku item |
+| skuItem-management  | edit information about a sku item given its RFID|
+| skuItem-management  | get a sku item by its RFID|
+| skuItem-management  | get a sku item list |
+| skuItem-management  | get a list of sku item given a skuID|
+
 
 
 # API testing - Scenarios
@@ -130,6 +164,18 @@ Version:
 |  2     |  ... |
 
 
+## Scenario UC5.1.2
+| Scenario |  update info of sku Item |
+| ------------- |:-------------:| 
+|  Precondition     | Clerk exists and is logged in |
+|                   | Sku item with a certain RFID exists |
+|                   | RFID of a certain sku item is valid |
+|  Post condition     | selected sku item is update |
+| Step#        | Description  |
+|  1     |  get sku item by its rfid |  
+|  2     |  update some or all informations of sku item |
+
+
 
 # Coverage of Scenarios and FR
 
@@ -140,6 +186,15 @@ Report also for each of the scenarios the (one or more) API Mocha tests that cov
 
 | Scenario ID | Functional Requirements covered | Mocha  Test(s) | 
 | ----------- | ------------------------------- | ----------- | 
+| 1-1 | FR2.1       | adding a new sku |
+| 1-2 | FR2.1           | set position of a sku |
+|     | FR2.2            | delete a sku by id |
+|     | FR2.3            | get sku list      |
+| 1-3 | FR2.1                | update sku info |
+| 5-1-1 5-3-1    | FR6.8.3          | store a sku item |
+|     | FR6.10         | delete sku item by RFID |
+|     | FR6.9       | get sku item list by RFID |
+| 5-1-2 | | update sku item informations |
 | 2-1 | FR3.3.1 | adding a new position |
 |  |  | adding a new position with wrong data |
 | 2-3 2-4 | FR3.1.1 - FR3.1.4 | try to modify a position |
