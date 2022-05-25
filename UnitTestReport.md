@@ -347,29 +347,72 @@ Version:
 | The skuID is valid     | V               | The skuID is valid and from the get we obtain a list of skuItem where skuItem.skuID= skuID | storeSkuItem(data)<br> getSkuItemBySkuID(skuID)-->OK    |  |
 | The skuID is not valid | I               | The skuID is not valid                                                                     |storeSkuItem(data)<br> getSkuItemBySkuID(skuID)-->error |  |
 
-
-
 ### **Class *itemDAO* - method *storeItem***
 
 **Criteria for method *storeItem*:**
 	
 
- - ID already existing or not in DB
+ - All parameters valid
+ - Item not already in DB
 
-**Predicates for method *createTestDescriptor*:**
+**Predicates for method *storeItem*:**
 
-| Criteria | Predicate              |
-| -------- | ---------------------- |
-| ID       | ID already exists      |
-|          | ID does not exists yet |
+| Criteria | Predicate                    |
+| -------- | ---------------------------- |
+| 1        | Item parameters are valid     |
+|          | Some parameters are not valid |
+| 2        | Item is not already present in the Database |
 
 **Combination of predicates**:
+| Criteria 1 | Criteria 2             | Valid / Invalid | Description of the test case | Jest test case|
+| ---------- | ---------------------- | --------------- | ------------------------- | ------------------------------------------- |
+| The Item ID is valid        | the parameters are correct | V               | the Item is stored             | storeItem(data) <br> item = getItemById(id); <br> if(item.body = params.body) --> OK | 
+| The Item ID is valid | the parameters are not correct  | I | an error occurs because the parameters are not correct | storeItem(data) --> error||
 
+### **Class *itemDAO* - method *modifyItemById***
 
-| ID         | Valid / Invalid | Description of the test case                                            | Jest test case              |
-| ---------- | --------------- | ----------------------------------------------------------------------- | --------------------------- |
-| not exists | V               | try to insert a new item                                                | create new item             |
-| exists     | I               | try to insert a new item and than a new one with same id and supplierId | create new item - duplicate |
+**Criteria for method *modifyItemById*:**
+	
+
+ - All parameters to put valid
+ - Item is already in DB
+
+**Predicates for method *modifyItemById*:**
+
+| Criteria | Predicate                    |
+| -------- | ---------------------------- |
+| 1        | All parameters to put in Item are valid     |
+|          | Some parameters are not valid |
+| 2        | Item is already present in the Database |
+
+**Combination of predicates**:
+| Criteria 1 | Criteria 2             | Valid / Invalid | Description of the test case | Jest test case|
+| ---------- | ---------------------- | --------------- | ------------------------- | ------------------------------------------- |
+| All parameters to put in Item are valid        | Item is already present in the Database | V               | the Item is stored             | storeItem(data) --> modifyItemById(id, newData) <br> item = getItemById(id); <br> if(item.body = params.body) --> OK | 
+| Some parameters are not valid | Item is already present in the Database  | I | an error occurs because the parameters are not correct | modifyItemById(id, newData) --> error||
+
+### **Class *itemDAO* - method *getSkuBySupplier***
+
+**Criteria for method *getSkuBySupplier*:**
+	
+
+ - All IDs valid
+ - Skus already in DB
+
+**Predicates for method *getSkuBySupplier*:**
+
+| Criteria | Predicate                    |
+| -------- | ---------------------------- |
+| 1        | Both ID of Item and Supplier are valid     |
+|          | Either one of ID of Item or Supplier is not valid |
+| 2        | Sku is already present in the Database |
+
+**Combination of predicates**:
+| Criteria 1 | Criteria 2             | Valid / Invalid | Description of the test case | Jest test case|
+| ---------- | ---------------------- | --------------- | ------------------------- | ------------------------------------------- |
+| Both ID of Item and Supplier are valid        | Sku is already present in the Database | V               | the Item is stored             | storeItem(data) <br> getSkuBySupplier(skuID)-->OK | 
+| Either one of ID of Item or Supplier is not valid  | Sku is already present in the Database  | I | an error occurs because the ids are not correct | storeItem(data) <br> getSkuBySupplier(skuID)--> error||
+
 
 
 # White Box Unit Tests
