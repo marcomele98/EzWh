@@ -223,7 +223,6 @@ Version:
 | Criteria | Predicate                           |
 | -------- | ----------------------------------- |
 | 1        | The skuID is valid(sku exist in DB) |
-|          | The skuID is not valid              |
 | 2        | The params are correct              |
 |          | The params are not correct          |
 
@@ -231,9 +230,7 @@ Version:
 **Combination of predicates**:
 | Criteria 1 | Criteria 2             | Valid / Invalid | Description of the test case | Jest test case|
 | ---------- | ---------------------- | --------------- | ------------------------- | ------------------------------------------- |
-| The skuID is valid        | the params are correct | V               | the skuItem is stored             | addSku(data) then storeSkuItem(params) <br> skuItem = getSkuItemByRFID(rfid); <br> if(skuItem.body = params.body) --> OK |addSku(data) then storeSkuItem(params) --> Error |                      |
-| The skuID is not valid | the params are correct | I               | the skuItem is not stored since there is no SKU associated | |
-| The  
+| The skuID is valid        | the params are correct | V               | the skuItem is stored             | addSku(data) then storeSkuItem(params) <br> skuItem = getSkuItemByRFID(rfid); <br> if(skuItem.body = params.body) --> OK |addSku(data) then storeSkuItem(params) --> Error |                      | 
 | the skuID is valid | the params are not correct  | I | an error occurs because the params are not correct | validateParams(params) == false --> error||
 
 
@@ -248,7 +245,7 @@ Version:
 | 1                          | The skuItem is in DB(RFID valid) |
 |                            | The skuItem is not in DB         |
 | 2                          | The params are correct           |
-| The params are not correct |
+|  |The params are not correct|
 
 
 **Combination of predicates**:
