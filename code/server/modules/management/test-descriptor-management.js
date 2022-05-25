@@ -2,7 +2,7 @@
 
 const db = require('../database/test-descriptorDAO');
 const dbSKU = require('../database/skuDAO');
-// const dbTestResult = require('../database/test-resultDAO');
+
 
 class TestDescriptorManagement {
 
@@ -117,7 +117,6 @@ class TestDescriptorManagement {
             return res.status(422).end();
         }
         try {
-            // await dbTestResult.deleteTestResultsByIdTestDescriptor(id);
             await db.deleteTestDescriptorByID(id);
             return res.status(204).end();
         } catch (err) {

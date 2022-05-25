@@ -9,7 +9,7 @@ var agent = chai.request.agent(app);
 const userDAO = require('../modules/database/userDAO');
 
 
-describe('test item apis', () => {
+describe('test user apis', () => {
 
     beforeEach(async () => {
         await userDAO.deleteTableContent();

@@ -6,16 +6,16 @@ chai.should();
 const app = require('../server');
 var agent = chai.request.agent(app);
 
-const dayjs = require('dayjs')
-var customParseFormat = require('dayjs/plugin/customParseFormat')
-dayjs.extend(customParseFormat);
 
 const resDAO = require('../modules/database/returnOrderDAO');
+const reDAO = require('../modules/database/restockOrderDAO');
+
 
 describe('test return order api', () => {
 
     beforeEach(async () => {
         await resDAO.deleteTableContent();
+        await reDAO.deleteTableContent();
     })
 
     restockOrderinput = {
@@ -49,26 +49,17 @@ describe('test return order api', () => {
     badInput3 = {
         "returnDate":"2021/11/29 09:33",
         "products": [{"SKUId":12,"description":"a product","price":10.99,"RFID":"12345678901234567890123456789016"},
-                    {"SKUId":-180,"description":"another product","price":11.99,"RFID":"12345678901234567890123456789038"}],
-        "restockOrderId" : 1
-    }
-
-    badInput4 = {
-        "returnDate":"2021/11/29 09:33",
-        "products": [{"SKUId":12,"description":"a product","price":10.99,"RFID":"12345678901234567890123456789016"},
                     {"SKUId":180,"description":"another product","price":11.99,"RFID":"12345678901234567890123456789038"}],
         "restockOrderId" : 3
     }
 
     deleteReturnOrder(204, input, 1 ,restockOrderinput);
-    deleteReturnOrder(404, input, 2, restockOrderinput); // return order not found
     deleteReturnOrder(422, input, -2, restockOrderinput); // invalid id
     
     newReturnOrder(201, input, restockOrderinput); // returnOrder created
-    newReturnOrder(422, badInput1, restockOrderinput); // issue date undefined
+    newReturnOrder(422, badInput1, restockOrderinput); // return date undefined
     newReturnOrder(422, badInput2, restockOrderinput); // restockOrderId negative
-    newReturnOrder(422, badInput3, restockOrderinput); // SKUId negative
-    newReturnOrder(404, badInput4, restockOrderinput); // restockOrder not found
+    newReturnOrder(404, badInput3, restockOrderinput); // restockOrder not found
     
     getListReturnOrders(200, input, restockOrderinput); // list return orders
     getReturnOrder(200, input, 1, restockOrderinput);

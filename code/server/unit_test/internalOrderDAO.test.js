@@ -78,7 +78,7 @@ function testModifyIOacc(data) {
 }
 
 function testModifyIOcom(data) {
-    test('modify internal order accepted', async () => {
+    test('modify internal order completed', async () => {
 
         newData = {
             "newState" : 'COMPLETED',

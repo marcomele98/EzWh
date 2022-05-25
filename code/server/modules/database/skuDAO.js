@@ -3,7 +3,7 @@
 const db = require('./DAO');
  /*SKU (id, description, weight,volume, notes, position, availableQuantity, price, testDescriptors)*/
 exports.newTableSku = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS sku(id INTEGER PRIMARY KEY, description TEXT, weight FLOAT, volume FLOAT,  notes TEXT, position TEXT, availableQuantity INTEGER, price FLOAT,  testDescriptors TEXT)';
+    const sql = 'CREATE TABLE IF NOT EXISTS sku(id INTEGER PRIMARY KEY, description TEXT, weight INTEGER, volume INTEGER,  notes TEXT, position TEXT, availableQuantity INTEGER, price FLOAT,  testDescriptors TEXT)';
     return db.run(sql);
 }
    
@@ -53,4 +53,5 @@ exports.resetTable = () =>{
     const sql = 'DELETE FROM sqlite_sequence WHERE NAME = sku'
     db.run(sql);
 }
+
 this.newTableSku();

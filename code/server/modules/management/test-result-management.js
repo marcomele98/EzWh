@@ -2,8 +2,6 @@
 
 const dayjs = require('dayjs')
 const db = require('../database/test-resultDAO');
-var customParseFormat = require('dayjs/plugin/customParseFormat')
-dayjs.extend(customParseFormat);
 const dbTestDescriptor = require('../database/test-descriptorDAO');
 const dbSKUItem = require('../database/skuItemDAO');
 
@@ -39,7 +37,7 @@ class TestResultManagement {
     }
 
     isNotValidDate = (Date) => {
-        return !dayjs(Date, ['YYYY/MM/DD', 'YYYY/MM/DD hh:mm', 'YYYY/M/DD', 'YYYY/M/DD hh:mm', 'YYYY/MM/D', 'YYYY/MM/D hh:mm', 'YYYY/M/D', 'YYYY/M/D hh:mm'], true).isValid()
+        return !dayjs(Date).isValid()
     }
 
     async getTestResultsListByRfid(req, res) {

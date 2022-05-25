@@ -24,6 +24,7 @@ describe('test item apis', () => {
     beforeEach(async () => {
         await itemDAO.deleteTableContent();
         await skuDAO.deleteTableContent();
+        await skuDAO.resetTable();
     });
 
     mod = { "newDescription": "a new item mod", "newPrice": 12.99 }
@@ -45,7 +46,6 @@ describe('test item apis', () => {
     modifyItem(404, 1, 'a new item', 10.99, 1, 1, mod, 4, sku); //item not found
     modifyItem(422, 1, 'a new item', 10.99, 1, 1, mod, -4, sku); //invalid id
     deleteItem(422, 1, 'a new item', 10.99, 1, 1, -5, sku); // invalid id to delete
-    deleteItem(404, 1, 'a new item', 10.99, 1, 1, 4, sku); // item not found 
     deleteItem(204, 1, 'a new item', 10.99, 1, 1, 1, sku);
 });
 
