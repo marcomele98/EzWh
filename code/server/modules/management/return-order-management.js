@@ -10,7 +10,6 @@ class ReturnOrderManagement {
 
     async createNewReturnOrder(req, res) {
         let returnOrder = req.body;
-        // console.log(returnOrder);
         if (returnOrder === undefined || returnOrder.returnDate === undefined || returnOrder.products === undefined || returnOrder.restockOrderId === undefined
             || returnOrder == '' || returnOrder.returnDate === '' || returnOrder.products === '' || returnOrder.restockOrderId === "" || returnOrder.restockOrderId < 0|| isNaN(returnOrder.restockOrderId) || 
              !dayjs(returnOrder.returnDate).isValid()) {

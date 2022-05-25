@@ -168,7 +168,6 @@ class RestockOrderManagement {
             var count = 0;
             const SKUItemsReturn = [];
 
-            // console.log(SKUItems.length);
             for (var i = 0; i < SKUItems.length; i++) {
                 const SKUcheck = await dbRES.getPassByIds(SKUItems[i].id, SKUItems[i].rfid);
                 if (SKUcheck === undefined) {
