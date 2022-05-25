@@ -256,9 +256,6 @@ Report also for each of the scenarios the (one or more) API Mocha tests that cov
 |  |  | try to delete item with invalid id|
 
 
-
-
-
 # Coverage of Non Functional Requirements
 
 | Non Functional Requirement | Test name |
@@ -267,12 +264,23 @@ Report also for each of the scenarios the (one or more) API Mocha tests that cov
 |  | try to modify a position |
 |  | try to modify a position id |
 | NFR6 | get a test result |
+|  | trying to add skuitem to restock order  |
+|  | try to add a new return order |
 |  | try adding a new test result |
 |  | try to modify a test result |
 |  | try to delete a test result |
 |  | try to add a new sku item |
-|  | update sku item info |
+|  | try to update a sku item info |
+| NFR9 | try adding a new test result |
+|  | try to modify a test result |
+|  | try to delete a test result | 
+|  | trying to modify internal order |
 | NFR9 | try adding a new test result |
 |  | try to modify a test result |
 |  | try to delete a test result |
-  
+|  | try to add a new restock order |
+|  | try to return a restock order |
+|  | try to add transport note to restock order |
+|  | try to add a new return order |
+|  | try to add a new internal order |
+

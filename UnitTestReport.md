@@ -354,7 +354,7 @@ Version:
 **Criteria for method *storeItem*:**
 	
 
- - ID already existing or not in DB
+ - All parameters valid
 
 **Predicates for method *createTestDescriptor*:**
 
