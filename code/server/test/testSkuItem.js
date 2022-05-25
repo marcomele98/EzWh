@@ -59,6 +59,7 @@ describe('test skuItem APIs', () => {
         "newRFID": "345678901234567890123456789015", //wrong value for RFID
         "newAvailable": 1,
         "newDateOfStock": "2021/11/29 12:30"
+
     }
 
     sku = {
@@ -72,14 +73,18 @@ describe('test skuItem APIs', () => {
 
     addNewSkuItem(201, skuItem, sku);
     addNewSkuItem(422, skuItemWrong, sku);
+    addNewSkuItem(404, skuItemWrong2, sku);
     updateSkuItem(200, skuItem2, newSkuItem, "22345678901234567890123456789015", sku);
     updateSkuItem(422, skuItem2, newSkuItemWrong, "22345678901234567890123456789015", sku);
+    updateSkuItem(422, skuItem2, newSkuItem, "2", sku); //wrong RFID
+    updateSkuItem(404, skuItem, newSkuItem, "82345678901234567890123456789015", sku) // no skuItem exist associated to this RFID
     getSkuItemByRFID(200, skuItem, "12345678901234567890123456789015", sku);
     getSkuItemByRFID(404, skuItem, "22345678901234567890123456789015", sku); //no RFID in DB
     getSkuItemByRFID(422, skuItem2, "345678901234567890123456789015", sku); //wrong RFID format
     getSkuItemBySKUID(200, skuItem, skuItem2, 1, sku);
     getSkuItemBySKUIDwithValue(200, skuItem, newSkuItem, 1, sku);
     getSkuItemBySKUID(422, skuItem, skuItem2, "ciao", sku); //validation failed
+    getSkuItemBySKUID(404, skuItem, skuItem2, 3, sku); //skuId does not exist
     getSkuItemBySKUIDwithValue(422, skuItem, newSkuItem, "ciao", sku);
     getSkuItemList(200, skuItem, skuItem2, sku);
     deleteSkuItem(422, skuItem, "124", sku);
@@ -106,17 +111,18 @@ function deleteSkuItem(expectedHTTPStatus, skuItem, RFID, sku) {
 
 function addNewSkuItem(expectedHTTPStatus, skuItem, sku) {
     it('adding a new skuItem', function (done) {
-        let SKUItem = { RFID: skuItem.RFID, SKUId: skuItem.SKUId, DateOfStock: skuItem.DateOfStock };
         agent.post('/api/sku').send(sku).then(function (result) {
             result.should.have.status(201);
-            agent.post('/api/skuItem').send(SKUItem).then(function (res) {
+
+            agent.post('/api/skuItem').send(skuItem).then(function (res) {
                 res.should.have.status(expectedHTTPStatus);
+
                 if (res == 201) {
-                    agent.get('/api/skuitems/' + SKUItem.RFID).then(function (r) {
+                    agent.get('/api/skuitems/' + skuItem.RFID).then(function (r) {
                         r.body.RFID.should.equal(skuItem.RFID);
                         r.body.SKUId.should.equal(skuItem.SKUId);
                         r.body.DateOfStock.should.equal(skuItem.DateOfStock);
-                    });
+                    }); e
                 } done();
             });
         });
@@ -212,7 +218,7 @@ function getSkuItemBySKUIDwithValue(expectedHTTPStatus, skuItem1, newSkuItem, SK
 
 function getSkuItemList(expectedHTTPStatus, skuItem, skuItem2, sku) {
     it('get sku item list', function (done) {
-       agent.post('/api/sku').send(sku).then(function (result) {
+        agent.post('/api/sku').send(sku).then(function (result) {
             result.should.have.status(201);
             agent.post('/api/skuitem').send(skuItem).then(function (res) {
                 res.should.have.status(201);

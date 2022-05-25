@@ -11,7 +11,7 @@ const positionDAO = require('../modules/database/positionDAO');
 const testDescriptorDAO = require('../modules/database/test-descriptorDAO');
 
 describe('test sku APIs', () => {
-  
+
     beforeEach(async () => {
         await skuDAO.deleteTableContent();
         await skuDAO.resetTable();
@@ -45,7 +45,44 @@ describe('test sku APIs', () => {
         "newPrice": 10.99,
         "newAvailableQuantity": 10,
     }
+    newSku2 = {
 
+        "newWeight": 20,
+        "newVolume": 10,
+        "newNotes": "first SKU",
+        "newPrice": 10.99,
+        "newAvailableQuantity": 10,
+    }
+    newSku3 = {
+        "newDescription": "a new sku",
+        "newVolume": 10,
+        "newNotes": "first SKU",
+        "newPrice": 10.99,
+        "newAvailableQuantity": 10,
+    }
+    newsku4 = {
+        "newDescription": "a new sku",
+        "newWeight": 20,
+        "newNotes": "first SKU",
+        "newPrice": 10.99,
+        "newAvailableQuantity": 10,
+    }
+
+    newSku5 = {
+        "newDescription": "a new sku",
+        "newWeight": 20,
+        "newVolume": 10,
+        "newAvailableQuantity": 10,
+    }
+
+    newSkuWrong = {
+        "newDescription": "a new sku",
+        "newWeight": -4,
+        "newVolume": 10,
+        "newNotes": "first SKU",
+        "newPrice": 10.99,
+        "newAvailableQuantity": 10,
+    }
     sku = {
         "description": "a new sku",
         "weight": 10,
@@ -65,14 +102,21 @@ describe('test sku APIs', () => {
     }
     addNewSku(201, 1, "prova", 10, 10, "test", 20, 4.99); //correct data
     addNewSku(422, 2, 1241, 10, 10, "test", 20, 4.99); //wrong description
-    updatePositionOfSku(404, sku, pos,"800234543412", 2 ); //no sku existing
+    updatePositionOfSku(404, sku, pos, "800234543412", 2); //no sku existing
     updatePositionOfSku(200, sku, pos, "800234543412", 1);
+    updatePositionOfSku(422, sku, pos, "800234543412", "test"); //wrong id of SKU
     updateSku(200, sku, newSku, 1);
+    updateSku(200, sku, newSku2, 1);
+    updateSku(200, sku, newSku3, 1);
+    updateSku(200, sku, newsku4, 1);
+    updateSku(200, sku, newSku5, 1);
+    updateSku(422, sku, newSkuWrong, 1);
     getSku(200, sku, 1);
     getSku(404, sku, 4);
     getSku(422, sku3, "ciao");
     getSkuList(200, sku);
     deleteSku(204, sku, 1);
+    deleteSku(422, sku, "ciao"); //invalid Id of SKU
 });
 
 function deleteSku(expectedHTTPStatus, sku, deleteId) {
@@ -90,7 +134,7 @@ function deleteSku(expectedHTTPStatus, sku, deleteId) {
 
 function addNewSku(expectedHTTPStatus, id, description, weight, volume, notes, availableQuantity, price) {
     it('adding a new sku', function (done) {
-        let sku = { description: description, weight: weight, volume: volume, notes: notes, price: price, availableQuantity: availableQuantity}
+        let sku = { description: description, weight: weight, volume: volume, notes: notes, price: price, availableQuantity: availableQuantity }
         agent.post('/api/sku').send(sku).then(function (res) {
             res.should.have.status(expectedHTTPStatus);
             if (res = 201) {
@@ -111,7 +155,7 @@ function addNewSku(expectedHTTPStatus, id, description, weight, volume, notes, a
 function updatePositionOfSku(expectedHTTPStatus, sku, pos, position, id) {
     it('modify position of a sku', function (done) {
         let posToSet = { position: position };
-        let SKU = { description: sku.description, weight: sku.weight, volume: sku.volume, notes: sku.notes, price: sku.price,  availableQuantity: sku.availableQuantity }
+        let SKU = { description: sku.description, weight: sku.weight, volume: sku.volume, notes: sku.notes, price: sku.price, availableQuantity: sku.availableQuantity }
         agent.post('/api/position').send(pos).then(function (res) {
             res.should.have.status(201);
             agent.post('/api/sku').send(SKU).then(function (res1) {
