@@ -111,6 +111,7 @@ describe('test sku APIs', () => {
     updateSku(200, sku, newsku4, 1);
     updateSku(200, sku, newSku5, 1);
     updateSku(422, sku, newSkuWrong, 1);
+    updateSku(422, sku, newSku, "test"); //invalid ID
     getSku(200, sku, 1);
     getSku(404, sku, 4);
     getSku(422, sku3, "ciao");
@@ -177,10 +178,10 @@ function updatePositionOfSku(expectedHTTPStatus, sku, pos, position, id) {
 
 function updateSku(expectedHTTPStatus, sku, newSku, skuId) {
     it('update sku info', function (done) {
-        let SKU = { description: sku.description, weight: sku.weight, volume: sku.volume, notes: sku.notes, price: sku.price, availableQuantity: sku.availableQuantity }
-        agent.post('/api/sku').send(SKU).then(function (res) {
+        agent.post('/api/sku').send(sku).then(function (res) {
             res.should.have.status(201);
             agent.put('/api/sku/' + skuId).send(newSku).then(function (res1) {
+                ;
                 res1.should.have.status(expectedHTTPStatus);
                 if (res1.status == 200) {
                     agent.get('/api/skus/' + skuId).then(function (r) {
