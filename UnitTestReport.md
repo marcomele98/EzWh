@@ -155,9 +155,8 @@ Version:
 
 ### **Class *skuDAO* -method *setPosition***
 **Criteria for method *setPosition*:**
-- 1. Position exists
-- 2. Position is valid
-- 3. SKU exists 
+- 1. Position is valid
+- 2. SKU exists 
 
 **Predicates for method *setPosition*:**
 | Criteria | Predicate                   |
@@ -207,10 +206,10 @@ Version:
 **Combination of predicates**:
 | Criteria 1             | Criteria 2                 | Valid / Invalid | Description of the test case                                | Jest test case                                                                                 |
 | ---------------------- | -------------------------- | --------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| the skuID is valid     | the params are correct     | V               | the sku is updated                                          | addNewSku(params); <br> validateParams(params) == true then updateSkuByID(params, ID) --> OK   |  |
-| the skuID is not valid | the params are correct     | I               | an error occurs because of invalid skuID                    | addNewSku(params); <br>validateParams(params) == true then updateSkuByID(params, ID) --> Error |  |
-| the skuID is not valid | the params are not correct | I               | an error occurs because of invalid skuID and invalid params | addNewSku(params); <br>validateParams(params) == false --> error                               |  |
-| the skuID is valid     | the params are not correct | I               | an error occurs because the params are not correct          | addNewSku(params); <br>validateParams(params) == false --> error                               |  |
+| the skuID is valid     | the params are correct     | V               | the sku is updated                                          | addNewSku(params); <br> sku = getSkuByID(id) <br> updateSkuByID(params, ID) <br> if(sku.body = params body) --> OK   |  |
+| the skuID is not valid | the params are correct     | I               | an error occurs because of invalid skuID                    | addNewSku(params); <br>sku = getSkuByID(id) <br> updateSkuByID(params, ID) --> Error |  |
+| the skuID is not valid | the params are not correct | I               | an error occurs because of invalid skuID and invalid params | addNewSku(params); <br>sku = getSkuByID(id) <br> updateSkuByID(params, ID) --> error                               |  |
+| the skuID is valid     | the params are not correct | I               | an error occurs because the params are not correct          | addNewSku(params); <br>sku = getSkuByID(id) <br> updateSkuByID(params, ID)--> error                               |  |
 
 
 
@@ -230,13 +229,11 @@ Version:
 
 
 **Combination of predicates**:
-| Criteria 1                                                                  | Criteria 2             | Valid / Invalid | Description of the test case                               | Jest test case                              |
-| --------------------------------------------------------------------------- | ---------------------- | --------------- | ---------------------------------------------------------- | ------------------------------------------- |
-| the skuID is valid                                                          | the params are correct | V               | the skuItem is stored                                      | addSku(data) then storeSkuItem(params) <br> |
-| skuItem = getSkuItemByRFID(rfid); <br> if(skuItem.body = params.body) --> O |                        |
-| The skuID is not valid                                                      | the params are correct | I               | the skuItem is not stored since there is no SKU associated |
- 
-
+| Criteria 1 | Criteria 2             | Valid / Invalid | Description of the test case | Jest test case|
+| ---------- | ---------------------- | --------------- | ------------------------- | ------------------------------------------- |
+| The skuID is valid        | the params are correct | V               | the skuItem is stored             | addSku(data) then storeSkuItem(params) <br> skuItem = getSkuItemByRFID(rfid); <br> if(skuItem.body = params.body) --> OK |addSku(data) then storeSkuItem(params) --> Error |                      |
+| The skuID is not valid | the params are correct | I               | the skuItem is not stored since there is no SKU associated | |
+| The  
 | the skuID is valid | the params are not correct  | I | an error occurs because the params are not correct | validateParams(params) == false --> error||
 
 
@@ -271,14 +268,14 @@ Version:
 | Criteria                 | Predicate            |
 | ------------------------ | -------------------- |
 | 1                        | The skuID is correct |
-| The skuID is not correct |
+| |The skuID is not correct |
 
 
 **Combination of predicates**:
 | Criteria 1             | Valid / Invalid | Description of the test case                                                               | Jest test case                   |
 | ---------------------- | --------------- | ------------------------------------------------------------------------------------------ | -------------------------------- |
 | The skuID is valid     | V               | The skuID is valid and from the get we obtain a list of skuItem where skuItem.skuID= skuID | storeSkuItem(data)<br> getSkuItemBySkuID(skuID)-->OK    |  |
-| The skuID is not valid | i               | The skuID is not valid                                                                     |storeSkuItem(data)<br> getSkuItemBySkuID(skuID)-->error |  |
+| The skuID is not valid | I               | The skuID is not valid                                                                     |storeSkuItem(data)<br> getSkuItemBySkuID(skuID)-->error |  |
 
 
 
@@ -336,6 +333,14 @@ Version:
 | internalOrderDAO   | modify internal order accepted |
 | internalOrderDAO   | delete internal order          |
 | internalOrderDAO   | create new Internal Order      |
+| skuDAO             | addSku                         |
+| skuDAO             | updateSkuByID                  |
+| skuDAO             | deleteSkuByID                  |
+| skuDAO             | setPosition                    |
+| skuItemDAO         | addSkuItem                     |
+| skuItemDAO         | getSkuItemBySkuID              |
+| skuItemDAO         | deleteSkuItemByRFID            |
+| skuItemDAO         | editSkuItemInfo                |       
 
 ### Code coverage report
 
