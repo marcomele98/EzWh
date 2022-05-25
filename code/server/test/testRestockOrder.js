@@ -6,9 +6,6 @@ chai.should();
 const app = require('../server');
 var agent = chai.request.agent(app);
 
-const dayjs = require('dayjs')
-var customParseFormat = require('dayjs/plugin/customParseFormat')
-dayjs.extend(customParseFormat);
 
 const resDAO = require('../modules/database/restockOrderDAO');
 
