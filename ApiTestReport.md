@@ -15,6 +15,7 @@ Version:
 - [Scenarios](#scenarios)
 
 - [Coverage of scenarios and FR](#scenario-coverage)
+
 - [Coverage of non-functional requirements](#nfr-coverage)
 
 
@@ -55,7 +56,16 @@ Version:
 |returnOrderDAO|empty db|
 |returnOrderDAO|create new return order|
 |returnOrderDAO|modify return order|
-
+| itemDAO | create new item |
+| itemDAO | create new item - duplicate |
+| itemDAO | delete item |
+| itemDAO | modify item |
+| itemDAO | get sku by supp |
+| internalOrderDAO | get internal order issued |
+| internalOrderDAO | get internal order accepted |
+| internalOrderDAO | modify internal order accepted |
+| internalOrderDAO | delete internal order |
+| internalOrderDAO | create new Internal Order |
 
 ## Step 2: API testing
 | Classes | Mocha test cases |
@@ -88,6 +98,19 @@ Version:
 | return-order-management | adding a new return order |
 | return-order-management | getting return orders list |
 | return-order-management | getting return order |
+| internal-order-management | delete internal order |
+| internal-order-management | adding a new internal order |
+| internal-order-management | modify internal order |
+| internal-order-management | getting internal orders list |
+| internal-order-management | getting issued internal orders list |
+| internal-order-management | getting accepted internal orders list |
+| internal-order-management | getting internal order by id |
+| item-management | delete item |
+| item-management | adding a new item |
+| item-management | adding a new item wrong |
+| item-management | getting item data from the system |
+| item-management | getting item list from the system |
+| item-management | modify item data from the system |
 
 
 # API testing - Scenarios
@@ -129,7 +152,55 @@ Report also for each of the scenarios the (one or more) API Mocha tests that cov
 |  | FR5.8.2 | try adding a new test result | 
 |  |  | try adding two test result | 
 |  |  | try to modify a test result | 
-|  |  | try to delete a test result |      
+|  |  | try to delete a test result |   
+|  | FR5.1 - FR5.3 - FR5.5 - FR5.6 | adding a new restock order |
+|  |  | trying to add new restock order with undefined issue date |
+|  |  | trying to add new restock order with negative supplier ID |
+|  |  | trying to add new product with negative SKUId |
+|  |  | trying to add new product with negative price |
+|  |  | trying to add new product with negative quantity |
+| 5-1 5-3 | FR5.2 | trying to add skuitem to restock order |
+|  |  | try to add skuitem with invalid SKUId|   
+|  |  | try to add skuitem with rfid too long|  
+|  |  | try to add skuitem to invalid restock order id|  
+|  |  | try to add skuitem to not existing restock order id|  
+|  | FR5.4 | trying to delete a restock order | 
+|  |  | try to delete restock order with invalid id|      
+| 5-2 | FR5.7 | trying to change state of restock order |
+|  |  | try to change restock order state with wrong state|     
+|  |  | try to change restock order state with invalid restock order id|     
+|  |  | try to change restock order state with not existing restock order id|                  
+|  | FR5.8 | adding transport note to restock order | 
+|  |  | try to add transport note with invalid delivery date | 
+|  |  | try to add transport note to invalid restock order id |
+|  |  | try to add transport note to not existing restock order id|
+|  | FR5.10 | returning restock order | 
+|  |  | try to return invalid restock order id|
+|  |  | try to return not existing restock order id|
+| 6-1 6-2 | FR5.9 - FR5.11| adding a new return order | 
+|  |  | adding new return order with undefined return date |
+|  |  | adding new return order with negative restockOrder ID |
+|  |  | adding new return order to not existing restockOrder ID |
+|  | FR6.1 - FR6.5| adding a new internal order |
+|  |  | trying to add new internal order with undefined issue date |
+|  |  | trying to add new internal order with negative customer ID |
+|  |  | trying to add new product to internal order with negative SKU ID |
+| 9-1 9-2 9-3 10-1 | FR6.2 -FR6.3 - FR6.6 - FR6.7 - FR6.8 | trying to modify internal order |
+|  |  | trying to modify internal order with invalid new state |
+|  |  | trying to modify internal order with invalid SKU ID|
+|  |  | trying to modify only state of internal order to not existing internal order ID|
+|  |  | trying to modify internal order to not existing internal order ID|
+|  | FR6.4 | trying to delete an internal order |
+|  |  | try to delete restock order with invalid id|
+| 11-1 11-2 | FR7 | adding, modifying and deleting items |
+|  |  | try to add item with invalid SKU id|
+|  |  | try to add item with invalid item id|
+|  |  | try to add item with no SKU found|
+|  |  | try to modify item with wrong id|
+|  |  | try to modify item with not existing id|
+|  |  | try to delete item with invalid id|
+
+
 
 
 
