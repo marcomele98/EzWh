@@ -10,11 +10,47 @@ class ReturnOrderManagement {
 
     async createNewReturnOrder(req, res) {
         let returnOrder = req.body;
-        if (returnOrder === undefined || returnOrder.returnDate === undefined || returnOrder.products === undefined || returnOrder.restockOrderId === undefined
-            || returnOrder == '' || returnOrder.returnDate === '' || returnOrder.products === '' || returnOrder.restockOrderId === "" || returnOrder.restockOrderId < 0|| isNaN(returnOrder.restockOrderId) || 
+        // console.log(returnOrder);
+        if (returnOrder === undefined || 
+            returnOrder.returnDate === undefined || 
+            returnOrder.products === undefined || 
+            returnOrder.restockOrderId === undefined || 
+            returnOrder == '' || 
+            returnOrder.returnDate === '' || 
+            returnOrder.products === '' || 
+            returnOrder.restockOrderId === "" || 
+            returnOrder.restockOrderId < 0|| 
+            isNaN(returnOrder.restockOrderId) || 
              !dayjs(returnOrder.returnDate).isValid()) {
                 return res.status(422).end();
         }
+
+        for (var i = 0; i < restockOrder.products.length; i++) {
+            if (
+                returnOrder.products[i].SKUId == undefined || 
+                returnOrder.products[i].SKUId <= 0 || 
+                returnOrder.products[i].SKUId == '' || 
+                returnOrder.products[i].itemId == undefined || 
+                returnOrder.products[i].itemId <= 0 || 
+                returnOrder.products[i].itemId == '' || 
+                isNaN(returnOrder.products[i].SKUId) ||
+                isNaN(returnOrder.products[i].itemId) ||
+                !isNaN(returnOrder.products[i].description) || 
+                returnOrder.products[i].description == undefined || 
+                returnOrder.products[i].description == '' || 
+                returnOrder.products[i].price < 0 ||
+                returnOrder.products[i].price == undefined || 
+                returnOrder.products[i].price == '' || 
+                isNaN(returnOrder.products[i].price) || 
+                returnOrder.products[i].RFID == undefined || 
+                returnOrder.products[i].RFID <= 0 || 
+                returnOrder.products[i].RFID == '' || 
+                isNaN(returnOrder.products[i].RFID)
+            ) {
+                return res.status(422).end();
+            }
+        }
+
         const RO = await ROdb.getRestockOrderById(returnOrder.restockOrderId);
         if(RO == undefined){
             return res.status(404).end();

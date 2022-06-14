@@ -57,10 +57,6 @@ class SkuItemManagement {
     async addSkuItem(req, res) {
         let skuItem = req.body;
 
-        if (skuItem.RFID == null || skuItem.SKUId == null || skuItem.DateOfStock == null) {
-            return res.status(422).end();
-        }
-
         if (skuItem.RFID.length !== 32 || skuItem.RFID === '' || skuItem.RFID == 0 || skuItem.RFID == undefined || isNaN(skuItem.RFID) ||
             skuItem.SKUId === '' || skuItem.SKUId == undefined || skuItem.SKUId < 0 || isNaN(skuItem.SKUId) ||
             skuItem.DateOfStock == undefined || skuItem.DateOfStock == '' ||
@@ -83,14 +79,9 @@ class SkuItemManagement {
         const rfid = req.params.rfid;
         const data = req.body;
 
-        if (rfid == null || data.newRFID == null || data.newAvailable == null || data.newDateOfStock == null
-            || rfid.length !== 32 || rfid == '' || isNaN(rfid)) {
+        if (rfid.length !== 32 || rfid == '' || isNaN(rfid)) {
             return res.status(422).end();
         }
-
-        // if (rfid.length !== 32 || rfid == '' || isNaN(rfid)) {
-        //     return res.status(422).end();
-        // }
 
         const oldSkuItem = await db.getSkuItemByRfid(rfid);
 

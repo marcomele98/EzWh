@@ -12,12 +12,12 @@ exports.newTableRestockOrder = () => {
 }
 
 exports.newTableProductsRE = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS productsRE(REid INTEGER, SKUId INTEGER , description TEXT, price float, qty INTEGER, PRIMARY KEY("REid","SKUId"))';
+    const sql = 'CREATE TABLE IF NOT EXISTS productsRE(REid INTEGER, SKUId INTEGER , itemId INTEGER ,  description TEXT, price float, qty INTEGER, PRIMARY KEY("REid","SKUId"))';
     return db.run(sql);
 }
 
 exports.newTableSkuRE = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS skuRE (REid INTEGER, SKUId INTEGER, rfid TEXT PRIMARY KEY)';
+    const sql = 'CREATE TABLE IF NOT EXISTS skuRE (REid INTEGER, SKUId INTEGER , itemId INTEGER ,  rfid TEXT PRIMARY KEY)';
     return db.run(sql);
 }
 
@@ -32,16 +32,16 @@ exports.storeRestockOrder = (data) => {
 }
 
 exports.storeProducts = (data, REid) => {
-    const sql1 = 'INSERT INTO productsRE (REid, SKUId, description, price, qty) VALUES(?, ?, ?, ?, ?)'
+    const sql1 = 'INSERT INTO productsRE (REid, SKUId, itemId, description, price, qty) VALUES(?, ?, ?, ?, ?)'
     for (var i = 0; i < data.length; i++) {
-        db.run(sql1, [REid, data[i].SKUId, data[i].description, data[i].price, data[i].qty]);
+        db.run(sql1, [REid, data[i].SKUId, data[i].itemId ,data[i].description, data[i].price, data[i].qty]);
     }
 }
 
 exports.storeSkuRE = (data, REid) => {
     const sql1 = 'INSERT INTO skuRE (REid, SKUId, rfid) VALUES(?, ?, ?)';
     for (var i = 0; i < data.skuItems.length; i++) {
-        db.run(sql1, [REid, data.skuItems[i].SKUId, data.skuItems[i].rfid]);
+        db.run(sql1, [REid, data.skuItems[i].SKUId, data[i].itemId , data.skuItems[i].rfid]);
     }
 }
 
@@ -51,12 +51,12 @@ exports.storeTransportNote = (data, REid) => {
 }
 
 exports.getListProducts = (id) => {
-    const sql = 'SELECT SKUId, description, price, qty FROM productsRE WHERE REid = ?';
+    const sql = 'SELECT SKUId, itemId, description, price, qty FROM productsRE WHERE REid = ?';
     return db.all(sql, [id]);
 }
 
 exports.getListSKURE = (id) => {
-    const sql = 'SELECT SKUId, rfid FROM skuRE WHERE REid = ?';
+    const sql = 'SELECT SKUId, itemId, rfid FROM skuRE WHERE REid = ?';
     return db.all(sql, [id]);
 }
 
