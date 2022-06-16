@@ -64,7 +64,7 @@ function deleteItem(expectedHTTPStatus, id, description, price, SKUId, supplierI
                             .send(item)
                             .then(function (res) {
                                 res.should.have.status(201);
-                                agent.delete('/api/items/' + deleteId)
+                                agent.delete('/api/items/' + deleteId+ "/" + supplierId)
                                     .then(function (r) {
                                         r.should.have.status(expectedHTTPStatus);
                                         done();
@@ -91,7 +91,7 @@ function newItem(expectedHTTPStatus, id, description, price, SKUId, supplierId, 
                             .then(function (re) {
                                 re.should.have.status(expectedHTTPStatus);
                                 if (re == 201) {
-                                    agent.get('/api/items/' + id)
+                                    agent.get('/api/items/' + id + "/" + supplierId)
                                         .then(function (r) {
                                             r.should.have.status(expectedHTTPStatus);
                                             r.body.description.should.equal(description);
@@ -151,7 +151,7 @@ function getItem(expectedHTTPStatus, id, description, price, SKUId, supplierId, 
                             .send(item)
                             .then(function (res) {
                                 res.should.have.status(201);
-                                agent.get('/api/items/' + getId)
+                                agent.get('/api/items/' + getId + "/" + supplierId)
                                     .then(function (r) {
                                         r.should.have.status(expectedHTTPStatus);
                                         if (r.status == 200) {
@@ -217,12 +217,12 @@ function modifyItem(expectedHTTPStatus, id, description, price, SKUId, supplierI
                             .send(item)
                             .then(function (res1) {
                                 res1.should.have.status(201);
-                                agent.put('/api/item/' + modifyId)
+                                agent.put('/api/item/' + modifyId + "/" +supplierId)
                                     .send(mod)
                                     .then(function (res2) {
                                         res2.should.have.status(expectedHTTPStatus);
                                         if (res2.status == 200) {
-                                            agent.get('/api/items/' + modifyId)
+                                            agent.get('/api/items/' + modifyId + "/" + supplierId)
                                                 .then(function (r) {
                                                     r.should.have.status(200);
                                                     if (mod.newDescription == undefined) {

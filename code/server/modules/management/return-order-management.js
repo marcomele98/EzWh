@@ -25,13 +25,13 @@ class ReturnOrderManagement {
                 return res.status(422).end();
         }
 
-        for (var i = 0; i < restockOrder.products.length; i++) {
+        for (var i = 0; i < returnOrder.products.length; i++) {
             if (
                 returnOrder.products[i].SKUId == undefined || 
-                returnOrder.products[i].SKUId <= 0 || 
+                returnOrder.products[i].SKUId < 0 || 
                 returnOrder.products[i].SKUId == '' || 
                 returnOrder.products[i].itemId == undefined || 
-                returnOrder.products[i].itemId <= 0 || 
+                returnOrder.products[i].itemId < 0 || 
                 returnOrder.products[i].itemId == '' || 
                 isNaN(returnOrder.products[i].SKUId) ||
                 isNaN(returnOrder.products[i].itemId) ||

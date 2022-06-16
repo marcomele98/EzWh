@@ -32,16 +32,16 @@ exports.storeRestockOrder = (data) => {
 }
 
 exports.storeProducts = (data, REid) => {
-    const sql1 = 'INSERT INTO productsRE (REid, SKUId, itemId, description, price, qty) VALUES(?, ?, ?, ?, ?)'
+    const sql1 = 'INSERT INTO productsRE (REid, SKUId, itemId, description, price, qty) VALUES(?, ?, ?, ?, ?, ?)'
     for (var i = 0; i < data.length; i++) {
-        db.run(sql1, [REid, data[i].SKUId, data[i].itemId ,data[i].description, data[i].price, data[i].qty]);
+        db.run(sql1, [REid, data[i].SKUId, data[i].itemId, data[i].description, data[i].price, data[i].qty]);
     }
 }
 
 exports.storeSkuRE = (data, REid) => {
-    const sql1 = 'INSERT INTO skuRE (REid, SKUId, rfid) VALUES(?, ?, ?)';
+    const sql1 = 'INSERT INTO skuRE (REid, SKUId, itemId, rfid) VALUES(?, ?, ?, ?)';
     for (var i = 0; i < data.skuItems.length; i++) {
-        db.run(sql1, [REid, data.skuItems[i].SKUId, data[i].itemId , data.skuItems[i].rfid]);
+        db.run(sql1, [REid, data.skuItems[i].SKUId, data.skuItems[i].itemId , data.skuItems[i].rfid]);
     }
 }
 
@@ -122,7 +122,6 @@ exports.deleteTableContent = () => {
 
 
 this.newTableRestockOrder();
-
 this.newTableProductsRE();
 this.newTableSkuRE();
 this.newTableTransportNoteRE();

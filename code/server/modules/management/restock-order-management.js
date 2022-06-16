@@ -28,10 +28,10 @@ class RestockOrderManagement {
         for (var i = 0; i < restockOrder.products.length; i++) {
             if (
                 restockOrder.products[i].SKUId == undefined || 
-                restockOrder.products[i].SKUId <= 0 || 
+                restockOrder.products[i].SKUId < 0 || 
                 restockOrder.products[i].SKUId == '' || 
                 restockOrder.products[i].itemId == undefined || 
-                restockOrder.products[i].itemId <= 0 || 
+                restockOrder.products[i].itemId < 0 || 
                 restockOrder.products[i].itemId == '' || 
                 isNaN(restockOrder.products[i].SKUId) ||
                 isNaN(restockOrder.products[i].itemId) ||

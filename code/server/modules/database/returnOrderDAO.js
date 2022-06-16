@@ -22,7 +22,7 @@ exports.storeReturnOrder = (data) => {
 }
 
 exports.storeProductRET = (data, RETid) => {
-    const sql1 = 'INSERT INTO productsRET(RETid , SKUId , itemId, description , price , RFID ) VALUES(?, ?, ?, ?, ?)'
+    const sql1 = 'INSERT INTO productsRET(RETid , SKUId , itemId, description , price , RFID ) VALUES(?, ?, ?, ?, ?, ?)'
     for (var i = 0; i < data.length; i++) {
         db.run(sql1, [RETid, data[i].SKUId, data[i].itemId , data[i].description, data[i].price, data[i].RFID]);
     }
