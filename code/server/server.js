@@ -139,15 +139,15 @@ app.get('/api/items', async (req, res) => {
   return item.getListItems(req, res);
 });
 
-app.get('/api/items/:id', async (req, res) => {
+app.get('/api/items/:id/:supplierId', async (req, res) => {
   return item.getItemById(req, res);
 });
 
-app.put('/api/item/:id', async (req, res) => {
+app.put('/api/item/:id/:supplierId', async (req, res) => {
   return item.modifyItemById(req, res);
 });
 
-app.delete('/api/items/:id', async (req, res) => {
+app.delete('/api/items/:id/:supplierId', async (req, res) => {
   return item.deleteItemById(req, res);
 });
 

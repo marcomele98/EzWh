@@ -43,6 +43,16 @@ exports.updateQuantity = (id, quantity) => {
     return db.run(sql, [quantity, id]);
 }
 
+// exports.deleteTableContent = () => {
+//     const sql = 'DELETE FROM sku'
+//     db.run(sql);
+//     const sql1 = 'DELETE FROM sqlite_sequence WHERE NAME = sku'
+//     db.run(sql1);
+
+//     // const query4 = 'UPDATE sqlite_sequence SET seq=0 WHERE name=?';
+//     // db.run(query4, ['sku']);
+// }
+
 exports.deleteTableContent = () => {
     const sql = 'DELETE FROM sku'
     db.run(sql);

@@ -12,7 +12,7 @@ exports.newTableReturnOrder = () => {
 }
 
 exports.newTableProductsRET = () => {
-    const sql = 'CREATE TABLE IF NOT EXISTS productsRET(RETid INTEGER, SKUId INTEGER , description TEXT, price float, RFID TEXT, PRIMARY KEY("RETid","RFID"))';   
+    const sql = 'CREATE TABLE IF NOT EXISTS productsRET(RETid INTEGER, SKUId INTEGER, itemId INTEGER, description TEXT, price float, RFID TEXT, PRIMARY KEY("RETid","RFID"))';   
     return db.run(sql);
 }
 
@@ -22,14 +22,14 @@ exports.storeReturnOrder = (data) => {
 }
 
 exports.storeProductRET = (data, RETid) => {
-    const sql1 = 'INSERT INTO productsRET(RETid , SKUId , description , price , RFID ) VALUES(?, ?, ?, ?, ?)'
+    const sql1 = 'INSERT INTO productsRET(RETid , SKUId , itemId, description , price , RFID ) VALUES(?, ?, ?, ?, ?, ?)'
     for (var i = 0; i < data.length; i++) {
-        db.run(sql1, [RETid, data[i].SKUId, data[i].description, data[i].price, data[i].RFID]);
+        db.run(sql1, [RETid, data[i].SKUId, data[i].itemId , data[i].description, data[i].price, data[i].RFID]);
     }
 }
 
 exports.getListProductRET = (id) => {
-    const sql = 'SELECT SKUId  , description , price , RFID , RFID FROM productsRET WHERE RETid = ?';
+    const sql = 'SELECT SKUId , itemId , description , price , RFID , RFID FROM productsRET WHERE RETid = ?';
     return db.all(sql, [id]);
 }
 

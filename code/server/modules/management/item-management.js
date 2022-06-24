@@ -41,11 +41,12 @@ class ItemManagement {
 
     async getItemById(req, res) {
         const id = req.params.id;
+        const suppId = req.params.supplierId
         if (id == undefined || id < 0 || isNaN(id)) {
             return res.status(422).end();
         }
         try {
-            const item = await db.getItemById(id);
+            const item = await db.getItemById(id, suppId);
             if (item === undefined) {
                 return res.status(404).end();
             } else {
@@ -59,13 +60,14 @@ class ItemManagement {
 
     async modifyItemById(req, res) {
         const id = req.params.id;
+        const suppId = req.params.supplierId
         const data = req.body;
 
-        if (id == undefined || isNaN(id) || id < 0 || data == undefined || data == '' || data == null) {
+        if (id == undefined || isNaN(id) || id < 0 || data == undefined || data == '' || data == null || suppId == undefined || isNaN(suppId) || suppId < 0) {
                 return res.status(422).end();
         }
 
-        const it = await db.getItemById(id);
+        const it = await db.getItemById(id, suppId);
 
         if (it == undefined) {
             res.status(404).end();
@@ -80,7 +82,7 @@ class ItemManagement {
         }
 
         try {
-            await db.modifyItemById(id, data);
+            await db.modifyItemById(id, data, suppId);
             res.status(200).end();
         } catch (err) {
             res.status(503).end();
@@ -89,11 +91,12 @@ class ItemManagement {
 
     async deleteItemById(req, res) {
         const id = req.params.id;
-        if (id == undefined || isNaN(id) || id < 0) {
+        const suppId = req.params.supplierId
+        if (id == undefined || isNaN(id) || id < 0 || suppId == undefined || isNaN(suppId) || suppId < 0) {
             return res.status(422).end();
         }
         try {
-            await db.deleteItemById(req.params.id);
+            await db.deleteItemById(id, suppId);
             res.status(204).end();
         } catch (err) {
             res.status(503).end();

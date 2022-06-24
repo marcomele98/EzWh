@@ -27,10 +27,24 @@ class RestockOrderManagement {
         }
         for (var i = 0; i < restockOrder.products.length; i++) {
             if (
-                restockOrder.products[i].SKUId == undefined || restockOrder.products[i].SKUId <= 0 || restockOrder.products[i].SKUId == '' || isNaN(restockOrder.products[i].SKUId) ||
-                !isNaN(restockOrder.products[i].description) || restockOrder.products[i].description == undefined || restockOrder.products[i].description == '' || restockOrder.products[i].price < 0 ||
-                restockOrder.products[i].price == undefined || restockOrder.products[i].price == '' || isNaN(restockOrder.products[i].price) || restockOrder.products[i].qty == undefined ||
-                restockOrder.products[i].qty < 0 || isNaN(restockOrder.products[i].qty)
+                restockOrder.products[i].SKUId == undefined || 
+                restockOrder.products[i].SKUId < 0 || 
+                restockOrder.products[i].SKUId == '' || 
+                restockOrder.products[i].itemId == undefined || 
+                restockOrder.products[i].itemId < 0 || 
+                restockOrder.products[i].itemId == '' || 
+                isNaN(restockOrder.products[i].SKUId) ||
+                isNaN(restockOrder.products[i].itemId) ||
+                !isNaN(restockOrder.products[i].description) || 
+                restockOrder.products[i].description == undefined || 
+                restockOrder.products[i].description == '' || 
+                restockOrder.products[i].price < 0 ||
+                restockOrder.products[i].price == undefined || 
+                restockOrder.products[i].price == '' || 
+                isNaN(restockOrder.products[i].price) || 
+                restockOrder.products[i].qty == undefined ||
+                restockOrder.products[i].qty < 0 || 
+                isNaN(restockOrder.products[i].qty)
             ) {
                 return res.status(422).end();
             }
@@ -168,6 +182,7 @@ class RestockOrderManagement {
             var count = 0;
             const SKUItemsReturn = [];
 
+            // console.log(SKUItems.length);
             for (var i = 0; i < SKUItems.length; i++) {
                 const SKUcheck = await dbRES.getPassByIds(SKUItems[i].id, SKUItems[i].rfid);
                 if (SKUcheck === undefined) {
@@ -214,8 +229,18 @@ class RestockOrderManagement {
         }
 
         for(var i = 0; i < data.skuItems.length; i++){
-            if(data.skuItems[i].rfid.length != 32 || data.skuItems[i].rfid === '' || data.skuItems[i].rfid == undefined || isNaN(data.skuItems[i].rfid)
-             || data.skuItems[i].SKUId == undefined || data.skuItems[i].SKUId == '' || data.skuItems[i].SKUId < 0 || isNaN(data.skuItems[i].SKUId)) {
+            if(data.skuItems[i].rfid.length != 32 || 
+                data.skuItems[i].rfid === '' || 
+                data.skuItems[i].rfid == undefined || 
+                isNaN(data.skuItems[i].rfid)
+             || data.skuItems[i].SKUId == undefined || 
+             data.skuItems[i].SKUId == '' || 
+             data.skuItems[i].SKUId < 0 || 
+             data.skuItems[i].itemId == undefined || 
+             data.skuItems[i].itemId == '' || 
+             data.skuItems[i].itemId < 0 || 
+             isNaN(data.skuItems[i].itemId) ||
+             isNaN(data.skuItems[i].SKUId)) {
                 return res.status(422).end();
             }
         }

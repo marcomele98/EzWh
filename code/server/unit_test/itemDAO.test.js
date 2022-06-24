@@ -31,7 +31,7 @@ function testNewItem(data) {
         var res = await itemDAO.getListItems();
         expect(res.length).toStrictEqual(1);
 
-        res = await itemDAO.getItemById(data.id);
+        res = await itemDAO.getItemById(data.id, data.supplierId);
 
         expect(res.id).toStrictEqual(data.id);
         expect(res.description).toStrictEqual(data.description);
@@ -53,7 +53,7 @@ function testNewItem(data) {
 function testDeleteItem(data) {
     test('delete item', async () => {
         await itemDAO.storeItem(data);
-        await itemDAO.deleteItemById(data.id);
+        await itemDAO.deleteItemById(data.id, data.supplierId);
         var res = await itemDAO.getListItems();
         expect(res.length).toStrictEqual(0);
     });
@@ -68,9 +68,9 @@ function testModifyItem(data) {
         }
 
         await itemDAO.storeItem(data);
-        await itemDAO.modifyItemById(data.id, newData);
+        await itemDAO.modifyItemById(data.id, newData, data.supplierId);
 
-        res = await itemDAO.getItemById(data.id);
+        res = await itemDAO.getItemById(data.id, data.supplierId);
 
         expect(res.id).toStrictEqual(data.id);
         expect(res.description).toStrictEqual(newData.newDescription);
@@ -83,7 +83,7 @@ function testModifyItem(data) {
 function testGetSkuBySupplier(data) {
     test('get sku by supp', async () => {
         await itemDAO.storeItem(data);
-        res = await itemDAO.getSkuBySupplier(data.id, data.supplierId);
+        res = await itemDAO.getSkuBySupplier(data.SKUId, data.supplierId);
 
         expect(res.id).toStrictEqual(data.id);
         expect(res.description).toStrictEqual(data.description);

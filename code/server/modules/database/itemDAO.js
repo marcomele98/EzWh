@@ -21,9 +21,9 @@ exports.getListItems = () => {
     return db.all(sql);
 }
 
-exports.getItemById = (id) => {
-    const sql = 'SELECT * FROM items WHERE id = ?';
-    return db.get(sql, [id]);
+exports.getItemById = (id, supplierId) => {
+    const sql = 'SELECT * FROM items WHERE id = ? AND supplierId = ?';
+    return db.get(sql, [id, supplierId]);
 }
 
 exports.getSkuBySupplier = (skuId, supplierId) => {
@@ -31,15 +31,15 @@ exports.getSkuBySupplier = (skuId, supplierId) => {
     return db.get(sql, [skuId, supplierId]);
 }
 
-exports.modifyItemById = (id, data) => {
-    const updateQuery = 'UPDATE items SET description=?, price=? WHERE id=?';
-    return db.run(updateQuery, [data.newDescription, data.newPrice, id]);
+exports.modifyItemById = (id, data, supplierId) => {
+    const updateQuery = 'UPDATE items SET description=?, price=? WHERE id=? AND supplierId = ?';
+    return db.run(updateQuery, [data.newDescription, data.newPrice, id, supplierId]);
 }
 
 
-exports.deleteItemById = (id) => {
-    const sql = 'DELETE FROM items WHERE id = ?';
-    return db.run(sql, [id]);
+exports.deleteItemById = (id, supplierId) => {
+    const sql = 'DELETE FROM items WHERE id = ? AND supplierId = ?';
+    return db.run(sql, [id, supplierId]);
 }
 
 exports.deleteTableContent = () => {

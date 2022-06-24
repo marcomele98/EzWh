@@ -17,43 +17,43 @@ describe('test restock order api', () => {
 
     input = {
         "issueDate":"2021/11/29 09:33",
-        "products": [{"SKUId":12,"description":"a product","price":10.99,"qty":3},
-                    {"SKUId":180,"description":"another product","price":11.99,"qty":2}],
+        "products": [{"SKUId":12, "itemId":10, "description":"a product","price":10.99,"qty":3},
+                    {"SKUId":180, "itemId":18, "description":"another product","price":11.99,"qty":2}],
         "supplierId" : 1
     };
 
 
     badInput1 = {
-        "products": [{"SKUId":12,"description":"a product","price":10.99,"qty":3},
-                    {"SKUId":180,"description":"another product","price":11.99,"qty":3}],
+        "products": [{"SKUId":12, "itemId":10, "description":"a product","price":10.99,"qty":3},
+                    {"SKUId":180, "itemId":18, "description":"another product","price":11.99,"qty":3}],
         "supplierId" : 1
     }
 
     badInput2 = {
         "issueDate":"2021/11/29 09:33",
-        "products": [{"SKUId":12,"description":"a product","price":10.99,"qty":3},
-                    {"SKUId":180,"description":"another product","price":11.99,"qty":3}],
+        "products": [{"SKUId":12, "itemId":10, "description":"a product","price":10.99,"qty":3},
+                    {"SKUId":180, "itemId":18, "description":"another product","price":11.99,"qty":3}],
         "supplierId" : -2
     }
 
     badInput3 = {
         "issueDate":"2021/11/29 09:33",
-        "products": [{"SKUId":-12,"description":"a product","price":10.99,"qty":3},
-                    {"SKUId":180,"description":"another product","price":11.99,"qty":3}],
+        "products": [{"SKUId":-12, "itemId":10, "description":"a product","price":10.99,"qty":3},
+                    {"SKUId":180, "itemId":18, "description":"another product","price":11.99,"qty":3}],
         "supplierId" : 1
     }
 
     badInput4 = {
         "issueDate":"2021/11/29 09:33",
-        "products": [{"SKUId":-12,"description":"a product","price":-10.99,"qty":3},
-                    {"SKUId":180,"description":"another product","price":11.99,"qty":3}],
+        "products": [{"SKUId":-12, "itemId":10, "description":"a product","price":-10.99,"qty":3},
+                    {"SKUId":180, "itemId":18, "description":"another product","price":11.99,"qty":3}],
         "supplierId" : 1
     }
 
     badInput5 = {
         "issueDate":"2021/11/29 09:33",
-        "products": [{"SKUId":-12,"description":"a product","price":10.99,"qty":3},
-                    {"SKUId":180,"description":"another product","price":11.99,"qty":-3}],
+        "products": [{"SKUId":-12, "itemId":10, "description":"a product","price":10.99,"qty":3},
+                    {"SKUId":180, "itemId":18, "description":"another product","price":11.99,"qty":-3}],
         "supplierId" : 1
     }
 
@@ -66,30 +66,30 @@ describe('test restock order api', () => {
     }
 
     modSkuItems = {
-        "skuItems" : [{"SKUId":12,"rfid":"12345678901234567890123456789016"},
-        {"SKUId":12,"rfid":"12345678901234567890123456789017"},
-        {"SKUId":12,"rfid":"12345678901234567890123456789020"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789021"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789022"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789023"}]
+        "skuItems" : [{"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789016"},
+        {"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789017"},
+        {"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789020"},
+        {"SKUId":180, "itemId":18, "rfid":"12345678901234567890123456789021"},
+        {"SKUId":180, "itemId":18, "rfid":"12345678901234567890123456789022"},
+        {"SKUId":180, "itemId":18, "rfid":"12345678901234567890123456789023"}]
     }
 
     modSkuItems1 = {
-        "skuItems" : [{"SKUId":-12,"rfid":"12345678901234567890123456789016"},
-        {"SKUId":12,"rfid":"12345678901234567890123456789017"},
-        {"SKUId":12,"rfid":"12345678901234567890123456789020"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789021"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789022"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789023"}]
+        "skuItems" : [{"SKUId":-12, "itemId":10, "rfid":"12345678901234567890123456789016"},
+        {"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789017"},
+        {"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789020"},
+        {"SKUId":180, "itemId":18, "rfid":"12345678901234567890123456789021"},
+        {"SKUId":180, "itemId":18, "rfid":"12345678901234567890123456789022"},
+        {"SKUId":180, "itemId":18, "rfid":"12345678901234567890123456789023"}]
     }
 
     modSkuItems2 = {
-        "skuItems" : [{"SKUId":12,"rfid":"12345678901234567890123456789016"},
-        {"SKUId":12,"rfid":"12345678901234567890123456789017111"},
-        {"SKUId":12,"rfid":"12345678901234567890123456789020"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789021"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789022"},
-        {"SKUId":180,"rfid":"12345678901234567890123456789023"}]
+        "skuItems" : [{"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789016"},
+        {"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789017111"},
+        {"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789020"},
+        {"SKUId":180, "itemId":18, "rfid":"12345678901234567890123456789021"},
+        {"SKUId":180, "itemId":18, "rfid":"12345678901234567890123456789022"},
+        {"SKUId":180, "itemId":18, "rfid":"12345678901234567890123456789023"}]
     }
 
     modTransportNote = {

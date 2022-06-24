@@ -7,8 +7,8 @@ describe('testDao', () => {
     
     const data =  {
         "issueDate":"2021/11/29 09:33",
-        "products": [{"SKUId":12,"description":"a product","price":10.99,"qty":30},
-                    {"SKUId":180,"description":"another product","price":11.99,"qty":20}],
+        "products": [{"SKUId":12, "itemId":10, "description":"a product","price":10.99,"qty":30},
+                    {"SKUId":180, "itemId":18, "description":"another product","price":11.99,"qty":20}],
         "supplierId" : 1
     }
 
@@ -70,16 +70,16 @@ function testModifyRestockOrder(data) {
             "id":1,
             "issueDate":"2021/11/29 09:33",
             "state": "DELIVERED",
-            "products": [{"SKUId":12,"description":"a product","price":10.99,"qty":30},
-                    {"SKUId":180,"description":"another product","price":11.99,"qty":20}],
+            "products": [{"SKUId":12, "itemId":10, "description":"a product","price":10.99,"qty":30},
+                    {"SKUId":180, "itemId":18, "description":"another product","price":11.99,"qty":20}],
             "supplierId" : 1,
             "transportNote":null,
             "skuItems" : null
         });
 
         const newskuItems = {
-            "skuItems" : [{"SKUId":12,"rfid":"12345678901234567890123456789016"},
-            {"SKUId":12,"rfid":"12345678901234567890123456789017"}]
+            "skuItems" : [{"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789016"},
+            {"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789017"}]
         };
 
         await restockOrderDAO.storeSkuRE(newskuItems, RE["MAX(id)"]);
@@ -90,11 +90,11 @@ function testModifyRestockOrder(data) {
             "id":1,
             "issueDate":"2021/11/29 09:33",
             "state": "DELIVERED",
-            "products": [{"SKUId":12,"description":"a product","price":10.99,"qty":30},
-                    {"SKUId":180,"description":"another product","price":11.99,"qty":20}],
+            "products": [{"SKUId":12, "itemId":10, "description":"a product","price":10.99,"qty":30},
+                    {"SKUId":180, "itemId":18, "description":"another product","price":11.99,"qty":20}],
             "supplierId" : 1,
             "transportNote":null,
-            "skuItems" : [{"SKUId":12,"rfid":"12345678901234567890123456789016"},{"SKUId":12,"rfid":"12345678901234567890123456789017"}]
+            "skuItems" : [{"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789016"},{"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789017"}]
         });
 
         const newTransportNote = {
@@ -110,11 +110,11 @@ function testModifyRestockOrder(data) {
             "id":1,
             "issueDate":"2021/11/29 09:33",
             "state": "DELIVERED",
-            "products": [{"SKUId":12,"description":"a product","price":10.99,"qty":30},
-                    {"SKUId":180,"description":"another product","price":11.99,"qty":20}],
+            "products": [{"SKUId":12, "itemId":10, "description":"a product","price":10.99,"qty":30},
+                    {"SKUId":180, "itemId":18, "description":"another product","price":11.99,"qty":20}],
             "supplierId" : 1,
             "transportNote":{"deliveryDate":"2021/12/29"},
-            "skuItems" : [{"SKUId":12,"rfid":"12345678901234567890123456789016"},{"SKUId":12,"rfid":"12345678901234567890123456789017"}]
+            "skuItems" : [{"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789016"},{"SKUId":12, "itemId":10, "rfid":"12345678901234567890123456789017"}]
         });
 
         await restockOrderDAO.deleteRestockOrderById(RE["MAX(id)"]);
